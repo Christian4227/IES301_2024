@@ -1,0 +1,251 @@
+/* Corpo */
+/* Imagem */
+.imagem_demonstracao {
+    width: 100%;
+    height: 600px;
+    opacity: 0.8;
+  }
+  
+  .div_demonstracao {
+    position: relative;
+    /* height: 70vh; */
+    width: 100%;
+  }
+  
+  .navOpcoes {
+    position: absolute;
+    bottom: 0;
+    margin: 0 auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .ul_opcoes {
+    display: flex;
+  }
+  
+  .opcao_imagem {
+    appearance: none;
+    border-radius: 100%;
+    background-color: black;
+    border: 2px solid black;
+    width: 20px;
+    height: 20px;
+    margin: 0 15px 10px 0;
+    cursor: pointer;
+  }
+
+  .opcao_imagem:checked {
+    background-color: white;
+  }
+  
+  /* Corpo da home */
+  .home_body {
+    width: 100%;
+    height: 80%;
+  }
+  
+  .home_body_direita,
+  .home_body_esquerda {
+    width: 50%;
+    height: 100%;
+    display: inline-flex;
+  }
+  
+  .home_body_direita {
+    text-align: center;
+    justify-content: center;
+    background-color: white;
+    align-items: center;
+    flex-direction: column;
+    margin: auto;
+  }
+  
+  .home_body_esquerda {
+    text-align: center;
+    justify-content: center;
+    background-color: white;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .home_body_titulo {
+    font-weight: bold;
+    font-size: 30px;
+    text-shadow: 3px 3px 5px gray;
+  }
+  
+  .menu_direita {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid black;
+    border-radius: 20px;
+    box-shadow: 2px 2px 8px gray;
+    width: 90%;
+    padding: 20px;
+    align-items: center;
+  }
+  
+  .botao_corpo {
+    background-color: black;
+    box-shadow: 4px 4px 6px gray;
+    border-radius: 80px;
+    color: white;
+    padding: 5px;
+    width: 130px;
+  }
+  
+  .home_eventos_info {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    margin: 10px;
+  }
+  
+  .img_menu {
+    width: 90%;
+    height: 150px;
+  }
+  
+  .home_body_esquerda h1 {
+    font-weight: bold;
+    font-size: 50px;
+    margin-bottom: 20px;
+  }
+  
+  .frase_botao {
+    font-weight: bold;
+    font-size: 35px;
+    margin: 80px 0 20px 0;
+  }
+  
+  .div_body1 {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    align-items: center;
+  }
+  
+  .body_descricao {
+    font-size: 20px;
+  }
+
+  .div_body2 {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    padding-top: 10px;
+    overflow: hidden;
+    scroll-behavior: smooth;
+    display: flex;
+  }
+  
+  .titulo_novidades h1 {
+    font-weight: bold;
+    font-size: 30px;
+    margin-bottom: 20px;
+  }
+
+  .titulo_novidades {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .div_festas_novidades {
+    position: relative;
+    display: flex;
+    width: 95%;
+    height: 100%;
+    overflow: hidden; 
+    scroll-behavior: smooth;
+  }
+  
+  .festas_novidades {
+      min-width: 300px;
+      max-height: 320px;
+      border: 1px solid black;
+  }
+
+  .img_festas_novidades {
+    width: 100%;
+    height: 60%;
+  }
+
+  .festas_novidades h2 {
+    font-weight: bold;
+  }
+
+  .img_seta_direita {
+    position: sticky;
+    right: 20px;
+    top: 40%;
+    width: 60px;
+    height: 80px;
+    border: 1px solid black;
+    opacity: 0.75;
+  }
+
+  .img_seta_esquerda {
+    position: sticky;
+    left: 20px;
+    top: 40%;
+    width: 60px;
+    height: 80px;
+    border: 1px solid black;
+    opacity: 0.5;
+  }
+  
+  /* Rodapé */
+  .home_footer {
+    background-color: black;
+    position: relative;
+    display: flex;
+    height: 280px;
+    padding: 10px;
+  }
+  
+  .footer_esquerda,
+  .footer_direita {
+    display: inline-flex;
+    position: relative;
+  }
+  
+  .footer_esquerda {
+    border-right: 1px solid white;
+    height: 100%;
+    width: 70%;
+    flex-direction: column;
+  }
+  
+  .footer_esquerda label {
+    color: white;
+    margin: 20px 0;
+  }
+  
+  .footer_direita {
+    width: 30%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    height: 100%;
+  }
+
+  .footer_direita label {
+    color: white;
+  }
+  
+  .footer_direitos {
+    position: absolute;
+    bottom: 0;
+  }
+  
+  .img {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+  }
+  
