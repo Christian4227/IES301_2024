@@ -17,25 +17,21 @@ import seta_direita from "../assets/seta_direita.png";
 import seta_esquerda from "../assets/seta esquerda.png";
 
 export default function Home() {
-    const [imagem, setImagem] = useState(musica);
-    const [scrollPosition, setScrollPosition] = useState(0);
-    const [indexI, setIndexI] = useState(0);
-    const containerRef = useRef();
     const listaImagens = [
-        musica,
-        disney,
-        festas,
-        fest_japao,
-        capoeira,
-        futebol,
-        torre_miroku,
+        { imagem: musica, descricao: "Rock in Rio" },
+        { imagem: disney, descricao: "Disney World" },
+        { imagem: festas, descricao: "Formatura" },
+        { imagem: fest_japao, descricao: "Festival do Japão" },
+        { imagem: capoeira, descricao: "Capoeira" },
+        { imagem: futebol, descricao: "Futebol" },
+        { imagem: torre_miroku, descricao: "Torre de Miroku" },
     ];
-
-    function TrocarImagem(index) {
-        var imagemSel = listaImagens[index];
-        setImagem(imagemSel);
-        document.getElementById("imgPainel").src = imagem;
-    }
+    const [imagem, setImagem] = useState(listaImagens[0].imagem);
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const [click, setClick] = useState(false);
+    const [indexI, setIndexI] = useState(0);
+    const [valorOption, setValorOption] = useState(listaImagens[0].descricao);
+    const containerRef = useRef();
 
     const DeslocarImagemNovidade = (amount) => {
         const newScrollPosition = scrollPosition + amount;
@@ -51,14 +47,29 @@ export default function Home() {
         containerRef.current.scrollLeft = newScrollPosition;
     };
 
-    setTimeout(() => {
-        setIndexI(indexI + 1);
-        if (indexI >= 6) {
-            setIndexI(0);
-        }
-        var imagemSel = listaImagens[indexI];
+    const MudarValorOption = (e) => {
+        setValorOption(e.target.value);
+    };
+
+    if (!click) {
+        setTimeout(() => {
+            setIndexI(indexI + 1);
+            if (indexI >= listaImagens.length - 1) {
+                setIndexI(0);
+            }
+            var imagemSel = listaImagens[indexI].imagem;
+            var imagemDescricao = listaImagens[indexI].descricao;
+            setImagem(imagemSel);
+            setValorOption(imagemDescricao);
+        }, 3000);
+    }
+
+    const TrocarImagem = (index) => {
+        var imagemSel = listaImagens[index].imagem;
         setImagem(imagemSel);
-    }, 10000);
+        document.getElementById("imgPainel").src = imagem;
+        setClick(true);
+    };
 
     return (
         <main>
@@ -75,71 +86,85 @@ export default function Home() {
                         <li>
                             <input
                                 type="radio"
-                                value=""
+                                value={listaImagens[0].descricao}
                                 id="ul_opcap_imagem0"
                                 className={styles.opcao_imagem}
                                 name="img_dem"
                                 onClick={() => TrocarImagem(0)}
+                                onChange={MudarValorOption}
+                                checked={valorOption === "Rock in Rio"}
                             />
                         </li>
                         <li>
                             <input
                                 type="radio"
-                                value=""
+                                value={listaImagens[1].descricao}
                                 id="ul_opcap_imagem1"
                                 className={styles.opcao_imagem}
                                 name="img_dem"
                                 onClick={() => TrocarImagem(1)}
+                                onChange={MudarValorOption}
+                                checked={valorOption === "Disney World"}
                             />
                         </li>
                         <li>
                             <input
                                 type="radio"
-                                value=""
+                                value={listaImagens[2].descricao}
                                 id="ul_opcap_imagem2"
                                 className={styles.opcao_imagem}
                                 name="img_dem"
                                 onClick={() => TrocarImagem(2)}
+                                onChange={MudarValorOption}
+                                checked={valorOption === "Formatura"}
                             />
                         </li>
                         <li>
                             <input
                                 type="radio"
-                                value=""
+                                value={listaImagens[3].descricao}
                                 id="ul_opcap_imagem3"
                                 className={styles.opcao_imagem}
                                 name="img_dem"
                                 onClick={() => TrocarImagem(3)}
+                                onChange={MudarValorOption}
+                                checked={valorOption === "Festival do Japão"}
                             />
                         </li>
                         <li>
                             <input
                                 type="radio"
-                                value=""
+                                value={listaImagens[4].descricao}
                                 id="ul_opcap_imagem4"
                                 className={styles.opcao_imagem}
                                 name="img_dem"
                                 onClick={() => TrocarImagem(4)}
+                                onChange={MudarValorOption}
+                                checked={valorOption === "Capoeira"}
                             />
                         </li>
                         <li>
                             <input
                                 type="radio"
-                                value=""
+                                value={listaImagens[5].descricao}
                                 id="ul_opcap_imagem5"
                                 className={styles.opcao_imagem}
                                 name="img_dem"
                                 onClick={() => TrocarImagem(5)}
+                                onChange={MudarValorOption}
+                                checked={valorOption === "Futebol"}
                             />
                         </li>
                         <li>
                             <input
                                 type="radio"
-                                value=""
+                                value={listaImagens[6].descricao}
                                 id="ul_opcap_imagem6"
                                 className={styles.opcao_imagem}
                                 name="img_dem"
                                 onClick={() => TrocarImagem(6)}
+                                onChange={MudarValorOption}
+                                checked={valorOption === "Torre de Miroku"}
                             />
                         </li>
                     </ul>

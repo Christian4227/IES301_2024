@@ -8,10 +8,10 @@ export default function Cabecalho() {
             <h1>Ticket Easy Pro</h1>
             <nav>
                 <ul className={styles.ul}>
-                    <Link href="./Login/TelaLoginAdm">
+                    <Link href="./LoginAdm">
                         <li className={styles.li_Adm}>Área restrita</li>
                     </Link>
-                    <Link href="./Login/TelaLoginCliente">
+                    <Link href="./LoginCliente">
                         <li className={styles.li_Login}>Log in</li>
                     </Link>
                 </ul>
