@@ -7,7 +7,7 @@ const user_service_1 = __importDefault(require("../../services/user.service"));
 const JWTAuth_1 = require("../../middlewares/JWTAuth");
 const UserRoute = async (api) => {
     const userService = new user_service_1.default();
-    api.post('/', async (request, reply) => {
+    api.post('/signin', async (request, reply) => {
         try {
             const data = await userService.create(request.body);
             return reply.send(data);
@@ -16,7 +16,7 @@ const UserRoute = async (api) => {
             reply.send(error);
         }
     });
-    api.post('/auth', async (request, reply) => {
+    api.post('/login', async (request, reply) => {
         try {
             const credentials = request.body;
             const data = await userService.login(credentials);
