@@ -1,16 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser2 = exports.createUser = void 0;
+exports.deleteById = exports.findAll = exports.findById = exports.findByEmail = exports.create = void 0;
 const prisma_1 = require("../services/prisma");
-const createUser = async (data) => {
-    const user = prisma_1.prisma.user.create({
-        ...data
+async function create({ email, name, birth_date, phone, phone_fix, password, salt }) {
+    const result = await prisma_1.prisma.user.create({ data: { name, email, birth_date, phone, password, salt, phone_fix } });
+    return result;
+}
+exports.create = create;
+const findByEmail = async (email) => {
+    const result = await prisma_1.prisma.user.findFirst({
+        where: {
+            email,
+        },
     });
+    return result || null;
 };
-exports.createUser = createUser;
-const createUser2 = async (data) => {
-    const user = prisma_1.prisma.user.create({
-        ...data
-    });
+exports.findByEmail = findByEmail;
+const findById = async (user_id) => {
+    const result = await prisma_1.prisma.user.findFirst({ where: { id: user_id } });
+    return result || null;
 };
-exports.createUser2 = createUser2;
+exports.findById = findById;
+const findAll = async () => {
+    const result = await prisma_1.prisma.user.findMany();
+    return result;
+};
+exports.findAll = findAll;
+const deleteById = async (user_id) => {
+    const result = await prisma_1.prisma.user.delete({ where: { id: user_id } });
+    return result || null;
+};
+exports.deleteById = deleteById;

@@ -1,13 +1,15 @@
 import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify"
 
 import UserService from "../../services/user.service"
-import { UserCreate } from "../../interfaces/user.interface";
+import { LoginResponseSchema, UserCreate, UserLogin } from "../../interfaces/user.interface";
+import { verifyJwt } from "../../middlewares/JWTAuth";
+
 
 
 const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
     const userService: UserService = new UserService()
 
-    api.post('/', async (request: FastifyRequest<{ Body: UserCreate }>, reply: FastifyReply) => {
+    api.post('/signin', async (request: FastifyRequest<{ Body: UserCreate }>, reply: FastifyReply) => {
         try {
             const data = await userService.create(request.body);
             return reply.send(data);
@@ -16,7 +18,22 @@ const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         }
     });
 
-    api.get('/:id', async (request: FastifyRequest, reply: FastifyReply) => {
+    api.post('/login', async (request: FastifyRequest<{ Body: UserLogin }>, reply: FastifyReply) => {
+        try {
+
+            const credentials = request.body;
+            const data = await userService.login(credentials);
+            const token = await reply.jwtSign({ login: data.email }, { sign: { sub: data.id, expiresIn: '12h' } });
+            return { accessToken: token }
+
+        } catch (error) {
+            reply.send(error);
+        }
+    });
+
+    api.get('/me', { onRequest: [verifyJwt] }, async (request: FastifyRequest, reply: FastifyReply) => {
+        // Exibe dados do próprio usuário
+
         reply.send({ hello: 'aswosrld2' });
     });
 

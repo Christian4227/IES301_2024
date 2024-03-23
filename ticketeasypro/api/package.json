@@ -6,19 +6,19 @@
   "type": "commonjs",
   "scripts": {
     "migrate": "npx prisma migrate dev",
-    "start": "tsc -p tsconfig.json --watch && node dist/server.js",
     "build": "tsc -p tsconfig.json",
+    "start": "tsc -p tsconfig.json --watch && node dist/server.js",
     "dev": "tsx watch src/server.ts"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@fastify/jwt": "^8.0.0",
     "@prisma/client": "^5.11.0",
-    "fastify": "^4.26.2",
-    "jsonwebtoken": "^9.0.2"
+    "fastify": "^4.26.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.11.28",
     "prisma": "^5.11.0",
     "tsx": "^4.7.1",

@@ -1,0 +1,12 @@
+# Arquivos e diretórios específicos
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Arquivos temporários
+*.tmp
+.DS_Store 
+# Diretórios específicos
+logs/
+temp/
+.vscode/

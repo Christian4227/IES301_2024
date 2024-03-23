@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const HomeRoute = async (api, opts) => {
+const EventRoute = async (api) => {
     // Array simulado de eventos
     const events = [
         { id: 1, name: 'Evento 1' },
@@ -14,4 +14,4 @@ const HomeRoute = async (api, opts) => {
         reply.code(200).send(events);
     });
 };
-exports.default = HomeRoute;
+exports.default = EventRoute;

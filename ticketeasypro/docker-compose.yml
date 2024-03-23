@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: db_tickets_container
+    environment:
+      POSTGRES_DB: db_tickets
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+      # rest_api:
+      # build:
+
+      # context: ./api
+      # dockerfile: Dockerfile
+      # container_name: rest_api_container
+      # depends_on:
+      # - postgres
+      # environment:
+      # DATABASE_URL: postgresql://postgres:1234@postgres:5430/db_tickets?schema=public
+      # ports:
+      # - "3210:3030"
+      # expose:
+      # - 3030

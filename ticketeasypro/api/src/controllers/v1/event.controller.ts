@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions, FastifyReply, FastifyRequest } from "fastify"
+import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify"
 
 
 

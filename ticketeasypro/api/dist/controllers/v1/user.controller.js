@@ -1,37 +1,49 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const repo = __importStar(require("../../repositories/user.repository"));
-const UserRoute = async (api, opts) => {
-    api.post('/', {}, async (request, reply) => {
+const user_service_1 = __importDefault(require("../../services/user.service"));
+const JWTAuth_1 = require("../../middlewares/JWTAuth");
+const UserRoute = async (api) => {
+    const userService = new user_service_1.default();
+    api.post('/', async (request, reply) => {
         try {
-            const user = repo.createUser(request.body);
-            reply.status(201).send(user);
+            const data = await userService.create(request.body);
+            return reply.send(data);
         }
-        catch (e) {
-            reply.status(400).send(e);
+        catch (error) {
+            reply.send(error);
+        }
+    });
+    api.post('/auth', async (request, reply) => {
+        try {
+            const credentials = request.body;
+            const data = await userService.login(credentials);
+            const token = await reply.jwtSign({ login: data.email }, { sign: { sub: data.id, expiresIn: '12h' } });
+            return { accessToken: token };
+        }
+        catch (error) {
+            reply.send(error);
+        }
+    });
+    api.get('/me', { onRequest: [JWTAuth_1.verifyJwt] }, async (request, reply) => {
+        // Exibe dados do próprio usuário
+        reply.send({ hello: 'aswosrld2' });
+    });
+    api.get('/', async (request, reply) => {
+        const all = await userService.getAll();
+        return reply.status(200).send(all);
+    });
+    api.delete('/:id', async (request, reply) => {
+        const { id: userId } = request;
+        try {
+            await userService.deleteAccount(userId);
+            return reply.status(204);
+        }
+        catch (error) {
+            console.error('Erro ao excluir usuário:', error);
+            return reply.status(500).send({ message: 'Erro ao excluir usuário', error: 'Internal Server Error' });
         }
     });
 };

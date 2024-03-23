@@ -1,7 +1,26 @@
-import fastify, { FastifyInstance } from "fastify";
+import fastify, { FastifyRequest, FastifyInstance, FastifyReply } from "fastify";
 import { UserRoute, EventRoute } from "./controllers/all_controllers";
-import { fastifyJwt } from "@fastify/jwt";
+import fastifyJwt, { JWT } from "@fastify/jwt";
+import { verifyJwt } from "./middlewares/JWTAuth";
 
+// declare module "fastify" {
+//     interface FastifyRequest {
+//         jwt: JWT;
+//     }
+//     export interface FastifyInstance {
+//         authenticate: any;
+//     }
+// }
+
+// declare module "@fastify/jwt" {
+//     interface FastifyJWT {
+//         user: {
+//             id: string;
+//             email: string;
+//             name: string;
+//         };
+//     }
+// }
 
 
 const api: FastifyInstance = fastify({ logger: true });
@@ -17,7 +36,18 @@ const api: FastifyInstance = fastify({ logger: true });
     }
 
     const jwtSecreteKey: string = process.env.JWT_SECRET_KEY as string
+    // api.register(fastifyJwt, { secret: jwtSecreteKey });
+
     api.register(fastifyJwt, { secret: jwtSecreteKey });
+    // api.jwt.verify
+
+    // api.decorate("authenticate", verifyJwt);
+
+
+    // api.addHook("preHandler", (request: FastifyRequest, reply: FastifyReply, next) => {
+    // request.jwt = api.jwt;
+    // return next();
+    // });
 
     const listeners = ['SIGINT', 'SIGTERM'];
     listeners.forEach((signal) => {
@@ -26,7 +56,7 @@ const api: FastifyInstance = fastify({ logger: true });
             process.exit(0);
         })
     })
-    api.listen({ port: 3333 }, () => { console.log('Server Subiu na porta 3333'); })
+    api.listen({ port: 3210 }, () => { console.log('Server Subiu na porta 3210'); })
 
 
 })();
