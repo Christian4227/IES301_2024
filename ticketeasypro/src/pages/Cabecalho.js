@@ -4,8 +4,12 @@ import styles from "../styles/Cabecalho.module.css";
 
 export default function Cabecalho() {
     return (
-        <header className={styles.Header}>
-            <h1>Ticket Easy Pro</h1>
+        <div className={styles.Header}>
+            <nav>
+                <Link href="./">
+                    <label>Ticket Easy Pro</label>
+                </Link>
+            </nav>
             <nav>
                 <ul className={styles.ul}>
                     <Link href="./LoginAdm">
@@ -16,6 +20,6 @@ export default function Cabecalho() {
                     </Link>
                 </ul>
             </nav>
-        </header>
+        </div>
     );
 }

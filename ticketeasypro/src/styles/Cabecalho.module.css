@@ -7,16 +7,17 @@
   height: 80px;
 }
 
-.Header h1 {
+.Header label {
   color: white;
+  font-size: 18px;
+  cursor: pointer;
 }
 
 .li_Login {
   text-align: center;
   color: white;
   border: 1px solid white;
-  height: 40px;
-  width: 160px;
+  width: 120px;
   border-radius: 50px;
   padding: 10px;
 }
@@ -24,14 +25,13 @@
 .li_Adm {
   text-align: center;
   color: white;
-  border: 1px solid white;
   width: 160px;
   padding: 10px;
 }
 
 .li_Login,
 .li_Adm {
-  margin: 0 10px 0 10px;
+  margin: 0 5px 0 5px;
 }
 
 .ul {

@@ -2,13 +2,12 @@
 /* Imagem */
 .imagem_demonstracao {
     width: 100%;
-    height: 600px;
+    height: 650px;
     opacity: 0.8;
   }
   
   .div_demonstracao {
     position: relative;
-    /* height: 70vh; */
     width: 100%;
   }
   
@@ -158,6 +157,7 @@
     height: 100%;
     overflow: hidden; 
     scroll-behavior: smooth;
+    border: 4px solid black;
   }
   
   .festas_novidades {
@@ -167,6 +167,7 @@
   }
 
   .img_festas_novidades {
+    border-bottom: 3px solid gray;
     width: 100%;
     height: 60%;
   }

@@ -1,0 +1,24 @@
+.div_cadastrar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form_cadastrar {
+    border: 1px solid black;
+    box-shadow: 4px 4px 7px gray;
+    padding: 2%;
+    width: 90%;
+    max-width: 600px;
+    min-width: 300px;
+}
+
+.cabecalho_cadastro {
+    text-align: center;
+    margin-bottom: 5%;
+}
+
+.btnCadastrar {
+    background-color: black;
+    color: white;
+}

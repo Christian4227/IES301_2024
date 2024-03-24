@@ -8,6 +8,14 @@
   box-sizing: border-box;
 }
 
+html, body, body #__next {
+    height: 100%;
+}
+
 label {
   font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+    text-decoration: none !important;
 }

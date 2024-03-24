@@ -2,6 +2,8 @@ import fastify, { FastifyRequest, FastifyInstance, FastifyReply } from "fastify"
 import { UserRoute, EventRoute } from "./controllers/all_controllers";
 import fastifyJwt, { JWT } from "@fastify/jwt";
 import { verifyJwt } from "./middlewares/JWTAuth";
+const cors = require('fastify-cors'); // Registrar o plugin CORS e permitir todas as origens
+
 
 // declare module "fastify" {
 //     interface FastifyRequest {
@@ -30,6 +32,7 @@ const api: FastifyInstance = fastify({ logger: true });
 
         api.register(EventRoute, { prefix: '/v1/events' });
         api.register(UserRoute, { prefix: '/v1/users' });
+        api.register(cors, {   origin: '*'});
 
     } catch (error) {
         console.error('Erro ao importar os controladores:', error);
@@ -56,7 +59,7 @@ const api: FastifyInstance = fastify({ logger: true });
             process.exit(0);
         })
     })
-    api.listen({ port: 3210 }, () => { console.log('Server Subiu na porta 3210'); })
+    api.listen({ port: 3210, host: "localhost" }, () => { console.log('Server Subiu na porta 3210'); })
 
 
 })();
