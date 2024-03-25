@@ -1,1 +1,2 @@
-export function middlewareAdministrador() {}
+import React from "react";
+export function middlewareAdministrador() { }

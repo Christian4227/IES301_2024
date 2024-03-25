@@ -1,26 +1,29 @@
-import React, { useState } from "react";
-import styles from "../styles/Login.module.css";
+import React, { useState } from 'react';
 import Link from "next/link";
-import axios from "axios";
+import styles from "../styles/Login.module.css";
+import client from "./../utils/client_axios";
+import { useRouter } from "next/router";
+
+
 
 export default function LogInCliente() {
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
-    function Login() {
-        let data = JSON.stringify({
-            email: email,
-            password: senha,
-        });
-        console.log(data);
-        axios
-            .post("http://localhost:3210/v1/users/login", data)
-            .then((response) => {
-                alert(response.data);
-            })
-            .catch((error) => {
-                alert("Erro na requisição: " + error);
-            });
-    }
+
+    const login = async () => {
+        const requestBody = { email, password: senha };
+        try {
+            const response = await client.post("users/login", requestBody);
+
+            console.log(response.data);
+            localStorage.setItem("token", response.data.accessToken);
+            router.push("/Admin/TelaInicialAdmin");
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
 
     return (
         <div className={styles.body_login_cliente}>
@@ -41,13 +44,14 @@ export default function LogInCliente() {
                     value={senha}
                     onChange={(e) => setSenha(e.target.value)}
                 />
-                <input
+                <button
                     id="btnEntrar"
                     className={styles.botao_submit}
                     type="button"
-                    value="Entrar"
-                    onClick={Login}
-                />
+                    onClick={login}
+                >
+                    Entrar
+                </button>
                 <label className={styles.descricao_cadastrar}>
                     Não tem uma conta?{" "}
                     <Link

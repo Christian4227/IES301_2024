@@ -1,7 +1,13 @@
 import * as userRepository from "../repositories/user.repository";
-import { User, UserCreate, UserLogin } from "../interfaces/user.interface";
+import { User, UserCreate, UserCredentials } from "../interfaces/user.interface";
 import { hashPassword, verifyPassword } from "../utils/hash";
-import { DataToken } from "../interfaces/toke.interface";
+import { DataToken, Token } from "../interfaces/token.interface";
+import { FastifyJwtSignOptions, SignPayloadType } from "@fastify/jwt";
+
+
+interface AsignJwt {
+  (payload: SignPayloadType, options?: FastifyJwtSignOptions): Promise<string>
+}
 
 class UserService {
   create = async (user: UserCreate): Promise<User> => {
@@ -18,38 +24,29 @@ class UserService {
     return result;
   };
 
-  login = async (credentials: UserLogin): Promise<DataToken> => {
+  generateToken = async (credentials: UserCredentials, asignJwt: AsignJwt): Promise<string> => {
+
+    const { email, password: candidatePassword } = credentials;
 
     // find a user by email
-    const user = await userRepository.findByEmail(credentials.email);
+    const user = await userRepository.findByEmail(email);
 
-    if (!user) {
+    if (!user)
       throw new Error("Invalid email or password");
-      // return  reply.code(401).send({
-      //   message: "Invalid email or password",
-      // });
-    }
+
+    const { password: hash, salt, id: sub } = user;
 
     // verify password
-    const correctPassword = verifyPassword({
-      candidatePassword: credentials.password,
-      salt: user.salt,
-      hash: user.password,
-    });
+    const correctPassword = verifyPassword({ candidatePassword, salt, hash });
 
     if (correctPassword) {
-      const { password, salt, ...rest } = user;
-      return rest;
+      // const { password, salt, ...rest } = user;
+      const token = await asignJwt({ login: email }, { sign: { sub, expiresIn: '12h' } });
+      return token;
     }
     throw new Error("Invalid email or password");
 
-    // return reply.code(401).send({
-    //   message: "Invalid email or password",
-    // });
   }
-
-
-
 
 
   find = async (user_id: string): Promise<User | null> => {

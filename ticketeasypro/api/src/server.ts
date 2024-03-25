@@ -1,9 +1,8 @@
-import fastify, { FastifyRequest, FastifyInstance, FastifyReply } from "fastify";
+import fastify, { FastifyRequest, FastifyInstance, FastifyReply, RouteShorthandOptions } from "fastify";
 import { UserRoute, EventRoute } from "./controllers/all_controllers";
 import fastifyJwt, { JWT } from "@fastify/jwt";
-import { verifyJwt } from "./middlewares/JWTAuth";
-const cors = require('fastify-cors'); // Registrar o plugin CORS e permitir todas as origens
-
+// import { verifyJwt } from "./middlewares/JWTAuth";
+import cors from "@fastify/cors";
 
 // declare module "fastify" {
 //     interface FastifyRequest {
@@ -26,40 +25,68 @@ const cors = require('fastify-cors'); // Registrar o plugin CORS e permitir toda
 
 
 const api: FastifyInstance = fastify({ logger: true });
+api.register(cors, { origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE'] });
+api.register(EventRoute, { prefix: '/v1/events' });
+api.register(UserRoute, { prefix: '/v1/users' });
 
-(async () => {
+const jwtSecreteKey: string = process.env.JWT_SECRET_KEY as string
+api.register(fastifyJwt, { secret: jwtSecreteKey });
+
+const start = async () => {
     try {
+        await api.listen({ port: 3210 });
+        const address = api.server.address();
+        const port = typeof address === 'string' ? address : address?.port;
 
-        api.register(EventRoute, { prefix: '/v1/events' });
-        api.register(UserRoute, { prefix: '/v1/users' });
-        api.register(cors, {   origin: '*'});
-
-    } catch (error) {
-        console.error('Erro ao importar os controladores:', error);
+    } catch (err) {
+        api.log.error(err);
+        process.exit(1);
     }
+}
 
-    const jwtSecreteKey: string = process.env.JWT_SECRET_KEY as string
-    // api.register(fastifyJwt, { secret: jwtSecreteKey });
-
-    api.register(fastifyJwt, { secret: jwtSecreteKey });
-    // api.jwt.verify
-
-    // api.decorate("authenticate", verifyJwt);
+start()
 
 
-    // api.addHook("preHandler", (request: FastifyRequest, reply: FastifyReply, next) => {
-    // request.jwt = api.jwt;
-    // return next();
-    // });
+// const start = async (api: FastifyInstance) => {
 
-    const listeners = ['SIGINT', 'SIGTERM'];
-    listeners.forEach((signal) => {
-        process.on(signal, async () => {
-            await api.close();
-            process.exit(0);
-        })
-    })
-    api.listen({ port: 3210, host: "localhost" }, () => { console.log('Server Subiu na porta 3210'); })
+//     try {
+//         api.register(EventRoute, { prefix: '/v1/events' });
+//         api.register(UserRoute, { prefix: '/v1/users' });
+//         api.register(cors, {
+//             origin: '*',
+//             methods: ['GET', 'POST', 'PUT', 'DELETE']
+//         })
+
+//     } catch (error) {
+//         console.error('Erro ao importar os controladores:', error);
+//     }
+
+//     const jwtSecreteKey: string = process.env.JWT_SECRET_KEY as string
+//     // api.register(fastifyJwt, { secret: jwtSecreteKey });
+
+//     api.register(fastifyJwt, { secret: jwtSecreteKey });
+//     // api.jwt.verify
+
+//     // api.decorate("authenticate", verifyJwt);
 
 
-})();
+//     // api.addHook("preHandler", (request: FastifyRequest, reply: FastifyReply, next) => {
+//     // request.jwt = api.jwt;
+//     // return next();
+//     // });
+
+//     // const listeners = ['SIGINT', 'SIGTERM'];
+//     // listeners.forEach((signal) => {
+//     // process.on(signal, async () => {
+//     // await api.close();
+//     // process.exit(0);
+//     // })
+//     // }
+//     // )
+//     //
+//     api.listen({ port: 3210 }, () => { console.log('Server Subiu na porta 3210'); });
+
+// }
+
+// const api: FastifyInstance = fastify({ logger: true });
+// start(api);
