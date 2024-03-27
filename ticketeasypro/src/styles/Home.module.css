@@ -54,7 +54,6 @@
   .home_body_direita {
     text-align: center;
     justify-content: center;
-    background-color: white;
     align-items: center;
     flex-direction: column;
     margin: auto;
@@ -63,7 +62,6 @@
   .home_body_esquerda {
     text-align: center;
     justify-content: center;
-    background-color: white;
     align-items: center;
     flex-direction: column;
   }
@@ -79,6 +77,7 @@
     grid-template-columns: 1fr 1fr;
     border: 1px solid black;
     border-radius: 20px;
+    background-color: white;
     box-shadow: 2px 2px 8px gray;
     width: 90%;
     padding: 20px;
@@ -163,7 +162,9 @@
   .festas_novidades {
       min-width: 300px;
       max-height: 320px;
+      height: 350px;
       border: 1px solid black;
+      background-color: white;
   }
 
   .img_festas_novidades {
@@ -214,7 +215,7 @@
   .footer_esquerda {
     border-right: 1px solid white;
     height: 100%;
-    width: 70%;
+    width: 75%;
     flex-direction: column;
   }
   
@@ -224,13 +225,16 @@
   }
   
   .footer_direita {
-    width: 30%;
+    width: 25%;
     position: relative;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     text-align: center;
     padding: 10px;
     height: 100%;
+    min-width: 200px;
   }
 
   .footer_direita label {

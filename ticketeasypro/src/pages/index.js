@@ -390,23 +390,27 @@ export default function Home() {
                     </label>
                 </div>
                 <div className={styles.footer_direita}>
-                    <label>Siga a gente nas redes sociais</label>
-                    <Image
-                        src={facebook}
-                        alt="facebook"
-                        className={styles.img}
-                    />
-                    <Image
-                        src={instagram}
-                        alt="instagram"
-                        className={styles.img}
-                    />
-                    <Image
-                        src={whatsapp}
-                        alt="whatsapp"
-                        className={styles.img}
-                    />
-                    <label>(11)99999-9999</label>
+                    <div>
+                        <label>Siga a gente nas redes sociais</label>
+                    </div>
+                    <div>
+                        <Image
+                            src={facebook}
+                            alt="facebook"
+                            className={styles.img}
+                        />
+                        <Image
+                            src={instagram}
+                            alt="instagram"
+                            className={styles.img}
+                        />
+                        <Image
+                            src={whatsapp}
+                            alt="whatsapp"
+                            className={styles.img}
+                        />
+                        <label>(11) 99999-9999</label>
+                    </div>
                 </div>
             </div>
         </main>

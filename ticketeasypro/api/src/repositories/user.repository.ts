@@ -8,7 +8,7 @@ export async function create({ email, name, birth_date, phone, phone_fix, passwo
 }
 
 export const findByEmail = async (email: string): Promise<User | null> => {
-    const result = await prisma.user.findUnique({
+    const result = await prisma.user.findFirst({
         where: {
             email,
         },
@@ -18,7 +18,7 @@ export const findByEmail = async (email: string): Promise<User | null> => {
 }
 export const findById = async (user_id: string): Promise<User | null> => {
 
-    const result = await prisma.user.findUnique({ where: { id: user_id } });
+    const result = await prisma.user.findFirst({ where: { id: user_id } });
     return result || null;
 }
 export const findAll = async (): Promise<User[]> => {

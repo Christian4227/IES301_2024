@@ -1,46 +1,40 @@
 import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify"
 
 import UserService from "../../services/user.service"
-import { UserCreate, UserCredentials, } from "../../interfaces/user.interface";
+import { LoginResponseSchema, UserCreate, UserLogin } from "../../interfaces/user.interface";
 import { verifyJwt } from "../../middlewares/JWTAuth";
-import { Token } from "../../interfaces/token.interface";
 
-
-interface TokenResponse {
-    accessToken: string; // Ou o tipo adequado para o token JWT
-}
 
 
 const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
     const userService: UserService = new UserService()
 
-    api.post('/signin', async (request: FastifyRequest<{ Body: UserCreate }>, reply: FastifyReply) => {
+    api.post('/cadastrar', async (request: FastifyRequest<{ Body: UserCreate }>, reply: FastifyReply) => {
         try {
             const data = await userService.create(request.body);
-            console.log("entrou");
-
             return reply.send(data);
         } catch (error) {
             reply.send(error);
         }
     });
-    api.post('/login', async (request: FastifyRequest<{ Body: UserCredentials }>, reply: FastifyReply): Promise<Token> => {
+
+    api.post('/login', async (request: FastifyRequest<{ Body: UserLogin }>, reply: FastifyReply) => {
         try {
 
             const credentials = request.body;
-            const token = await userService.generateToken(credentials, reply.jwtSign.bind(reply));
-
-            return reply.code(200).send({ accessToken: token });
+            const data = await userService.login(credentials);
+            const token = await reply.jwtSign({ login: data.email }, { sign: { sub: data.id, expiresIn: '12h' } });
+            return { accessToken: token }
 
         } catch (error) {
-            return reply.code(401).send(error);
+            reply.send(error);
         }
     });
 
     api.get('/me', { onRequest: [verifyJwt] }, async (request: FastifyRequest, reply: FastifyReply) => {
         // Exibe dados do próprio usuário
 
-        reply.send({ hello: request.user });
+        reply.send({ hello: 'aswosrld2' });
     });
 
     api.get('/', async (request: FastifyRequest, reply: FastifyReply) => {

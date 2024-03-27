@@ -3,9 +3,10 @@
     // Focalizar para exibir as descrições dos atributos existentes.
     // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
+    
     "configurations": [
         {
-            "command": "cd ./ticketeasypro/api && npm run dev",
+            "command": "cd ./ticketeasypro/api | npm run dev",
             "name": "Run npm start",
             "request": "launch",
             "type": "node-terminal",

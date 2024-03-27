@@ -7,10 +7,12 @@
 .form_cadastrar {
     border: 1px solid black;
     box-shadow: 4px 4px 7px gray;
+    background-color: white;
     padding: 2%;
     width: 90%;
     max-width: 600px;
     min-width: 300px;
+    margin: 2% 0;
 }
 
 .cabecalho_cadastro {

@@ -1,8 +1,6 @@
-import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify"
-
-
-
-const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const EventRoute = async (api) => {
     // Array simulado de eventos
     const events = [
         { id: 1, name: 'Evento 1' },
@@ -12,10 +10,8 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         { id: 5, name: 'Evento 5' },
         // Adicione mais eventos conforme necessário
     ];
-
-    api.get('/', {}, async (request: FastifyRequest, reply: FastifyReply) => {
+    api.get('/', {}, async (request, reply) => {
         reply.code(200).send(events);
-
-    })
-}
-export default EventRoute;
+    });
+};
+exports.default = EventRoute;

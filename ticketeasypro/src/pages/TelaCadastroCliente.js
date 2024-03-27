@@ -5,54 +5,68 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 
 export default function TelaCadastroCliente() {
-    const [telefoneE, setTelefoneE] = useState("");
-    const [celularE, setCelularE] = useState("");
+    const [nome, setNome] = useState("");
+    const [telefone, setTelefone] = useState("");
+    const [celular, setCelular] = useState("");
+    const [dataNascimento, setDataNascimento] = useState("");
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const [novaSenha, setNovaSenha] = useState("");
+
     function MascaraContato(tipo, value) {
         if (tipo == "Telefone") {
             value = value.replace(/\D/g, "");
             value = value.replace(/(\d{2})(\d)/, "($1) $2");
             value = value.replace(/(\d)(\d{4})$/, "$1-$2");
-            setTelefoneE(value);
+            setTelefone(value);
         } else {
             value = value.replace(/\D/g, "");
             value = value.replace(/(\d{2})(\d)/, "($1) $2");
             value = value.replace(/(\d{5})(\d{4})$/, "$1-$2");
-            setCelularE(value);
+            setCelular(value);
         }
 
         return value;
     }
 
     function InserirDados() {
-        const nome = document.getElementById("InputNomeCompleto").value;
-        const telefone = document.getElementById("InputTelefone").value;
-        const celular = document.getElementById("InputCelular").value;
-        var dataNascimento = document.getElementById(
-            "InputDataNascimento"
-        ).value;
-        const email = document.getElementById("InputEmail").value;
-        const senha = document.getElementById("InputSenha").value;
-        const novaSenha = document.getElementById("InputNovaSenha").value;
+        if (
+            nome.length == 0 ||
+            telefone.length == 0 ||
+            celular.length == 0 ||
+            dataNascimento == "" ||
+            email.length == 0 ||
+            senha.length == 0 ||
+            novaSenha.length == 0
+        ) {
+            alert("Algum campo do formulário não foi preenchido.");
+            return;
+        }
 
-        if (senha != novaSenha || senha.length == 0) {
+        if (senha != novaSenha) {
             alert("As senhas não correspondem.");
             return;
         }
 
-        dataNascimento = new Date(dataNascimento);
-        dataNascimento = dataNascimento.toISOString();
+        var dataNascimentoC = new Date(dataNascimento);
+        dataNascimentoC = dataNascimentoC.toISOString().slice(0, 19) + "Z";
+
         let data = JSON.stringify({
             email: email,
             password: senha,
             name: nome,
-            birth_date: dataNascimento,
+            birth_date: dataNascimentoC,
             phone: celular,
             phone_fix: telefone,
         });
         axios
-            .post("http://127.0.0.1:3210/v1/users/cadastrar", data)
-            .then((response) => {
-                alert(response.data);
+            .post("http://localhost:3210/v1/users/cadastrar", data, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            .then(() => {
+                alert("Dados cadastrados com sucesso!");
             })
             .catch((error) => {
                 alert("Erro na requisição: " + error);
@@ -84,6 +98,8 @@ export default function TelaCadastroCliente() {
                             className="form-control"
                             id="InputNomeCompleto"
                             aria-describedby="emailHelp"
+                            value={nome}
+                            onChange={(e) => setNome(e.target.value)}
                         />
                     </div>
                     <div
@@ -120,7 +136,7 @@ export default function TelaCadastroCliente() {
                             onChange={(e) =>
                                 MascaraContato("Telefone", e.target.value)
                             }
-                            value={telefoneE}
+                            value={telefone}
                         />
                         <input
                             type="tel"
@@ -130,12 +146,14 @@ export default function TelaCadastroCliente() {
                             onChange={(e) =>
                                 MascaraContato("Celular", e.target.value)
                             }
-                            value={celularE}
+                            value={celular}
                         />
                         <input
                             type="date"
                             className="form-control"
                             id="InputDataNascimento"
+                            value={dataNascimento}
+                            onChange={(e) => setDataNascimento(e.target.value)}
                         />
                     </div>
                     <div className="mb-3">
@@ -149,6 +167,8 @@ export default function TelaCadastroCliente() {
                             type="email"
                             className="form-control"
                             id="InputEmail"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <label
                             htmlFor="exampleInputPassword1"
@@ -160,6 +180,8 @@ export default function TelaCadastroCliente() {
                             type="password"
                             className="form-control"
                             id="InputSenha"
+                            value={senha}
+                            onChange={(e) => setSenha(e.target.value)}
                         />
                         <label
                             htmlFor="exampleInputPassword1"
@@ -171,6 +193,8 @@ export default function TelaCadastroCliente() {
                             type="password"
                             className="form-control"
                             id="InputNovaSenha"
+                            value={novaSenha}
+                            onChange={(e) => setNovaSenha(e.target.value)}
                         />
                     </div>
                     <input
