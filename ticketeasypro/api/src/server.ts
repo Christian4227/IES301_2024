@@ -1,68 +1,47 @@
 import fastify, { FastifyRequest, FastifyInstance, FastifyReply } from "fastify";
 import { UserRoute, EventRoute } from "./controllers/all_controllers";
-import fastifyJwt, { JWT } from "@fastify/jwt";
-import { verifyJwt } from "./middlewares/JWTAuth";
+import fastifyJwt from "@fastify/jwt";
+import { UserPayload } from './types'; // Importa as interfaces definidas no arquivo types.ts
+import fCookie from '@fastify/cookie'
+
 import cors from "@fastify/cors";
-
-
-// declare module "fastify" {
-//     interface FastifyRequest {
-//         jwt: JWT;
-//     }
-//     export interface FastifyInstance {
-//         authenticate: any;
-//     }
-// }
-
-// declare module "@fastify/jwt" {
-//     interface FastifyJWT {
-//         user: {
-//             id: string;
-//             email: string;
-//             name: string;
-//         };
-//     }
-// }
-
+import Authentication from "./middlewares/JWTAuth";
 
 const api: FastifyInstance = fastify({ logger: true });
 
-(async () => {
+
+const jwtSecreteKey: string = process.env.JWT_SECRET_KEY as string
+api.register(fastifyJwt, { secret: jwtSecreteKey });
+
+// cookies
+api.register(fCookie, {
+    secret: process.env.COOKIE_SECRET_KEY,
+    hook: 'preHandler',
+})
+
+api.addHook('preHandler', (request: FastifyRequest, reply: FastifyReply, next) => {
+
+    request.jwt = api.jwt
+    return next()
+})
+
+api.decorate('authenticate', Authentication)
+
+api.register(cors, { origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE'] });
+api.register(EventRoute, { prefix: '/v1/events' });
+api.register(UserRoute, { prefix: '/v1/users' });
+
+const start = async () => {
     try {
-        api.register(cors, {
-            origin: "*",
-            methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-            allowedHeaders: "*",
-        })
-        api.register(EventRoute, { prefix: '/v1/events' });
-        api.register(UserRoute, { prefix: '/v1/users' });
+        await api.listen({ port: 3210 });
+        const address = api.server.address();
+        const port = typeof address === 'string' ? address : address?.port;
 
-    } catch (error) {
-        console.error('Erro ao importar os controladores:', error);
+    } catch (err) {
+        api.log.error(err);
+        process.exit(1);
     }
+}
 
-    const jwtSecreteKey: string = process.env.JWT_SECRET_KEY as string
-    // api.register(fastifyJwt, { secret: jwtSecreteKey });
+start()
 
-    api.register(fastifyJwt, { secret: jwtSecreteKey });
-    // api.jwt.verify
-
-    // api.decorate("authenticate", verifyJwt);
-
-
-    // api.addHook("preHandler", (request: FastifyRequest, reply: FastifyReply, next) => {
-    // request.jwt = api.jwt;
-    // return next();
-    // });
-
-    const listeners = ['SIGINT', 'SIGTERM'];
-    listeners.forEach((signal) => {
-        process.on(signal, async () => {
-            await api.close();
-            process.exit(0);
-        })
-    })
-    api.listen({ port: 3210, host: "localhost" }, () => { console.log('Server Subiu na porta 3210'); })
-
-
-})();

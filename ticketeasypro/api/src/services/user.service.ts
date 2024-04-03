@@ -1,7 +1,22 @@
 import * as userRepository from "../repositories/user.repository";
-import { User, UserCreate, UserLogin } from "../interfaces/user.interface";
+import { User, UserCreate, UserCredentials } from "../interfaces/user.interface";
 import { hashPassword, verifyPassword } from "../utils/hash";
-import { DataToken } from "../interfaces/toke.interface";
+import { FastifyJwtSignOptions, SignPayloadType } from "@fastify/jwt";
+import { CookieSerializeOptions } from "@fastify/cookie";
+import { FastifyReply } from "fastify/types/reply";
+
+
+interface AsignJwt {
+  (payload: SignPayloadType, options?: FastifyJwtSignOptions): Promise<string>
+}
+interface AsignCookie {
+  (cookieName: string, toke: string, options: Object): Promise<any>
+}
+
+interface SetCookie {
+  (name: string, value: string, options?: CookieSerializeOptions): FastifyReply;
+}
+
 
 class UserService {
   create = async (user: UserCreate): Promise<User> => {
@@ -18,38 +33,74 @@ class UserService {
     return result;
   };
 
-  login = async (credentials: UserLogin): Promise<DataToken> => {
+  #getNamedRole = (role: number) => {
+    switch (role) {
+      case 0:
+        return "admin";
+      case 1:
+        return "organizador";
+      case 2:
+        return "colaborador";
+      case 3:
+        return "cliente";
+
+    }
+  }
+
+  generateCookie = async (credentials: UserCredentials, asignJwt: AsignJwt, setCookie: SetCookie) => {
+
+    const { email, password: candidatePassword } = credentials;
 
     // find a user by email
-    const user = await userRepository.findByEmail(credentials.email);
+    const user = await userRepository.findByEmail(email);
 
-    if (!user) {
+    if (!user)
       throw new Error("Invalid email or password");
-      // return  reply.code(401).send({
-      //   message: "Invalid email or password",
-      // });
-    }
+
+    const { password: hash, salt, id: sub, type: role } = user;
 
     // verify password
-    const correctPassword = verifyPassword({
-      candidatePassword: credentials.password,
-      salt: user.salt,
-      hash: user.password,
-    });
+    const correctPassword = verifyPassword({ candidatePassword, salt, hash });
 
     if (correctPassword) {
-      const { password, salt, ...rest } = user;
-      return rest;
+      // const { password, salt, ...rest } = user;
+      const payload = { login: email, role: this.#getNamedRole(role) }
+      const token = await asignJwt(payload, { sign: { sub, expiresIn: '3h' } });
+      setCookie('access_token', token, {
+        path: '/',
+        httpOnly: true,
+        secure: true,
+      })
+
+      return token;
     }
     throw new Error("Invalid email or password");
 
-    // return reply.code(401).send({
-    //   message: "Invalid email or password",
-    // });
   }
 
+  // generateToken = async (credentials: UserCredentials, asignJwt: AsignJwt): Promise<string> => {
 
+  //   const { email, password: candidatePassword } = credentials;
 
+  //   // find a user by email
+  //   const user = await userRepository.findByEmail(email);
+
+  //   if (!user)
+  //     throw new Error("Invalid email or password");
+
+  //   const { password: hash, salt, id: sub } = user;
+
+  //   // verify password
+  //   const correctPassword = verifyPassword({ candidatePassword, salt, hash });
+
+  //   if (correctPassword) {
+  //     // const { password, salt, ...rest } = user;
+  //     const token = await asignJwt({ login: email }, { sign: { sub, expiresIn: '12h' } });
+  //     return token;
+  //   }
+  //   throw new Error("Invalid email or password");
+
+  // }
 
 
   find = async (user_id: string): Promise<User | null> => {

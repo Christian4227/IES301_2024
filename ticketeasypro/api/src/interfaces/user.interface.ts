@@ -24,12 +24,8 @@ export interface UserCreate {
     salt: string
 }
 
-export interface UserLogin {
+export interface UserCredentials {
     email: string;
     password: string
 
-}
-
-export interface LoginResponseSchema {
-    accessToken: string
 }

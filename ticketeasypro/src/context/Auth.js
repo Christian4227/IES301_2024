@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import axios from "axios";
+import client from "@/utils/client_axios";
 import { setCookie } from "nookies";
 import { useRouter } from "next/router";
 
@@ -18,20 +18,15 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
-    function ConverterToken(token) {
+    const ConverterToken = (token) => {
         setCookie(undefined, "ticket-token", JSON.stringify(token));
     }
 
     const login = (data) => {
-        axios
-            .post("http://localhost:3210/v1/users/login", data, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
+        client.post("users/login", data)
             .then((response) => {
-                //console.log(response.data);
-                ConverterToken(response.data);
+                const accessToken = response.data;
+                ConverterToken(accessToken);
                 router.push("/Admin/Administracao");
             })
             .catch((error) => {
