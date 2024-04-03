@@ -16,6 +16,30 @@ label {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+main {
+    position: relative;
+}
+
 a {
     text-decoration: none !important;
+}
+
+a:visited {
+    color: black;
+}
+
+input[type=button]{
+    cursor: pointer;
+}
+
+input[type=button]:disabled{
+    cursor: unset;
+    opacity: 0.6;
+}
+
+hr {
+    background-color: black;
+    height: 2px;
+    width: 99%;
+    margin: 10px 0 10px 0;
 }

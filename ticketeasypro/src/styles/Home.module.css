@@ -1,3 +1,62 @@
+/* Cabeçalho */
+.Header {
+    background-color: black;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 10px;
+    height: 80px;
+  }
+  
+  .Header label {
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .li_Login {
+    text-align: center;
+    color: white;
+    border: 1px solid white;
+    width: 120px;
+    border-radius: 50px;
+    padding: 10px;
+  }
+  
+  .li_Adm {
+    text-align: center;
+    color: white;
+    width: 160px;
+    padding: 10px;
+  }
+  
+  .li_Login,
+  .li_Adm {
+    margin: 0 5px 0 5px;
+  }
+  
+  .ul {
+    display: flex;
+    position: absolute;
+    top: 20%;
+    right: 60px;
+  }
+  
+  .menulateral {
+      width: 120px;
+      height: 50px;
+  }
+  
+  @media screen and (max-width: 700px) {
+      .ul {
+          right: 5px;
+      }
+  
+      .li_Adm {
+          margin: 0;
+      }
+  }
+
 /* Corpo */
 /* Imagem */
 .imagem_demonstracao {
@@ -8,7 +67,6 @@
   
   .div_demonstracao {
     position: relative;
-    width: 100%;
   }
   
   .navOpcoes {
@@ -39,10 +97,6 @@
   }
   
   /* Corpo da home */
-  .home_body {
-    width: 100%;
-    height: 80%;
-  }
   
   .home_body_direita,
   .home_body_esquerda {
@@ -57,19 +111,25 @@
     align-items: center;
     flex-direction: column;
     margin: auto;
+    width: 100%;
+    padding: 20px 20px;
   }
   
   .home_body_esquerda {
+    display: flex;
+    flex-direction: column;
     text-align: center;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    width: 100%;
+    padding: 20px 20px;
   }
   
   .home_body_titulo {
     font-weight: bold;
-    font-size: 30px;
-    text-shadow: 3px 3px 5px gray;
+    font-size: 20px;
+    text-shadow: 3px 3px 4px gray;
   }
   
   .menu_direita {
@@ -79,18 +139,37 @@
     border-radius: 20px;
     background-color: white;
     box-shadow: 2px 2px 8px gray;
-    width: 90%;
+    width: 100%;
     padding: 20px;
     align-items: center;
   }
   
-  .botao_corpo {
+  .botao_corpo, .botao_entrar {
     background-color: black;
     box-shadow: 4px 4px 6px gray;
     border-radius: 80px;
     color: white;
     padding: 5px;
     width: 130px;
+  }  
+
+  .botao_entrar {
+    position: relative;
+    margin: auto;
+    margin-bottom: 20px;
+  }
+
+  .botao_area_restrita {
+    background-color: black;
+    box-shadow: 4px 4px 6px gray;
+    border-radius: 5px;
+    color: white;
+    padding: 10px;
+    width: 130px;
+    background-image: url("../assets/cadeado.png");
+    background-repeat: no-repeat;
+    text-align: right;
+    margin-top: 20px;
   }
   
   .home_eventos_info {
@@ -118,10 +197,9 @@
   }
   
   .div_body1 {
-    width: 100%;
-    height: 60%;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
   
   .body_descricao {
@@ -142,6 +220,7 @@
     font-weight: bold;
     font-size: 30px;
     margin-bottom: 20px;
+    text-shadow: 3px 3px 4px gray;
   }
 
   .titulo_novidades {
@@ -165,6 +244,10 @@
       height: 350px;
       border: 1px solid black;
       background-color: white;
+  }
+
+  .festas_novidades h2 {
+    font-size: 20px;
   }
 
   .img_festas_novidades {
@@ -253,4 +336,75 @@
     height: 40px;
     margin: 10px;
   }
+
+  .menu_lateral {
+    position: absolute;
+    padding: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 100%;
+    background-color: white;
+    border-left: 2px solid black;
+    overflow: hidden;
+    z-index: 2;
+    transition: 0.7s;    
+  }
+
+  .menu_lateral_area_restrita {
+    text-align: right;
+  }
+
+  .menu_lateral nav {
+    width: 230px;
+    overflow: hidden;
+  }
+
+  .menu_lateral_cliente_botao {
+    text-align: center;
+  }
+
+  .menu_lateral_cliente_texto {
+    text-align: right;
+  }
+
+  .menu_lateral_header {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
+
+  .img_menu_lateral {
+    width: 20px;
+    height: 20px;
+    margin-left: 20px;
+  }
+
+  .menu_lateral_header h1 {
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .menu_lateral_cliente a {
+    flex-grow: 1;
+  }
   
+  @media screen and (max-width: 700px) {
+    .menu_direita {
+        grid-template-columns: 1fr;
+    }
+
+    .div_body1 {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .imagem_demonstracao {
+        height: 300px;
+    }
+
+    .home_footer {
+        height: 380px;
+    }
+  }

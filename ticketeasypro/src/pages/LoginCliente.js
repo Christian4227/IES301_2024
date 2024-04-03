@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "../styles/Login.module.css";
 import Link from "next/link";
-import axios from "axios";
-import { useRouter } from "next/router";
+import { AuthContext } from "@/context/Auth";
 
 export default function LogInCliente() {
-    const router = useRouter();
+    const { login } = useContext(AuthContext);
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     function Login() {
@@ -13,19 +12,7 @@ export default function LogInCliente() {
             email: email,
             password: senha,
         });
-        console.log(data);
-        axios
-            .post("http://localhost:3210/v1/users/login", data, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-            .then(() => {
-                router.push("/Cliente/TelaInicialCliente");
-            })
-            .catch((error) => {
-                alert("Erro na requisição: " + error);
-            });
+        login(data);
     }
 
     return (

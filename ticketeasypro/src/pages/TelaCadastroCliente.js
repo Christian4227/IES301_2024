@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Cabecalho from "./Cabecalho";
 import styles from "../styles/CadastroCliente.module.css";
+import styleh from "../styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import Menu from "./Menu";
 
 export default function TelaCadastroCliente() {
     const [nome, setNome] = useState("");
@@ -74,137 +76,143 @@ export default function TelaCadastroCliente() {
     }
 
     return (
-        <div>
-            <Cabecalho />
-            <div className={styles.div_cadastrar}>
-                <form className={styles.form_cadastrar}>
-                    <div className={styles.cabecalho_cadastro}>
-                        <b>
-                            <h1>Cadastro das informações</h1>
-                        </b>
-                        <label>
-                            Insira os seus dados para se inscrever nos eventos
-                        </label>
-                    </div>
-                    <div className="mb-3">
-                        <label
-                            htmlFor="exampleInputEmail1"
-                            className="form-label"
+        <main>
+            <div id="div-principal">
+                <Cabecalho className={styleh.header} />
+                <div className={styles.div_cadastrar}>
+                    <form className={styles.form_cadastrar}>
+                        <div className={styles.cabecalho_cadastro}>
+                            <b>
+                                <h1>Cadastro das informações</h1>
+                            </b>
+                            <label>
+                                Insira os seus dados para se inscrever nos
+                                eventos
+                            </label>
+                        </div>
+                        <div className="mb-3">
+                            <label
+                                htmlFor="exampleInputEmail1"
+                                className="form-label"
+                            >
+                                Nome completo
+                            </label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="InputNomeCompleto"
+                                aria-describedby="emailHelp"
+                                value={nome}
+                                onChange={(e) => setNome(e.target.value)}
+                            />
+                        </div>
+                        <div
+                            className="mb-3"
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "1fr 1fr 1fr",
+                                gap: "20px",
+                            }}
                         >
-                            Nome completo
-                        </label>
+                            <label
+                                htmlFor="exampleInputPassword1"
+                                className="form-label"
+                            >
+                                Telefone
+                            </label>
+                            <label
+                                htmlFor="exampleInputPassword1"
+                                className="form-label"
+                            >
+                                Celular
+                            </label>
+                            <label
+                                htmlFor="exampleInputPassword1"
+                                className="form-label"
+                            >
+                                Data de nascimento
+                            </label>
+                            <input
+                                type="tel"
+                                className="form-control"
+                                id="InputTelefone"
+                                maxLength={14}
+                                onChange={(e) =>
+                                    MascaraContato("Telefone", e.target.value)
+                                }
+                                value={telefone}
+                            />
+                            <input
+                                type="tel"
+                                className="form-control"
+                                id="InputCelular"
+                                maxLength={15}
+                                onChange={(e) =>
+                                    MascaraContato("Celular", e.target.value)
+                                }
+                                value={celular}
+                            />
+                            <input
+                                type="date"
+                                className="form-control"
+                                id="InputDataNascimento"
+                                value={dataNascimento}
+                                onChange={(e) =>
+                                    setDataNascimento(e.target.value)
+                                }
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label
+                                htmlFor="exampleInputPassword1"
+                                className="form-label"
+                            >
+                                E-mail
+                            </label>
+                            <input
+                                type="email"
+                                className="form-control"
+                                id="InputEmail"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <label
+                                htmlFor="exampleInputPassword1"
+                                className="form-label"
+                            >
+                                Senha
+                            </label>
+                            <input
+                                type="password"
+                                className="form-control"
+                                id="InputSenha"
+                                value={senha}
+                                onChange={(e) => setSenha(e.target.value)}
+                            />
+                            <label
+                                htmlFor="exampleInputPassword1"
+                                className="form-label"
+                            >
+                                Repetir senha
+                            </label>
+                            <input
+                                type="password"
+                                className="form-control"
+                                id="InputNovaSenha"
+                                value={novaSenha}
+                                onChange={(e) => setNovaSenha(e.target.value)}
+                            />
+                        </div>
                         <input
-                            type="text"
-                            className="form-control"
-                            id="InputNomeCompleto"
-                            aria-describedby="emailHelp"
-                            value={nome}
-                            onChange={(e) => setNome(e.target.value)}
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={() => InserirDados()}
+                            defaultValue="Submit"
                         />
-                    </div>
-                    <div
-                        className="mb-3"
-                        style={{
-                            display: "grid",
-                            gridTemplateColumns: "1fr 1fr 1fr",
-                            gap: "20px",
-                        }}
-                    >
-                        <label
-                            htmlFor="exampleInputPassword1"
-                            className="form-label"
-                        >
-                            Telefone
-                        </label>
-                        <label
-                            htmlFor="exampleInputPassword1"
-                            className="form-label"
-                        >
-                            Celular
-                        </label>
-                        <label
-                            htmlFor="exampleInputPassword1"
-                            className="form-label"
-                        >
-                            Data de nascimento
-                        </label>
-                        <input
-                            type="tel"
-                            className="form-control"
-                            id="InputTelefone"
-                            maxLength={14}
-                            onChange={(e) =>
-                                MascaraContato("Telefone", e.target.value)
-                            }
-                            value={telefone}
-                        />
-                        <input
-                            type="tel"
-                            className="form-control"
-                            id="InputCelular"
-                            maxLength={15}
-                            onChange={(e) =>
-                                MascaraContato("Celular", e.target.value)
-                            }
-                            value={celular}
-                        />
-                        <input
-                            type="date"
-                            className="form-control"
-                            id="InputDataNascimento"
-                            value={dataNascimento}
-                            onChange={(e) => setDataNascimento(e.target.value)}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label
-                            htmlFor="exampleInputPassword1"
-                            className="form-label"
-                        >
-                            E-mail
-                        </label>
-                        <input
-                            type="email"
-                            className="form-control"
-                            id="InputEmail"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                        <label
-                            htmlFor="exampleInputPassword1"
-                            className="form-label"
-                        >
-                            Senha
-                        </label>
-                        <input
-                            type="password"
-                            className="form-control"
-                            id="InputSenha"
-                            value={senha}
-                            onChange={(e) => setSenha(e.target.value)}
-                        />
-                        <label
-                            htmlFor="exampleInputPassword1"
-                            className="form-label"
-                        >
-                            Repetir senha
-                        </label>
-                        <input
-                            type="password"
-                            className="form-control"
-                            id="InputNovaSenha"
-                            value={novaSenha}
-                            onChange={(e) => setNovaSenha(e.target.value)}
-                        />
-                    </div>
-                    <input
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => InserirDados()}
-                        defaultValue="Submit"
-                    />
-                </form>
+                    </form>
+                </div>
+                <Menu id="menu-lateral" className={styleh.menu_lateral} />
             </div>
-        </div>
+        </main>
     );
 }
