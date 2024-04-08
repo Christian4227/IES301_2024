@@ -48,7 +48,7 @@ export default function Menu() {
                     <div className={styles.menu_lateral_cliente_texto}>
                         <label>Ainda não tem uma conta?</label>
                         <br />
-                        <Link href="./TelaCadastroCliente">Cadastre-se</Link>
+                        <Link href="./CadastroCliente">Cadastre-se</Link>
                     </div>
                 </div>
                 <hr />

@@ -6,6 +6,8 @@
     position: relative;
     padding: 10px;
     height: 80px;
+    width: 100%;
+    top: 0;
   }
   
   .Header label {
@@ -338,7 +340,7 @@
   }
 
   .menu_lateral {
-    position: absolute;
+    position: fixed;
     padding: 0;
     top: 0;
     bottom: 0;
@@ -348,7 +350,6 @@
     background-color: white;
     border-left: 2px solid black;
     overflow: hidden;
-    z-index: 2;
     transition: 0.7s;    
   }
 

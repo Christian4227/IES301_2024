@@ -43,3 +43,11 @@ hr {
     width: 99%;
     margin: 10px 0 10px 0;
 }
+
+p {
+    text-align: justify;
+}
+
+table {
+    width: 100%;
+}

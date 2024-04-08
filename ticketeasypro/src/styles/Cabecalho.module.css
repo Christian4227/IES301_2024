@@ -1,3 +1,4 @@
+/* Home page */
 .Header {
   background-color: black;
   display: flex;
@@ -6,6 +7,7 @@
   padding: 10px;
   height: 80px;
   width: 100%;
+  top: 0;
 }
 
 .Header label {
@@ -14,7 +16,7 @@
   cursor: pointer;
 }
 
-.li_Login {
+.li_Login, .li_admin_sair {
   text-align: center;
   color: white;
   border: 1px solid white;
@@ -56,3 +58,5 @@
         margin: 0;
     }
 }
+
+/* Administracao */

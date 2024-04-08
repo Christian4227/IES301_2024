@@ -2,7 +2,7 @@ import React from "react";
 import CabecalhoCliente from "./CabecalhoCliente";
 // import styles from "../../styles/Cliente.module.css";
 
-export default function TelaInicialCliente() {
+export default function GeralCliente() {
     return (
         <div>
             <CabecalhoCliente />

@@ -44,7 +44,7 @@ export default function LogInCliente() {
                 <label className={styles.descricao_cadastrar}>
                     Não tem uma conta?{" "}
                     <Link
-                        href="/TelaCadastroCliente"
+                        href="/CadastroCliente"
                         className={styles.link_cadastrar}
                     >
                         Cadastre-se

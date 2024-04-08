@@ -1,0 +1,122 @@
+/* Página home tipo evento */
+.header_infoEventos {
+    border-bottom: 1px solid black;
+    width: 98%;
+    margin-left: 1%;
+    display: flex;
+    padding: 10px 0 0 0;
+    position: relative;
+}
+
+.header_infoEventos h1 {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.header_infoEventos_nav {
+    position: absolute;
+    right: calc(100% - 95%);
+}
+
+.header_InfoEventos_menu {
+    display: flex;
+}
+
+.header_InfoEventos_menu a:nth-of-type(1){
+    border-right: 2px solid black;
+}
+
+.header_InfoEventos_menu li {
+    padding: 0 20px;
+    font-weight: bold;
+}
+
+.body_imagem_tipoEvento {
+    padding-top: 20px;
+}
+
+.img_tipoEvento {
+    width: 100%;
+    height: 600px;
+}
+
+.body_infoTipoEventos {
+    display: flex;
+}
+
+.body_infoTipoEvento_secao {
+    padding: 1em 1em;
+    width: 15%;
+    min-width: 140px;
+}
+
+.infoTipoEvento_Principal, .body_infoTipoEventos {
+    margin-top: 5px;
+}
+
+.body_infoTipoEvento_secao ul li {
+    margin: 0.5em 0;
+}
+
+.body_infoTipoEvento_secao ul {
+    padding-left: 0 !important;
+}
+
+.body_infoTipoEvento_secao h1, .infoTipoEvento_Ingressos h1, 
+.infoTipoEvento_DescricaoEvento h1, .infoTipoEvento_Recomendacoes h1 {
+    font-weight: bold;
+    border-bottom: 1px solid black;
+    padding-bottom: 10px;
+}
+
+.infoTipoEvento_Principal {
+    border-left: 1px solid black;
+    padding: 1em 1em;
+    width: 85%;
+    margin-top: 1%;
+}
+
+.infoTipoEvento_DescricaoEvento p, .infoTipoEvento_Ingressos p,
+.infoTipoEvento_Recomendacoes p {
+    margin: 1em 0;
+}
+
+.table_info_tipoeventos {
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+
+}
+
+.table_info_tipoeventos thead tr th {
+    border: 1px solid white;
+    padding: 7px;
+}
+
+.table_info_tipoeventos tbody tr td {
+    border: 1px solid black;
+    text-align: center;
+    padding: 7px;
+}
+
+.table_head_tipoEventos {
+    background-color: black;
+    color: white;
+}
+
+.botao_comprar, .botao_ver {
+    width: 100px;
+    border-radius: 4px;
+    color: white;
+    padding: 3px;
+}
+
+.botao_comprar {
+    border: 1px solid #2368EE;
+    background-color: #2368EE;
+}
+
+.botao_ver  {
+    border: 1px solid #0A7A08;
+    background-color: #0A7A08;
+}

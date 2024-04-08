@@ -1,43 +1,60 @@
-import jwt from "jsonwebtoken";
+import { jwtDecode } from "jwt-decode";
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request) {
     const meuCookie = request.cookies.get("ticket-token");
+
+    if (!meuCookie) {
+        return Response.redirect(new URL("/", request.url));
+    }
+
     // Supondo que 'token' é o seu JWT
     const token = JSON.parse(meuCookie.value).accessToken;
 
-    // 'secret' é a chave secreta usada para assinar o JWT
-    const secret = "sua-chave-secreta";
+    const decoded = jwtDecode(token);
 
-    // Decodificar o token
-    const decoded = jwt.verify(token, secret);
-
-    // O papel do usuário geralmente é armazenado em uma propriedade do payload do token
+    // // O papel do usuário geralmente é armazenado em uma propriedade do payload do token
     const userRole = decoded.role;
 
     console.log(`O papel do usuário é: ${userRole}`);
 
-    const currentUser = request.cookies.get("currentUser")?.value;
-
-    if (currentUser && !request.nextUrl.pathname.startsWith("/Cliente")) {
-        return Response.redirect(new URL("/", request.url));
+    if (
+        userRole === "cliente" &&
+        !request.nextUrl.pathname.startsWith("/Cliente")
+    ) {
+        return Response.redirect(new URL("/Cliente/GeralCliente", request.url));
     }
 
-    if (!currentUser && !request.nextUrl.pathname.startsWith("/Admin")) {
+    if (
+        userRole === "admin" &&
+        !request.nextUrl.pathname.startsWith("/Admin")
+    ) {
+        return Response.redirect(new URL("/Admin/Administracao", request.url));
+    }
+
+    if (
+        userRole === "colaborador" &&
+        !request.nextUrl.pathname.startsWith("/Colaborador")
+    ) {
         return Response.redirect(
-            new URL("/Admin/TelaInicialAdmin", request.url)
+            new URL("/Colaborador/ValidarIngresso", request.url)
         );
     }
 
     if (
-        !currentUser &&
-        !request.nextUrl.pathname.startsWith("/pages/Colaborador")
+        userRole === "organizador" &&
+        !request.nextUrl.pathname.startsWith("/Organizador")
     ) {
-        return Response.redirect(new URL("/", request.url));
+        return Response.redirect(new URL("/Organizador/Dados", request.url));
     }
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-    matcher: ["/Colaborador/:path*", "/Admin/:path*", "/Cliente/:path*"],
+    matcher: [
+        "/Colaborador/:path*",
+        "/Admin/:path*",
+        "/Cliente/:path*",
+        "/Organizador/:path*",
+    ],
 };

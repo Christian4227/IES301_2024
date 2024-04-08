@@ -2,7 +2,7 @@ import fastify, { FastifyRequest, FastifyInstance, FastifyReply } from "fastify"
 import { UserRoute, EventRoute } from "./controllers/all_controllers";
 import fastifyJwt from "@fastify/jwt";
 import { UserPayload } from './types'; // Importa as interfaces definidas no arquivo types.ts
-import fCookie from '@fastify/cookie'
+import fCookie from '@fastify/cookie';
 
 import cors from "@fastify/cors";
 import Authentication from "./middlewares/JWTAuth";

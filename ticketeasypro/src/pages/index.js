@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import Link from "next/link";
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
@@ -298,11 +299,13 @@ export default function Home() {
                             ref={containerRef}
                         >
                             <div className={styles.festas_novidades}>
-                                <Image
-                                    src={capoeira}
-                                    alt="img_nov"
-                                    className={styles.img_festas_novidades}
-                                />
+                                <Link href="/InfoTipoEvento">
+                                    <Image
+                                        src={capoeira}
+                                        alt="img_nov"
+                                        className={styles.img_festas_novidades}
+                                    />
+                                </Link>
                                 <h2>Descrição do evento</h2>
                                 <label>
                                     Breve descrição do evento com no máximo três
@@ -310,11 +313,13 @@ export default function Home() {
                                 </label>
                             </div>
                             <div className={styles.festas_novidades}>
-                                <Image
-                                    src={futebol}
-                                    alt="img_nov"
-                                    className={styles.img_festas_novidades}
-                                />
+                                <Link href="/InfoTipoEvento">
+                                    <Image
+                                        src={futebol}
+                                        alt="img_nov"
+                                        className={styles.img_festas_novidades}
+                                    />
+                                </Link>
                                 <h2>Descrição do evento</h2>
                                 <label>
                                     Breve descrição do evento com no máximo três
@@ -322,11 +327,13 @@ export default function Home() {
                                 </label>
                             </div>
                             <div className={styles.festas_novidades}>
-                                <Image
-                                    src={festas}
-                                    alt="img_nov"
-                                    className={styles.img_festas_novidades}
-                                />
+                                <Link href="/InfoTipoEvento">
+                                    <Image
+                                        src={festas}
+                                        alt="img_nov"
+                                        className={styles.img_festas_novidades}
+                                    />
+                                </Link>
                                 <h2>Descrição do evento</h2>
                                 <label>
                                     Breve descrição do evento com no máximo três
@@ -334,11 +341,13 @@ export default function Home() {
                                 </label>
                             </div>
                             <div className={styles.festas_novidades}>
-                                <Image
-                                    src={fest_japao}
-                                    alt="img_nov"
-                                    className={styles.img_festas_novidades}
-                                />
+                                <Link href="/InfoTipoEvento">
+                                    <Image
+                                        src={fest_japao}
+                                        alt="img_nov"
+                                        className={styles.img_festas_novidades}
+                                    />
+                                </Link>
                                 <h2>Descrição do evento</h2>
                                 <label>
                                     Breve descrição do evento com no máximo três
@@ -346,11 +355,13 @@ export default function Home() {
                                 </label>
                             </div>
                             <div className={styles.festas_novidades}>
-                                <Image
-                                    src={disney}
-                                    alt="img_nov"
-                                    className={styles.img_festas_novidades}
-                                />
+                                <Link href="/InfoTipoEvento">
+                                    <Image
+                                        src={disney}
+                                        alt="img_nov"
+                                        className={styles.img_festas_novidades}
+                                    />
+                                </Link>
                                 <h2>Descrição do evento</h2>
                                 <label>
                                     Breve descrição do evento com no máximo três
@@ -358,11 +369,13 @@ export default function Home() {
                                 </label>
                             </div>
                             <div className={styles.festas_novidades}>
-                                <Image
-                                    src={torre_miroku}
-                                    alt="img_nov"
-                                    className={styles.img_festas_novidades}
-                                />
+                                <Link href="/InfoTipoEvento">
+                                    <Image
+                                        src={torre_miroku}
+                                        alt="img_nov"
+                                        className={styles.img_festas_novidades}
+                                    />
+                                </Link>
                                 <h2>Descrição do evento</h2>
                                 <label>
                                     Breve descrição do evento com no máximo três
@@ -370,11 +383,13 @@ export default function Home() {
                                 </label>
                             </div>
                             <div className={styles.festas_novidades}>
-                                <Image
-                                    src={musica}
-                                    alt="img_nov"
-                                    className={styles.img_festas_novidades}
-                                />
+                                <Link href="/InfoTipoEvento">
+                                    <Image
+                                        src={musica}
+                                        alt="img_nov"
+                                        className={styles.img_festas_novidades}
+                                    />
+                                </Link>
                                 <h2>Descrição do evento</h2>
                                 <label>
                                     Breve descrição do evento com no máximo três

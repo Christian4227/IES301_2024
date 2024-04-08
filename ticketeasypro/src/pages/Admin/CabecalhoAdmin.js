@@ -1,10 +1,26 @@
-import React from "react";
-// import styles from "../../styles/Administracao.module.css";
+import React, { useContext } from "react";
+import Link from "next/link";
+import { AuthContext } from "@/context/Auth";
+import styles from "../../styles/Cabecalho.module.css";
 
 export default function CabecalhoAdmin() {
+    const { logout } = useContext(AuthContext);
+
+    const Sair = () => {
+        logout();
+    };
     return (
-        <div>
-            <h1>Cabeçalho Administrador</h1>
+        <div className={styles.Header}>
+            <label>Administração</label>
+            <nav>
+                <ul className={styles.ul}>
+                    <li className={styles.li_admin_sair}>
+                        <Link href="#" onClick={() => Sair()}>
+                            Sair
+                        </Link>
+                    </li>
+                </ul>
+            </nav>
         </div>
     );
 }

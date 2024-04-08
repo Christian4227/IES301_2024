@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import client from "@/utils/client_axios";
-import { setCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { useRouter } from "next/router";
 
 export const AuthContext = createContext();
@@ -12,18 +12,24 @@ export const AuthProvider = ({ children }) => {
     const router = useRouter();
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
+        const token = parseCookies();
+
+        const valorCookie = token["ticket-token"];
+        if (valorCookie) {
             setAuth(true);
+        } else {
+            setAuth(false);
+            router.push("/");
         }
     }, []);
 
     const ConverterToken = (token) => {
         setCookie(undefined, "ticket-token", JSON.stringify(token));
-    }
+    };
 
     const login = (data) => {
-        client.post("users/login", data)
+        client
+            .post("users/login", data)
             .then((response) => {
                 const accessToken = response.data;
                 ConverterToken(accessToken);
@@ -36,13 +42,14 @@ export const AuthProvider = ({ children }) => {
         setUser(data);
     };
 
-    const signOut = () => {
-        localStorage.removeItem("token");
+    const logout = () => {
+        destroyCookie(undefined, "ticket-token");
+        router.push("/");
         return;
     };
 
     return (
-        <AuthContext.Provider value={{ auth, user, login, signOut }}>
+        <AuthContext.Provider value={{ auth, user, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
