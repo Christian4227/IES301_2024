@@ -131,7 +131,7 @@
   .home_body_titulo {
     font-weight: bold;
     font-size: 20px;
-    text-shadow: 3px 3px 4px gray;
+    text-shadow: 2px 2px 5px gray;
   }
   
   .menu_direita {
@@ -145,35 +145,7 @@
     padding: 20px;
     align-items: center;
   }
-  
-  .botao_corpo, .botao_entrar {
-    background-color: black;
-    box-shadow: 4px 4px 6px gray;
-    border-radius: 80px;
-    color: white;
-    padding: 5px;
-    width: 130px;
-  }  
 
-  .botao_entrar {
-    position: relative;
-    margin: auto;
-    margin-bottom: 20px;
-  }
-
-  .botao_area_restrita {
-    background-color: black;
-    box-shadow: 4px 4px 6px gray;
-    border-radius: 5px;
-    color: white;
-    padding: 10px;
-    width: 130px;
-    background-image: url("../assets/cadeado.png");
-    background-repeat: no-repeat;
-    text-align: right;
-    margin-top: 20px;
-  }
-  
   .home_eventos_info {
     text-align: center;
     width: 100%;
@@ -222,7 +194,7 @@
     font-weight: bold;
     font-size: 30px;
     margin-bottom: 20px;
-    text-shadow: 3px 3px 4px gray;
+    text-shadow: 2px 2px 5px gray;
   }
 
   .titulo_novidades {
@@ -337,58 +309,6 @@
     width: 40px;
     height: 40px;
     margin: 10px;
-  }
-
-  .menu_lateral {
-    position: fixed;
-    padding: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 0;
-    height: 100%;
-    background-color: white;
-    border-left: 2px solid black;
-    overflow: hidden;
-    transition: 0.7s;    
-  }
-
-  .menu_lateral_area_restrita {
-    text-align: right;
-  }
-
-  .menu_lateral nav {
-    width: 230px;
-    overflow: hidden;
-  }
-
-  .menu_lateral_cliente_botao {
-    text-align: center;
-  }
-
-  .menu_lateral_cliente_texto {
-    text-align: right;
-  }
-
-  .menu_lateral_header {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-  }
-
-  .img_menu_lateral {
-    width: 20px;
-    height: 20px;
-    margin-left: 20px;
-  }
-
-  .menu_lateral_header h1 {
-    font-weight: bold;
-    font-size: 20px;
-  }
-
-  .menu_lateral_cliente a {
-    flex-grow: 1;
   }
   
   @media screen and (max-width: 700px) {

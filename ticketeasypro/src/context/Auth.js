@@ -17,9 +17,6 @@ export const AuthProvider = ({ children }) => {
         const valorCookie = token["ticket-token"];
         if (valorCookie) {
             setAuth(true);
-        } else {
-            setAuth(false);
-            router.push("/");
         }
     }, []);
 

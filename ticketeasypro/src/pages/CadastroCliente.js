@@ -207,7 +207,7 @@ export default function TelaCadastroCliente() {
                             type="button"
                             className="btn btn-primary"
                             onClick={() => InserirDados()}
-                            defaultValue="Submit"
+                            defaultValue="Cadastrar"
                         />
                     </form>
                 </div>

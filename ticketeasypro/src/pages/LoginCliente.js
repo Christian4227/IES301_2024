@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "../styles/Login.module.css";
 import Link from "next/link";
 import { AuthContext } from "@/context/Auth";
@@ -14,6 +14,16 @@ export default function LogInCliente() {
         });
         login(data);
     }
+
+    useEffect(() => {
+        document
+            .getElementById("txtSenha")
+            .addEventListener("keypress", function (e) {
+                if (e.key === "Enter") {
+                    document.getElementById("btnEntrar").click();
+                }
+            });
+    });
 
     return (
         <div className={styles.body_login_cliente}>
@@ -37,7 +47,7 @@ export default function LogInCliente() {
                 <input
                     id="btnEntrar"
                     className={styles.botao_submit}
-                    type="button"
+                    type="submit"
                     value="Entrar"
                     onClick={Login}
                 />

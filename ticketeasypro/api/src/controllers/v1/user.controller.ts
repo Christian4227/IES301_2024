@@ -39,6 +39,15 @@ const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         }
     });
 
+    api.post('/cadastrar', async (request: FastifyRequest<{ Body: UserCreate }>, reply: FastifyReply) => {
+        try {
+            const data = await userService.create(request.body);
+            return reply.send(data);
+        } catch (error) {
+            reply.send(error);
+        }
+    });
+
     api.get('/me', { preHandler: [api.authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
         // Exibe dados do próprio usuário
 

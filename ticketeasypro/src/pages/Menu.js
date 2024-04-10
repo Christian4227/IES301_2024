@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
-import styles from "../styles/Home.module.css";
+import styles from "../styles/Menu.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import fechar from "../assets/x.png";
