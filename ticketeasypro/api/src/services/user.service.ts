@@ -33,19 +33,19 @@ class UserService {
     return result;
   };
 
-  #getNamedRole = (role: number) => {
-    switch (role) {
-      case 0:
-        return "admin";
-      case 1:
-        return "organizador";
-      case 2:
-        return "colaborador";
-      case 3:
-        return "cliente";
+  // #getNamedRole = (role: string) => {
+  //   switch (role) {
+  //     case 0:
+  //       return "admin";
+  //     case 1:
+  //       return "organizador";
+  //     case 2:
+  //       return "colaborador";
+  //     case 3:
+  //       return "cliente";
 
-    }
-  }
+  //   }
+  // }
 
   generateCookie = async (credentials: UserCredentials, asignJwt: AsignJwt, setCookie: SetCookie) => {
 
@@ -64,7 +64,8 @@ class UserService {
 
     if (correctPassword) {
       // const { password, salt, ...rest } = user;
-      const payload = { login: email, role: this.#getNamedRole(role) }
+      // # const payload = { login: email, role: this.#getNamedRole(role) }
+      const payload = { login: email, role}
       const token = await asignJwt(payload, { sign: { sub, expiresIn: '3h' } });
       setCookie('access_token', token, {
         path: '/',

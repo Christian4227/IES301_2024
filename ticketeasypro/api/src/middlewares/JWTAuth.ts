@@ -1,5 +1,8 @@
-import { FastifyJWT } from '@fastify/jwt';
+// import { FastifyJWT } from '@fastify/jwt';
 import { FastifyReply, FastifyRequest } from 'fastify';
+// import UserPayload from "../@types/userPayload";
+import { FastifyJWT } from "../@types/fastify-jwt";
+
 
 const verifyJwt = async (request: FastifyRequest, reply: FastifyReply) => {
     try {

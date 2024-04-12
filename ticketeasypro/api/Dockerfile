@@ -1,30 +1,48 @@
-FROM node:lts-slim as builder
+# Stage 1: Build the base code. 
+FROM node:lts-alpine as buildStage
 
 LABEL version="0.0.1"
 LABEL description="Api Fastify (Node.js) Docker Image"
 LABEL maintainer="Luiz Otavio <luiz0loon@gmail.com>"
 
-# Define o diretório de trabalho dentro do contêiner
-WORKDIR /app/ticketeasypro/api
+# Create app directory
+WORKDIR /app
 
-RUN apt-get update && apt-get upgrade -y && apt-get autoclean -y && apt-get autoremove -y
-
-RUN apt-get update -y && apt-get install -y openssl
-
-# Copia os arquivos package.json e package-lock.json para o diretório de trabalho
 COPY package*.json ./
+COPY tsconfig.json ./
+RUN npm ci
 
-# Instala as dependências do projeto
-RUN npm install
-
-# Instala o Prisma CLI globalmente
-RUN npm install -g prisma
-
-# Copia o restante dos arquivos do projeto para o diretório de trabalho
+COPY prisma ./prisma/
+# COPY src ./src/
+# COPY ./.env.production ./.env
+# Install app dependencies
 COPY . .
 
-# Define a porta que será exposta pelo contêiner
-EXPOSE 3001
+RUN npx prisma generate
 
-# Comando para iniciar o servidor de desenvolvimento do Fastify
-CMD ["npm", "start"]
+# COPY ./node_modules/.prisma/client ./node_modules/.prisma/client
+
+RUN npm run build
+
+
+# Stage 2: Production image
+FROM node:lts-alpine as prodStage
+RUN npm install -g npm@latest
+
+WORKDIR /app/ticketeasypro/api
+ENV NODE_ENV production
+
+
+COPY --from=buildStage /app/.env.production ./.env
+COPY --from=buildStage /app/package*.json ./
+# COPY ./.env.production ./.env
+
+RUN npm ci --omit=dev --quiet
+
+COPY --from=buildStage /app/node_modules/.prisma/client ./node_modules/.prisma/client
+COPY --from=buildStage /app/prisma ./prisma
+
+
+COPY --from=buildStage /app/dist ./dist
+EXPOSE 3210
+CMD [ "node", "dist/server.js"]

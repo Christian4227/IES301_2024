@@ -2,12 +2,14 @@
   "name": "api",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.ts",
+  "main": "dist/server.js",
   "type": "commonjs",
   "scripts": {
-    "migrate": "npx prisma migrate dev",
+    "db:migrate": "npx prisma migrate dev",
+    "db:deploy": "npx prisma db push",
+    "clean": "rm -rf ./dist/* ",
     "build": "tsc -p tsconfig.json",
-    "start": "tsc -p tsconfig.json --watch && node dist/server.js",
+    "start": "node dist/server.js",
     "dev": "nodemon --watch src --exec ts-node src/server.ts"
   },
   "author": "",

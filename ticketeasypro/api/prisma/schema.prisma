@@ -8,7 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model User{
   id              String   @id @default(uuid())
   email           String   @unique
   name            String
@@ -16,11 +16,79 @@ model User {
   birth_date      DateTime @default(now()) @db.Date
   phone           String?
   phone_fix       String?
-  type            Int      @default(0) @db.SmallInt
   salt            String
   password        String
-  created_at      DateTime @default(now()) @db.Timestamptz(6)
-  updated_at      DateTime @updatedAt @db.Timestamptz(6)
+  created_at      DateTime @default(now()) @db.Timestamptz(0)
+  updated_at      DateTime @updatedAt @db.Timestamptz(0)
+  type            Role     @default(SPECTATOR)
+  Event           Event[]
 
   @@map("USERS")
+}
+
+model Event {
+  id            BigInt      @id @default(autoincrement())
+  userId        String
+  name          String      @db.VarChar(255)
+  description   String      @db.VarChar(1024)
+  initial_date  DateTime    @db.Timestamptz(0)
+  final_date    DateTime    @db.Timestamptz(0)
+  categoryId    BigInt
+  status        EventStatus @default(PLANNED)
+  base_price    BigInt
+  capacity      BigInt
+  img_banner    String      @db.VarChar
+  img_thumbnail String      @db.VarChar
+  created_at    DateTime    @default(now()) @db.Timestamptz(0)
+  updated_at    DateTime    @updatedAt @db.Timestamptz(0)
+  category      Category    @relation(fields: [categoryId], references: [id])
+  event_manager User        @relation(fields: [userId], references: [id])
+
+  @@map("EVENTS")
+}
+
+model Category {
+  id          BigInt   @id @default(autoincrement())
+  name        String   @unique @db.VarChar(128)
+  description String   @db.VarChar(1024)
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @updatedAt @db.Timestamptz(6)
+  events      Event[]
+
+  @@map("CATEGORIES")
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymenMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  BANK_SLIP
+  PIX
+}
+
+enum Role {
+  ADMIN
+  EVENT_MANAGER
+  STAFF
+  SPECTATOR
+}
+
+enum EventStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TicketStatus {
+  AVAILABLE
+  RESERVED
+  USED
+  EXPIRED
 }

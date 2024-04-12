@@ -6,7 +6,7 @@ export function hashPassword(password: string) {
      * Salt is a random bit of data added to the user's password
      * Salt means that every password's hash is going to be unique
      */
-    const salt = crypto.randomBytes(16).toString("hex");
+    const salt = crypto.randomBytes(20).toString("hex");
 
     /*
      * Create a hash with 1000 iterations
@@ -18,7 +18,7 @@ export function hashPassword(password: string) {
     return { hash, salt };
 }
 
-export function verifyPassword({candidatePassword, salt, hash,}: { candidatePassword: string; salt: string; hash: string;}) {
+export function verifyPassword({ candidatePassword, salt, hash, }: { candidatePassword: string; salt: string; hash: string; }) {
     /*
      * Create a hash with the salt from the user and the password
      * the user tried to login with

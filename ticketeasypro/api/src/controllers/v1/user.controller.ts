@@ -29,22 +29,13 @@ const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         try {
 
             const credentials = request.body;
-            
+
             const token = await userService.generateCookie(credentials, reply.jwtSign.bind(reply), reply.setCookie.bind(reply));
 
             return reply.code(200).send({ accessToken: token });
 
         } catch (error) {
             return reply.code(401).send(error);
-        }
-    });
-
-    api.post('/cadastrar', async (request: FastifyRequest<{ Body: UserCreate }>, reply: FastifyReply) => {
-        try {
-            const data = await userService.create(request.body);
-            return reply.send(data);
-        } catch (error) {
-            reply.send(error);
         }
     });
 
@@ -66,8 +57,8 @@ const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
             await userService.deleteAccount(userId);
             return reply.status(204);
         } catch (error) {
-            console.error('Erro ao excluir usuário:', error);
-            return reply.status(500).send({ message: 'Erro ao excluir usuário', error: 'Internal Server Error' });
+            console.error('User deletion error:', error);
+            return reply.status(500).send({ message: 'User deletion error', error: 'Internal Server Error' });
         }
     });
 }
