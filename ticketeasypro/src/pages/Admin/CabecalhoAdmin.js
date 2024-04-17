@@ -11,7 +11,9 @@ export default function CabecalhoAdmin() {
     };
     return (
         <div className={styles.Header}>
-            <label>Administração</label>
+            <Link href="/">
+                <label>Ticket Easy Pro</label>
+            </Link>
             <nav>
                 <ul className={styles.ul}>
                     <li className={styles.li_admin_sair}>

@@ -412,11 +412,14 @@ export default function Home() {
                 <div className={styles.home_footer}>
                     <div className={styles.footer_esquerda}>
                         <label>Empresa fictícia Ticket Easy Pro</label>
-                        <label>
+                        <p>
                             Sede na Faculdade de Tecnologia de São Paulo - FATEC
-                            SP Av. Tiradentes, 615, Bom Retiro, São Paulo, São
+                            SP
+                        </p>
+                        <p>
+                            Av. Tiradentes, 615, Bom Retiro, São Paulo, São
                             Paulo - Brasil
-                        </label>
+                        </p>
                         <label className={styles.footer_direitos}>
                             ©Copyrights | Todos os direitos reservados.
                         </label>

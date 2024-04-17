@@ -253,6 +253,15 @@
     border: 1px solid black;
     opacity: 0.5;
   }
+
+  .botao_corpo {
+    background-color: black;
+    box-shadow: 4px 4px 6px gray;
+    border-radius: 80px;
+    color: white;
+    padding: 5px;
+    width: 130px;
+  }  
   
   /* Rodapé */
   .home_footer {
@@ -279,6 +288,10 @@
   .footer_esquerda label {
     color: white;
     margin: 20px 0;
+  }
+
+  .footer_esquerda p {
+    color: white;
   }
   
   .footer_direita {

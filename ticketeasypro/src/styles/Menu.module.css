@@ -1,3 +1,4 @@
+/* Estilos gerais */
 .menu_lateral {
     position: fixed;
     padding: 0;
@@ -17,10 +18,11 @@
   }
 
   .menu_lateral nav {
-    width: 230px;
+    width: 260px;
     overflow: hidden;
   }
 
+  /* Menu lateral da Home Page */
   .menu_lateral_cliente_botao {
     text-align: center;
   }
@@ -76,4 +78,52 @@
     position: relative;
     margin: auto;
     margin-bottom: 20px;
+  }
+
+  /* Menu lateral da administração */
+  .header_menu_admin {
+    display: flex;
+    align-items: baseline;
+  }
+
+  .header_menu_admin label {
+    margin-left: 20px;
+    font-size: 1em;
+    font-weight: bold;
+  }
+
+  .logo_admin {
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-right: 15px;
+  }
+
+  .logo_admin label {
+    color: white;
+  }
+
+  .menus_usuarios {
+    text-align: right;
+  }
+
+  .menus_usuarios ul li {
+    margin: 20px 0;
+  }
+
+  .menus_usuarios ul li a {
+    font-size: 1.1em;
+  }
+
+  .footer_menu {
+    text-align: right;
+    margin: 20px 0;
+  }
+
+  .footer_menu a {
+    font-size: 1.1em;
   }

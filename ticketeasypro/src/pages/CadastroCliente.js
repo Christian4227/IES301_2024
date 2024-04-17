@@ -62,7 +62,7 @@ export default function TelaCadastroCliente() {
             phone_fix: telefone,
         });
         axios
-            .post("http://localhost:3210/v1/users/cadastrar", data, {
+            .post("http://localhost:3210/v1/users/signin", data, {
                 headers: {
                     "Content-Type": "application/json",
                 },

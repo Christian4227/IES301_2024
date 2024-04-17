@@ -2,3 +2,15 @@
 
 
 /* Outras telas */
+.header_administrador {
+    border-bottom: 1px solid black;
+    width: 98%;
+    margin-left: 1%;
+    padding: 10px 0 0 0;
+    margin-bottom: 20px;
+}
+
+.header_administrador h1 {
+    font-weight: bold;
+    font-size: 1.5em;
+}
