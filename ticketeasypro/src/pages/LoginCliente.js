@@ -28,6 +28,7 @@ export default function LogInCliente() {
     return (
         <div className={styles.body_login_cliente}>
             <div className={styles.div_Login}>
+                <h1>Seja bem vindo!</h1>
                 <input
                     id="txtEmail"
                     className={styles.login_campo}
@@ -52,7 +53,7 @@ export default function LogInCliente() {
                     onClick={Login}
                 />
                 <label className={styles.descricao_cadastrar}>
-                    Não tem uma conta?{" "}
+                    <b>Não tem uma conta? </b>
                     <Link
                         href="/CadastroCliente"
                         className={styles.link_cadastrar}

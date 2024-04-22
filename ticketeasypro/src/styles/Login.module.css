@@ -17,13 +17,20 @@
     min-width: 350px;
     height: 60vh;
     min-height: 480px;
-    border-radius: 5px;
-    box-shadow: 4px 4px 5px gray;
+    border-radius: 3px;
+    box-shadow: 1px 1px 10px 1px gray;
     margin-top: 4%;
 }
 
+.div_Login a {
+    color: blue;
+    text-decoration: none !important;
+}
+
 .login_campo {
-    border-bottom: 1px solid black;
+    border: 1px solid black;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px 2px gray;
     padding: 5px;
     width: 90%;
     height: 40px;
@@ -31,9 +38,13 @@
     outline: none;
 }
 
+.div_Login h1 {
+    margin-bottom: 20px;
+}
+
 .login_campo:focus {
-    border-bottom: 2px solid #2C56DE;
-    transition-delay: 0.2s;
+    border: 2px solid #2C56DE;
+    box-shadow: 1px 1px 4px 1px #2C56DE;
 }
 
 .botao_submit {
@@ -46,10 +57,12 @@
     margin: 20px 0 10px 0;
 }
 
-.botao_submit:hover {
+.botao_submit:active {
     background-color: #363534;
-    transition: 0.3s;
-    width: 50%;
+}
+
+.botao_submit:hover {
+    background-color: #242323;
 }
 
 .link_cadastrar {

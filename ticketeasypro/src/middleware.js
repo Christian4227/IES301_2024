@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 export function middleware(request) {
     const meuCookie = request.cookies.get("ticket-token");
     if (!meuCookie) {
-        return Response.redirect(new URL("/Admin/Administracao", request.url));
+        return Response.redirect(new URL("/", request.url));
     }
     // Supondo que 'token' é o seu JWT
     const token = JSON.parse(meuCookie.value).accessToken;

@@ -421,7 +421,7 @@ export default function Home() {
                             Paulo - Brasil
                         </p>
                         <label className={styles.footer_direitos}>
-                            ©Copyrights | Todos os direitos reservados.
+                            © Copyrights | Todos os direitos reservados.
                         </label>
                     </div>
                     <div className={styles.footer_direita}>
@@ -429,21 +429,27 @@ export default function Home() {
                             <label>Siga a gente nas redes sociais</label>
                         </div>
                         <div>
-                            <Image
-                                src={facebook}
-                                alt="facebook"
-                                className={styles.img}
-                            />
-                            <Image
-                                src={instagram}
-                                alt="instagram"
-                                className={styles.img}
-                            />
-                            <Image
-                                src={whatsapp}
-                                alt="whatsapp"
-                                className={styles.img}
-                            />
+                            <Link href="https://www.facebook.com">
+                                <Image
+                                    src={facebook}
+                                    alt="facebook"
+                                    className={styles.img}
+                                />
+                            </Link>
+                            <Link href="https://www.instagram.com">
+                                <Image
+                                    src={instagram}
+                                    alt="instagram"
+                                    className={styles.img}
+                                />
+                            </Link>
+                            <Link href="https://www.whatsapp.com">
+                                <Image
+                                    src={whatsapp}
+                                    alt="whatsapp"
+                                    className={styles.img}
+                                />
+                            </Link>
                             <label>(11) 99999-9999</label>
                         </div>
                     </div>

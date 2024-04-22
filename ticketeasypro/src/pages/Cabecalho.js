@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function Cabecalho() {
     const MenuLateral = () => {
-        document.getElementById("menu-lateral").style.width = "250px";
+        document.getElementById("menu-lateral").style.width = "280px";
         document.getElementById("menu-lateral").style.padding = "10px";
     };
 

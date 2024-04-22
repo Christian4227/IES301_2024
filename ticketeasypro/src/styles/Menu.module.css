@@ -80,6 +80,48 @@
     margin-bottom: 20px;
   }
 
+  .usuario_nao_identificado, .usuario_identificado {
+    padding: 10px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .usuario_nao_identificado {
+    background-color: rgb(56, 54, 54);
+    border: 1px solid rgb(56, 54, 54);
+    color: white;
+  }
+
+  .usuario_identificado {
+    display: flex;
+  }
+
+  .usuario_identificado {
+    display: flex;
+    align-items: center;
+    background-color: rgb(73, 71, 71);
+    color: white;
+  }
+
+  .usuario_identificado label {
+    font-size: 1.1em;
+  }
+
+  .usuario_identificado_logo {
+    background-color: blue;
+    border: 1px solid black;
+    color: white;
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    font-size: 1.3em;
+  }
+
   /* Menu lateral da administração */
   .header_menu_admin {
     display: flex;

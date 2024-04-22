@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useRouter } from "next/router";
 import styles from "../styles/Menu.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import fechar from "../assets/x.png";
+import { AuthContext } from "@/context/Auth";
 
 export default function Menu() {
     const router = useRouter();
+    const { auth } = useContext(AuthContext);
     const EntrarCliente = () => {
         router.push("./LoginCliente");
     };
@@ -24,7 +26,7 @@ export default function Menu() {
             <nav>
                 <div className={styles.menu_lateral_header}>
                     <b>
-                        <h1>Área do cliente</h1>
+                        <h1>Ticket Easy Pro</h1>
                     </b>
                     <button onClick={() => FecharMenuLateral()}>
                         <Image
@@ -37,13 +39,31 @@ export default function Menu() {
                 <hr />
                 <div className={styles.menu_lateral_cliente}>
                     <div className={styles.menu_lateral_cliente_botao}>
-                        <input
-                            type="button"
-                            id="inputEntrar"
-                            value="Entrar"
-                            className={styles.botao_entrar}
-                            onClick={() => EntrarCliente()}
-                        />
+                        {auth ? (
+                            <div className={styles.usuario_identificado}>
+                                <div
+                                    className={styles.usuario_identificado_logo}
+                                >
+                                    C
+                                </div>
+                                <label>Christian Cubo</label>
+                            </div>
+                        ) : (
+                            <div>
+                                <div
+                                    className={styles.usuario_nao_identificado}
+                                >
+                                    <label>Usuário não identificado</label>
+                                </div>
+                                <input
+                                    type="button"
+                                    id="inputEntrar"
+                                    value="Entrar"
+                                    className={styles.botao_entrar}
+                                    onClick={() => EntrarCliente()}
+                                />
+                            </div>
+                        )}
                     </div>
                     <div className={styles.menu_lateral_cliente_texto}>
                         <label>Ainda não tem uma conta?</label>
