@@ -1,6 +1,9 @@
 # Stage 1: Build the base code. 
 FROM node:lts-alpine as buildStage
 
+# Define um valor padrão para ENV, que será utilizado caso nenhum outro seja fornecido
+ARG ENV=
+
 LABEL version="0.0.1"
 LABEL description="Api Fastify (Node.js) Docker Image"
 LABEL maintainer="Luiz Otavio <luiz0loon@gmail.com>"
@@ -13,36 +16,32 @@ COPY tsconfig.json ./
 RUN npm ci
 
 COPY prisma ./prisma/
-# COPY src ./src/
-# COPY ./.env.production ./.env
-# Install app dependencies
-COPY . .
+COPY src ./src/
+
+# A sintaxe abaixo escolhe o arquivo .env apropriado ou o padrão .env caso ENV não seja especificado
+COPY ./.env${ENV:+.$ENV} ./.env
 
 RUN npx prisma generate
-
-# COPY ./node_modules/.prisma/client ./node_modules/.prisma/client
-
 RUN npm run build
-
 
 # Stage 2: Production image
 FROM node:lts-alpine as prodStage
 RUN npm install -g npm@latest
 
 WORKDIR /app/ticketeasypro/api
-ENV NODE_ENV production
+# ENV NODE_ENV=production
 
+# Copia o arquivo .env da stage de build
+COPY --from=buildStage /app/.env ./.env
 
-COPY --from=buildStage /app/.env.production ./.env
 COPY --from=buildStage /app/package*.json ./
-# COPY ./.env.production ./.env
-
 RUN npm ci --omit=dev --quiet
 
 COPY --from=buildStage /app/node_modules/.prisma/client ./node_modules/.prisma/client
 COPY --from=buildStage /app/prisma ./prisma
-
-
 COPY --from=buildStage /app/dist ./dist
+
+RUN npx prisma db push
+
 EXPOSE 3210
 CMD [ "node", "dist/server.js"]
