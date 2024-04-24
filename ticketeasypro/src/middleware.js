@@ -13,19 +13,19 @@ export function middleware(request) {
     const userRole = decoded.role;
     console.log(`O papel do usuário é: ${userRole}`);
     if (
-        userRole === "cliente" &&
+        userRole === "SPECTATOR" &&
         !request.nextUrl.pathname.startsWith("/Cliente")
     ) {
         return Response.redirect(new URL("/Cliente/GeralCliente", request.url));
     }
     if (
-        userRole === "admin" &&
+        userRole === "ADMIN" &&
         !request.nextUrl.pathname.startsWith("/Admin")
     ) {
         return Response.redirect(new URL("/Admin/Administracao", request.url));
     }
     if (
-        userRole === "colaborador" &&
+        userRole === "STAFF" &&
         !request.nextUrl.pathname.startsWith("/Colaborador")
     ) {
         return Response.redirect(
@@ -33,7 +33,7 @@ export function middleware(request) {
         );
     }
     if (
-        userRole === "organizador" &&
+        userRole === "EVENT_MANAGER" &&
         !request.nextUrl.pathname.startsWith("/Organizador")
     ) {
         return Response.redirect(new URL("/Organizador/Dados", request.url));

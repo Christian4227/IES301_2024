@@ -138,9 +138,9 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     border: 1px solid black;
-    border-radius: 20px;
+    border-radius: 5px;
     background-color: white;
-    box-shadow: 2px 2px 8px gray;
+    box-shadow: 1px 1px 10px 1px gray;
     width: 100%;
     padding: 20px;
     align-items: center;
@@ -252,8 +252,8 @@
 
   .botao_corpo {
     background-color: black;
-    box-shadow: 4px 4px 6px gray;
-    border-radius: 80px;
+    box-shadow: 1px 1px 8px 1px gray;
+    border-radius: 12px;
     color: white;
     padding: 5px;
     width: 130px;

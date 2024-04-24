@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import client from "@/utils/client_axios";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { useRouter } from "next/router";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext();
 
@@ -24,18 +25,34 @@ export const AuthProvider = ({ children }) => {
         setCookie(undefined, "ticket-token", JSON.stringify(token));
     };
 
+    const DicrecionarRota = (token) => {
+        const decoded = jwtDecode(token.accessToken);
+
+        // // O papel do usuário geralmente é armazenado em uma propriedade do payload do token
+        const userRole = decoded.role;
+
+        if (userRole === "ADMIN") {
+            router.push("/Admin/Administracao");
+        } else if (userRole === "SPECTATOR") {
+            router.push("/Cliente/GeralCliente");
+        } else if (userRole === "EVENT_MANAGER") {
+            router.push("/Organizador/DadosOrganizador");
+        } else if (userRole === "STAFF") {
+            router.push("/Colaborador/ListaEventos");
+        }
+    };
+
     const login = (data) => {
         client
             .post("users/login", data)
             .then((response) => {
                 const accessToken = response.data;
                 ConverterToken(accessToken);
-                router.push("/Admin/Administracao");
+                DicrecionarRota(accessToken);
             })
             .catch((error) => {
                 console.log("Erro na requisição. " + error);
             });
-
         setUser(data);
     };
 

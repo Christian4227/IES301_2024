@@ -411,7 +411,7 @@ export default function Home() {
                 </div>
                 <div className={styles.home_footer}>
                     <div className={styles.footer_esquerda}>
-                        <label>Empresa fictícia Ticket Easy Pro</label>
+                        <label>Empresa fictícia Excelsior Event Solution</label>
                         <p>
                             Sede na Faculdade de Tecnologia de São Paulo - FATEC
                             SP

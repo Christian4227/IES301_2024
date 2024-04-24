@@ -13,7 +13,7 @@ export default function Cabecalho() {
     return (
         <div className={styles.Header}>
             <Link href="/">
-                <label>Ticket Easy Pro</label>
+                <label>Excelsior Event Solution</label>
             </Link>
             <nav>
                 <ul className={styles.ul}>
