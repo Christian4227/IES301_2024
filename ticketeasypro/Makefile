@@ -15,7 +15,7 @@ stop:
 
 # Executar migrações de banco de dados com o Prisma dentro do contêiner Docker
 migrate:
-	$(DOCKER_COMPOSE) exec backend npx prisma migrate dev
+	$(DOCKER_COMPOSE) exec backend npx prisma db push
 
 # Rollback da última migração de banco de dados com o Prisma dentro do contêiner Docker
 rollback:

@@ -1,5 +1,9 @@
 version: "3"
 
+volumes:
+    postgres-data:
+
+
 services:
     frontend:
         container_name: front_tickets_container
@@ -37,6 +41,7 @@ services:
             - 5432
         networks:
             - ticketeasypro-network
-
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
 networks:
     ticketeasypro-network:

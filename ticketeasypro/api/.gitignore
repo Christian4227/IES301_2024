@@ -1,3 +1,8 @@
 node_modules
 # Keep environment variables out of version control
 .env.production
+# Ignorar todos os arquivos que terminam com .bkp
+*.bkp
+
+# Ignorar todos os arquivos que começam com ~$
+~$*
