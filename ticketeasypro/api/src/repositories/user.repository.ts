@@ -2,8 +2,12 @@
 import { User, UserCreate } from "../interfaces/user.interface";
 import { prisma } from "../services/prisma";
 
-export async function create({ email, name, birth_date, phone, phone_fix, password, salt }: UserCreate): Promise<User> {
-    const result = await prisma.user.create({ data: { name, email, birth_date, phone, password, salt, phone_fix } });
+
+
+
+
+export async function create({ email, name, birth_date, phone, role, phone_fix, password, salt }: UserCreate): Promise<User> {
+    const result = await prisma.user.create({ data: { email, name, birth_date, role, phone, phone_fix, password, salt } });
     return result;
 }
 

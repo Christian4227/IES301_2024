@@ -57,7 +57,7 @@ class UserService {
     if (!user)
       throw new Error("Invalid email or password");
 
-    const { password: hash, salt, id: sub, type: role } = user;
+    const { password: hash, salt, id: sub, role: role } = user;
 
     // verify password
     const correctPassword = verifyPassword({ candidatePassword, salt, hash });
@@ -65,7 +65,7 @@ class UserService {
     if (correctPassword) {
       // const { password, salt, ...rest } = user;
       // # const payload = { login: email, role: this.#getNamedRole(role) }
-      const payload = { login: email, role}
+      const payload = { login: email, role }
       const token = await asignJwt(payload, { sign: { sub, expiresIn: '3h' } });
       setCookie('access_token', token, {
         path: '/',
@@ -104,8 +104,8 @@ class UserService {
   // }
 
 
-  find = async (user_id: string): Promise<User | null> => {
-    const user = await userRepository.findById(user_id);
+  find = async (user_email: string): Promise<User | null> => {
+    const user = await userRepository.findByEmail(user_email);
     return user;
   };
 
