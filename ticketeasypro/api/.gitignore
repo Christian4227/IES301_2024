@@ -6,3 +6,7 @@ node_modules
 
 # Ignorar todos os arquivos que começam com ~$
 ~$*
+
+# Ignore backup files
+*.$*.drawio.bkp
+~$*.docx
