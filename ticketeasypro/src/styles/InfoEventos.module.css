@@ -109,6 +109,7 @@
     border-radius: 4px;
     color: white;
     padding: 3px;
+    margin: 0 10px;
 }
 
 .botao_comprar {
@@ -119,4 +120,115 @@
 .botao_ver  {
     border: 1px solid #0A7A08;
     background-color: #0A7A08;
+}
+
+/* Página todos os eventos */
+.body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.filtros {
+    background-color: white;
+    border: 1px solid black;
+    box-shadow: 1px 1px 7px 5px gray;
+    padding: 1em;
+    margin: 1em;
+    max-width: 700px;
+}
+
+.filtros_titulo, .filtros_conteudo {
+    display: flex;
+    justify-content: center;
+}
+
+.filtros_conteudo_1, .filtros_conteudo_2 {
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    width: 400px;
+}
+
+.filtros_conteudo_1 {
+    border-right: 1px solid black;
+}
+
+.filtros_conteudo_2_data {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.tabela_eventos {
+    background-color: white;
+    border: 1px solid black;
+    box-shadow: 1px 1px 7px 5px gray;
+    min-width: 500px;
+}
+
+.img_tabela_eventos {
+    width: 100%;
+    height: 200px;
+}
+
+.secao_tabela_eventos {
+    padding: 1em;
+}
+
+.secao_tabela_eventos_titulo {
+    display: flex;
+    padding: 1em 1em 0 1em;
+    align-items: baseline;
+}
+
+.secao_tabela_eventos_titulo h2 {
+    width: fit-content;
+    border-right: 1px solid black;
+    padding-right: 10px;
+}
+
+.secao_tabela_eventos_titulo label {
+    padding-left: 10px;
+    height: fit-content;
+}
+
+.tabela_eventos_botoes {
+    display: flex;
+    justify-content: right;
+}
+
+.tabela_eventos_info {
+    display: flex;
+}
+
+.tabela_eventos_info ul li {
+    margin: 0 0 10px 0;
+}
+
+.tabela_eventos_info_topico li label {
+    font-weight: bold;
+}
+
+.tabela_evento_nao_encontrado {
+    background-color: white;
+    border: 1px solid black;
+    box-shadow: 1px 1px 7px 5px gray;
+    padding: 1em;
+    max-width: 500px;
+    min-width: 300px;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tabela_evento_nao_encontrado label {
+    font-weight: bold;
+}
+
+.eventos {
+    margin-top: 10px;
 }
