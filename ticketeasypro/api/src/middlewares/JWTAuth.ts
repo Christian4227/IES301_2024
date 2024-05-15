@@ -1,7 +1,8 @@
 // import { FastifyJWT } from '@fastify/jwt';
 import { FastifyReply, FastifyRequest } from 'fastify';
 // import UserPayload from "../@types/userPayload";
-import { FastifyJWT } from "../@types/fastify-jwt";
+import { FastifyJWT } from "../types/fastify-jwt";
+import { Role } from '@prisma/client';
 
 
 const verifyJwt = async (request: FastifyRequest, reply: FastifyReply) => {
@@ -28,11 +29,22 @@ const Authentication = async (request: FastifyRequest, reply: FastifyReply) => {
         // Continuar com o fluxo da aplicação
         return;
     } catch (error) {
-        console.error('Auth Error:', error);
-        return reply.status(500).send({ message: 'Internal Server Error' });
+        console.error();
+        return reply.status(500).send({ message: `Auth ${error}` });
     }
 }
 
+const AuthorizeRoles = (roles: Role[]) => {
+    return async (request: FastifyRequest, reply: FastifyReply) => {
+        const { role } = request.user;
+
+        // Verifica se o usuário autenticado tem pelo menos um dos papéis permitidos
+        if (!role || !roles.includes(role as Role)) {
+            throw new Error('Insufficient permissions.');
+        }
+    };
+}
+
 export default Authentication;
-export { verifyJwt }
+export { verifyJwt, AuthorizeRoles }
 

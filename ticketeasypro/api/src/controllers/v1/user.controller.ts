@@ -1,33 +1,26 @@
 import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify"
-
 import UserService from "../../services/user.service"
-import { UserCreate, UserCredentials, } from "../../interfaces/user.interface";
-import { verifyJwt } from "../../middlewares/JWTAuth";
-import { Token } from "../../interfaces/token.interface";
+import {
+    UserCredentials, UserSignin, UserSigninResult, UserUpdate
+} from "@interfaces/controller/user.interface";
+import { Token } from "@interfaces/token.interface";
 
-
-// interface TokenResponse {
-//     accessToken: string; // Ou o tipo adequado para o token JWT
-// }
 
 
 const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
-    const userService: UserService = new UserService()
+    const userService: UserService = new UserService();
 
-    api.post('/signin', async (request: FastifyRequest<{ Body: UserCreate }>, reply: FastifyReply) => {
+    api.post('/signin', async (request: FastifyRequest<{ Body: UserSignin }>, reply: FastifyReply): Promise<UserSigninResult> => {
         try {
-            const data = await userService.create(request.body);
-            console.log("entrou");
-
-            return reply.send(data);
+            const user = await userService.create(request.body);
+            return reply.code(201).send(user);
         } catch (error) {
-            reply.send(error);
+            return reply.code(409).send(error);
         }
     });
 
     api.post('/login', async (request: FastifyRequest<{ Body: UserCredentials }>, reply: FastifyReply): Promise<Token> => {
         try {
-
             const credentials = request.body;
 
             const token = await userService.generateCookie(credentials, reply.jwtSign.bind(reply), reply.setCookie.bind(reply));
@@ -39,26 +32,20 @@ const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         }
     });
 
-    api.get('/me', { preHandler: [api.authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
-        // Exibe dados do próprio usuário
-
+    api.get('/whoami', { preHandler: [api.authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
         reply.send({ hello: request.user });
     });
 
-    api.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
-        const all = await userService.getAll();
-        return reply.status(200).send(all);
-    })
+    // O user pode alterar os dados dele mesmo apenas
+    api.put('/', { preHandler: [api.authenticate] }, async (request: FastifyRequest<{ Body: UserUpdate }>, reply: FastifyReply) => {
 
-
-    api.delete('/:id', async (request: FastifyRequest, reply: FastifyReply) => {
-        const { id: userId } = request;
+        const { user: { sub: userId }, body: updateData } = request;
         try {
-            await userService.deleteAccount(userId);
+            await userService.update({ id: userId }, updateData);
             return reply.status(204);
         } catch (error) {
-            console.error('User deletion error:', error);
-            return reply.status(500).send({ message: 'User deletion error', error: 'Internal Server Error' });
+            console.error('User update error:', error);
+            return reply.status(500).send({ message: 'User update error', error: 'Internal Server Error' });
         }
     });
 }

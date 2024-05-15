@@ -1,127 +1,90 @@
-import * as userRepository from "../repositories/user.repository";
-import { User, UserCreate, UserCredentials } from "../interfaces/user.interface";
+import UserRepository from "../repositories/user.repository";
 import { hashPassword, verifyPassword } from "../utils/hash";
-import { FastifyJwtSignOptions, SignPayloadType } from "@fastify/jwt";
-import { CookieSerializeOptions } from "@fastify/cookie";
-import { FastifyReply } from "fastify/types/reply";
-
-
-interface AsignJwt {
-  (payload: SignPayloadType, options?: FastifyJwtSignOptions): Promise<string>
-}
-interface AsignCookie {
-  (cookieName: string, toke: string, options: Object): Promise<any>
-}
-
-interface SetCookie {
-  (name: string, value: string, options?: CookieSerializeOptions): FastifyReply;
-}
+import { PaginatedUserResult, UserCreateResult } from "../types/service/user.type";
+import { AsignJwt, SetCookie, UserCredentials, UserResult, UserSignin, UserUpdate } from "../interfaces/service/user.interface";
+import { Role } from "@prisma/client";
+import { UserPayload } from "../types";
+import { Identifier } from "types/common.type";
 
 
 class UserService {
-  create = async (user: UserCreate): Promise<User> => {
-    const { email, password, ...rest } = user;
 
-    const verifyIfUserExists = await userRepository.findByEmail(email);
-    if (verifyIfUserExists) {
-      throw new Error('User already exists');
-    }
-    const { hash, salt } = hashPassword(password);
+	private userRepo: UserRepository
 
-    const result = await userRepository.create({ ...rest, email, salt, password: hash });
+	constructor() {
+		this.userRepo = new UserRepository();
+	}
 
-    return result;
-  };
+	create = async (userSignin: UserSignin, role: Role = Role.SPECTATOR): Promise<UserCreateResult> => {
+		const { email, password, confirm_password, ...rest } = userSignin;
 
-  // #getNamedRole = (role: string) => {
-  //   switch (role) {
-  //     case 0:
-  //       return "admin";
-  //     case 1:
-  //       return "organizador";
-  //     case 2:
-  //       return "colaborador";
-  //     case 3:
-  //       return "cliente";
+		// Verifica se as senhas correspondem
+		if (password !== confirm_password) throw new Error("Passwords do not match.");
 
-  //   }
-  // }
+		const userFound = await this.userRepo.find({ email: email } as Identifier);
 
-  generateCookie = async (credentials: UserCredentials, asignJwt: AsignJwt, setCookie: SetCookie) => {
+		if (!!userFound) throw new Error('User already exists');
 
-    const { email, password: candidatePassword } = credentials;
+		const { hash, salt } = hashPassword(password);
 
-    // find a user by email
-    const user = await userRepository.findByEmail(email);
+		const user = await this.userRepo.create({ ...rest, role, email, salt, password: hash });
 
-    if (!user)
-      throw new Error("Invalid email or password");
+		return user;
+	};
 
-    const { password: hash, salt, id: sub, role: role } = user;
+	generateCookie = async (credentials: UserCredentials, asignJwt: AsignJwt, setCookie: SetCookie) => {
+		const { email, password: candidatePassword } = credentials;
 
-    // verify password
-    const correctPassword = verifyPassword({ candidatePassword, salt, hash });
+		// find a user by email
+		const user = await this.userRepo.find({ email });
 
-    if (correctPassword) {
-      // const { password, salt, ...rest } = user;
-      // # const payload = { login: email, role: this.#getNamedRole(role) }
-      const payload = { login: email, role }
-      const token = await asignJwt(payload, { sign: { sub, expiresIn: '3h' } });
-      setCookie('access_token', token, {
-        path: '/',
-        httpOnly: true,
-        secure: true,
-      })
+		if (!user) throw new Error("Invalid email or password");
 
-      return token;
-    }
-    throw new Error("Invalid email or password");
+		const { password: hashedPassword, salt, id: sub, role: role, name: userName } = user;
 
-  }
+		// verify password
+		const correctPassword = verifyPassword({ candidatePassword, salt, hashedPassword });
 
-  // generateToken = async (credentials: UserCredentials, asignJwt: AsignJwt): Promise<string> => {
+		if (!correctPassword) throw new Error("Invalid email or password");
 
-  //   const { email, password: candidatePassword } = credentials;
+		const payload: UserPayload = { sub: sub, login: email, role: role, name: userName }
+		const token = await asignJwt(payload, { sign: { expiresIn: '6h' } });
+		setCookie('access_token', token, {
+			path: '/',
+			httpOnly: true,
+			secure: true,
+		})
+		return token;
+	}
 
-  //   // find a user by email
-  //   const user = await userRepository.findByEmail(email);
+	find = async (email: string): Promise<UserResult | null> => {
+		const user = await this.userRepo.find(email as Identifier);
+		return user;
+	};
 
-  //   if (!user)
-  //     throw new Error("Invalid email or password");
+	update = async (identifier: Identifier, userData: UserUpdate): Promise<UserResult> => {
+		// const userId = dataUpdate.id;
+		const user = await this.userRepo.update(identifier, userData);
+		return user;
+	}
+	// updateRole = async ({ id: userID, role }: UserUpdateRole): Promise<Role> => {
+	// 	return await this.userRepo.update(userID, { role: role })
 
-  //   const { password: hash, salt, id: sub } = user;
+	// }
+	toggleStatus = async (identifier: Identifier): Promise<boolean> => {
+		const user = await this.userRepo.find(identifier);
+		if (!!!user)
+			throw new Error(`User ${identifier.id ? `id: ${identifier.id}` : `email: ${identifier.email}`} not found`);
 
-  //   // verify password
-  //   const correctPassword = verifyPassword({ candidatePassword, salt, hash });
+		const userUpdated = await this.userRepo.update(identifier, { active: !user.active });
+		return !!userUpdated;
+	};
 
-  //   if (correctPassword) {
-  //     // const { password, salt, ...rest } = user;
-  //     const token = await asignJwt({ login: email }, { sign: { sub, expiresIn: '12h' } });
-  //     return token;
-  //   }
-  //   throw new Error("Invalid email or password");
-
-  // }
+	// getAll = async (query: string, page: number = 1, pageSize: number = 10): Promise<PaginatedUserResult> => {
+	// return await this.userRepo.findUsers(query, page, pageSize);
+	// }
 
 
-  find = async (user_email: string): Promise<User | null> => {
-    const user = await userRepository.findByEmail(user_email);
-    return user;
-  };
-
-  deleteAccount = async (user_id: string): Promise<User | null> => {
-    const user = await userRepository.deleteById(user_id);
-    return user;
-  };
-  getAll = async (): Promise<User[]> => {
-    const allUsers: User[] = await userRepository.findAll();
-
-    return allUsers;
-  };
-
-  // getAll = async (): Promise<User[] | null> => {
-  //   const allUsers: User[] = await userRepository.findAll();
-  // }
 }
 
 export default UserService;

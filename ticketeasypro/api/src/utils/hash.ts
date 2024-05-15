@@ -18,7 +18,7 @@ export function hashPassword(password: string) {
     return { hash, salt };
 }
 
-export function verifyPassword({ candidatePassword, salt, hash, }: { candidatePassword: string; salt: string; hash: string; }) {
+export function verifyPassword({ candidatePassword, salt, hashedPassword }: { candidatePassword: string; salt: string; hashedPassword: string; }) {
     /*
      * Create a hash with the salt from the user and the password
      * the user tried to login with
@@ -32,5 +32,5 @@ export function verifyPassword({ candidatePassword, salt, hash, }: { candidatePa
      * then the candidate password is correct
      */
 
-    return candidateHash === hash;
+    return candidateHash === hashedPassword;
 }

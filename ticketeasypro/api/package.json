@@ -7,10 +7,10 @@
   "scripts": {
     "db:migrate": "npx prisma migrate dev",
     "db:deploy": "npx prisma db push",
-    "clean": "rm -rf ./dist/* ",
+    "clean": "rm -rf ./dist ",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
-    "dev": "nodemon --watch src --exec ts-node src/server.ts"
+    "dev": "nodemon --watch src --exec ts-node -r tsconfig-paths/register src/server.ts"
   },
   "author": "",
   "license": "MIT",
@@ -19,15 +19,16 @@
     "@fastify/cors": "^8.5.0",
     "@fastify/jwt": "^8.0.0",
     "@prisma/client": "^5.11.0",
-    "@types/nodemailer": "^6.4.15",
     "fastify": "^4.26.2",
     "nodemailer": "^6.9.13"
   },
   "devDependencies": {
     "@types/node": "^20.12.2",
+    "@types/nodemailer": "^6.4.15",
     "nodemon": "^3.1.0",
     "prisma": "^5.11.0",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.3"
   }
 }

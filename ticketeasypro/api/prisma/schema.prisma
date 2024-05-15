@@ -9,18 +9,19 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(uuid())
-  email           String   @unique
+  id              String    @id @default(uuid())
+  email           String    @unique
   password        String
-  email_confirmed Boolean  @default(false)
-  birth_date      DateTime @default(now()) @db.Date
-  name            String   @db.VarChar(256)
-  phone           String?
+  email_confirmed Boolean   @default(false)
+  birth_date      DateTime  @default(now()) @db.Date
+  name            String    @db.VarChar(256)
+  phone           String
   phone_fix       String?
-  role            Role     @default(SPECTATOR)
+  role            Role      @default(SPECTATOR)
   salt            String
-  created_at      DateTime @default(now()) @db.Timestamptz(0)
-  updated_at      DateTime @updatedAt @db.Timestamptz(0)
+  created_at      DateTime  @default(now()) @db.Timestamp(0)
+  updated_at      DateTime? @updatedAt @db.Timestamp(0)
+  active          Boolean   @default(true)
   Event           Event[]
   Order           Order[]
 
@@ -28,92 +29,92 @@ model User {
 }
 
 model Venue {
-  id           BigInt   @id @default(autoincrement())
-  address_type String   @db.VarChar(256)
-  address      String   @db.VarChar(512)
-  number       String   @db.VarChar(10)
-  zip_code     String   @db.VarChar(10)
-  city         String   @db.VarChar(256)
-  uf           String   @db.VarChar(2)
-  country      String   @default("BRASIL") @db.VarChar(512)
-  complements  String   @db.VarChar(512)
-  created_at   DateTime @default(now()) @db.Timestamptz(0)
-  updated_at   DateTime @updatedAt @db.Timestamptz(0)
+  id           Int       @id @default(autoincrement())
+  address_type String    @db.VarChar(256)
+  address      String    @db.VarChar(512)
+  number       String    @db.VarChar(10)
+  zip_code     String    @db.VarChar(10)
+  city         String    @db.VarChar(256)
+  uf           String    @db.VarChar(2)
+  country      String    @default("BRASIL") @db.VarChar(512)
+  complements  String    @db.VarChar(512)
+  created_at   DateTime  @default(now()) @db.Timestamp(0)
+  updated_at   DateTime? @updatedAt @db.Timestamp(0)
   Event        Event[]
 
   @@map("VENUES")
 }
 
-model OrderItem {
-  id         BigInt   @id @default(autoincrement())
-  order_id   String
-  unit_price BigInt
-  created_at DateTime @default(now()) @db.Timestamptz(0)
-  updated_at DateTime @updatedAt @db.Timestamptz(0)
-
-  @@map("ORDERITEMS")
-}
-
 model Order {
   id             String       @id @default(uuid())
   customer_id    String
-  total_amount   BigInt
-  status         OrderStatus  @default(PENDING)
+  total_amount   BigInt       @db.BigInt()
+  status         OrderStatus  @default(PROCESSING)
   payment_method PaymenMethod @default(PIX)
-  created_at     DateTime     @default(now()) @db.Timestamptz(0)
-  updated_at     DateTime     @updatedAt @db.Timestamptz(0)
+  created_at     DateTime     @default(now()) @db.Timestamp(0)
+  updated_at     DateTime?    @updatedAt @db.Timestamp(0)
 
   customer User @relation(fields: [customer_id], references: [id])
 
   @@map("ORDERS")
 }
 
+model OrderTicket {
+  id         Int        @id @default(autoincrement())
+  order_id   String
+  unit_price Int        @db.Integer()
+  created_at DateTime   @default(now()) @db.Timestamp(0)
+  updated_at DateTime?  @updatedAt @db.Timestamp(0)
+  type_id    Int        @db.Integer()
+  type       TypeTicket @relation(fields: [type_id], references: [id])
+
+  @@map("ORDERTICKETS")
+}
+
 model Ticket {
   id         String       @id @default(uuid())
-  event_id   BigInt
+  event_id   Int          @db.Integer()
   status     TicketStatus @default(AVAILABLE)
-  type_id    BigInt
-  created_at DateTime     @default(now()) @db.Timestamptz(0)
-  updated_at DateTime     @updatedAt @db.Timestamptz(0)
+  created_at DateTime     @default(now()) @db.Timestamp(0)
+  updated_at DateTime?    @updatedAt @db.Timestamp(0)
 
-  type  TypeTicket @relation(fields: [type_id], references: [id])
-  event Event      @relation(fields: [event_id], references: [id])
+  event Event @relation(fields: [event_id], references: [id])
 
   @@map("TICKETS")
 }
 
 model TypeTicket {
-  id          BigInt @id @default(autoincrement())
-  name        String @unique @db.VarChar(256)
-  discount    Int    @default(0) @db.SmallInt
-  description String @db.VarChar(1024)
-
-  created_at DateTime @default(now()) @db.Timestamptz(0)
-  updated_at DateTime @updatedAt @db.Timestamptz(0)
-  Ticket     Ticket[]
+  id          Int           @id @default(autoincrement())
+  name        String        @unique @db.VarChar(256)
+  discount    Int           @default(0) @db.SmallInt
+  description String        @db.VarChar(1024)
+  created_at  DateTime      @default(now()) @db.Timestamp(0)
+  updated_at  DateTime?     @updatedAt @db.Timestamp(0)
+  OrderTicket OrderTicket[]
 
   @@map("TYPETICKETS")
 }
 
 model Event {
-  id            BigInt      @id @default(autoincrement())
-  user_id       String
+  id            Int         @id @default(autoincrement())
+  manager_id    String
   name          String      @db.VarChar(256)
   description   String      @db.VarChar(1024)
-  initial_date  DateTime    @db.Timestamptz(0)
-  final_date    DateTime    @db.Timestamptz(0)
-  category_id   BigInt
+  initial_date  DateTime    @db.Timestamp(0)
+  final_date    DateTime    @db.Timestamp(0)
+  category_id   Int         @db.Integer
   status        EventStatus @default(PLANNED)
-  base_price    BigInt
-  capacity      BigInt
+  base_price    Int         @db.Integer
+  capacity      Int         @db.Integer
   img_banner    String      @db.VarChar
   img_thumbnail String?     @db.VarChar
-  location_id   BigInt
-  created_at    DateTime    @default(now()) @db.Timestamptz(0)
-  updated_at    DateTime    @updatedAt @db.Timestamptz(0)
+  location_id   Int
+  color         String      @db.VarChar()
+  created_at    DateTime    @default(now()) @db.Timestamp(0)
+  updated_at    DateTime?   @updatedAt @db.Timestamp(0)
 
   category      Category @relation(fields: [category_id], references: [id])
-  event_manager User     @relation(fields: [user_id], references: [id])
+  event_manager User     @relation(fields: [manager_id], references: [id])
   location      Venue    @relation(fields: [location_id], references: [id])
   Ticket        Ticket[]
 
@@ -121,18 +122,17 @@ model Event {
 }
 
 model Category {
-  id          BigInt   @id @default(autoincrement())
-  name        String   @unique @db.VarChar(128)
-  description String   @db.VarChar(1024)
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @updatedAt @db.Timestamptz(6)
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(128)
+  description String    @db.VarChar(1024)
+  created_at  DateTime  @default(now()) @db.Timestamp(0)
+  updated_at  DateTime? @updatedAt @db.Timestamp(0)
   events      Event[]
 
   @@map("CATEGORIES")
 }
 
 enum OrderStatus {
-  PENDING
   PROCESSING
   COMPLETED
   CANCELLED
@@ -164,4 +164,5 @@ enum TicketStatus {
   RESERVED
   USED
   EXPIRED
+  CANCELLED
 }

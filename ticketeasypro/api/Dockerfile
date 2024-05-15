@@ -8,6 +8,10 @@ LABEL version="0.0.1"
 LABEL description="Api Fastify (Node.js) Docker Image"
 LABEL maintainer="Luiz Otavio <luiz0loon@gmail.com>"
 
+
+# Setar o fuso horário como UTC
+ENV TZ=UTC
+
 # Create app directory
 WORKDIR /app
 
@@ -28,6 +32,10 @@ RUN npm run build
 FROM node:lts-alpine as prodStage
 RUN npm install -g npm@latest
 
+
+# Setar o fuso horário como UTC
+ENV TZ=UTC
+
 WORKDIR /app/ticketeasypro/api
 # ENV NODE_ENV=production
 
@@ -41,7 +49,7 @@ COPY --from=buildStage /app/node_modules/.prisma/client ./node_modules/.prisma/c
 COPY --from=buildStage /app/prisma ./prisma
 COPY --from=buildStage /app/dist ./dist
 
-RUN npx prisma db push
+# RUN npx prisma migrate deploy
 
 EXPOSE 3210
 CMD [ "node", "dist/server.js"]
