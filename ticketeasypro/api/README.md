@@ -29,7 +29,7 @@ Na busca por eventos:
 ##GERAL
  - As rotas de update de atributos terão o seguinte formato 
     `url_base_v1/entidade/id_da_entidade/nome_do_atributo`
-    ex. "{{base_v1}}/events/870f7d1f-0e26-4002-8521-2a7c00d749bf/status"
+    ex. "{{base_v1}}/events/1/status"
 
 
 
