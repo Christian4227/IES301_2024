@@ -24,3 +24,76 @@
     background-color: black;
     color: white;
 }
+
+.Mensagem_sucesso, .Mensagem_erro {
+    position: fixed;
+    top: 1em;
+    left: 25%;
+    background-color: white;
+    width: 50%;
+    height: 25%;
+    display: flex;
+    align-items: center;
+    padding: 0.4em;
+    transition: .5s ease;
+}
+
+.Mensagem_sucesso {
+    border: 3px solid green;
+    box-shadow: 1px 1px 10px lightgreen;
+    display: none;
+}
+
+.Mensagem_erro {
+    border: 3px solid red;
+    box-shadow: 1px 1px 10px lightcoral;
+    display: none;
+}
+
+.Mensagem_erro h1, .Mensagem_sucesso h1 {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.tick_verde, .erro {
+    width: 100px;
+    height: 100px;
+}
+
+.Mensagem_sucesso_imagem, .Mensagem_erro_imagem {
+    width: 30%;
+}
+
+.Mensagem_sucesso_texto, .Mensagem_erro_texto {
+    margin: 0 0.8em 0 0;
+}
+
+.footer_form {
+    text-align: center;
+    margin-top: 1em;
+}
+
+/* Tela RecuperarEmail */
+.divPrincipal_recuperar_email {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.recuperar_email {
+    background-color: white;
+    border: 1px solid black;
+    margin: 1em;
+    padding: 1em;
+    width: 50%;
+}
+
+.recuperar_email_titulo {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.recuperar_email_titulo h1 {
+    font-weight: bold;
+    font-size: 1.5em;
+}

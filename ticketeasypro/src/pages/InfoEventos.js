@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Cabecalho from "./Cabecalho";
 import styles from "../styles/Home.module.css";
 import stylese from "../styles/InfoEventos.module.css";
@@ -8,6 +8,7 @@ import Menu from "./Menu";
 import Image from "next/image";
 import torre from "../assets/torre_miroku.jpg";
 import { useRouter } from "next/router";
+// import client from "@/utils/client_axios";
 
 export default function InfoEventos() {
     const router = useRouter();
@@ -21,6 +22,10 @@ export default function InfoEventos() {
     const VisualizarEvento = () => {
         router.push("/Evento.js");
     };
+
+    useEffect(() => {
+        setDados("");
+    });
 
     return (
         <div id="div-principal">

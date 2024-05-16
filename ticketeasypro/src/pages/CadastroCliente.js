@@ -5,6 +5,10 @@ import styleh from "../styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import Menu from "./Menu";
+import certo from "../assets/ticky_verde.png";
+import erro from "../assets/x_vermelho.png";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function TelaCadastroCliente() {
     const [nome, setNome] = useState("");
@@ -61,6 +65,13 @@ export default function TelaCadastroCliente() {
             phone: celular,
             phone_fix: telefone,
         });
+        /*
+        let dataEmail = JSON.stringify({
+            to: email,
+            subject: "Envio de confirmação: Ticket Easy Pro",
+            text: "",
+        });
+        */
         axios
             .post("http://localhost:3210/v1/users/signin", data, {
                 headers: {
@@ -69,12 +80,54 @@ export default function TelaCadastroCliente() {
             })
             .then(() => {
                 alert("Dados cadastrados com sucesso!");
+                document.getElementById("divMensagemSucesso").style.display =
+                    "";
+                setTimeout(() => {
+                    document.getElementById(
+                        "divMensagemSucesso"
+                    ).style.display = "";
+                }, 7000);
+                // Começa a requisição para enviar o e-mail
+                /*
+                axios
+                    .post(
+                        "http://localhost:3210/v1/users/send-email",
+                        dataEmail,
+                        {
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        }
+                    )
+                    // Se obter sucesso na hora de enviar o e-mail
+                    .then(() => {
+                        document.getElementById(
+                            "divMensagemSucesso"
+                        ).style.display = "";
+                        setTimeout(() => {
+                            document.getElementById(
+                                "divMensagemSucesso"
+                            ).style.display = "";
+                        }, 7000);
+                    })
+                    // Caso dê algum erro na hora de enviar o e-mail
+                    .catch(() => {
+                        document.getElementById(
+                            "divMensagemErro"
+                        ).style.display = "";
+                        setTimeout(() => {
+                            document.getElementById(
+                                "divMensagemErro"
+                            ).style.display = "";
+                        }, 7000);
+                    });
+                // Termina
+                */
             })
             .catch((error) => {
                 alert("Erro na requisição: " + error);
             });
     }
-
     return (
         <main>
             <div id="div-principal">
@@ -209,9 +262,46 @@ export default function TelaCadastroCliente() {
                             onClick={() => InserirDados()}
                             defaultValue="Cadastrar"
                         />
+                        <div className={styles.footer_form}>
+                            <label>
+                                Não recebeu o e-mail de confirmação?{" "}
+                                <Link href="/RecuperarEmail">Clique aqui</Link>
+                            </label>
+                        </div>
                     </form>
                 </div>
                 <Menu id="menu-lateral" className={styleh.menu_lateral} />
+            </div>
+            <div id="divMensagemSucesso" className={styles.Mensagem_sucesso}>
+                <div className={styles.Mensagem_sucesso_imagem}>
+                    <Image
+                        src={certo}
+                        alt="certo"
+                        className={styles.tick_verde}
+                    />
+                </div>
+                <div className={styles.Mensagem_sucesso_texto}>
+                    <h1>Dados cadastrados com sucesso!</h1>
+                    <p>
+                        Verifique no seu e-mail cadastrado uma mensagem de
+                        confirmação. Clique em <b>Confirmar e-mail</b> para
+                        acessar os seus dados cadastraqdos na área restrita do
+                        participante.
+                    </p>
+                </div>
+            </div>
+            <div id="divMensagemErro" className={styles.Mensagem_erro}>
+                <div className={styles.Mensagem_erro_imagem}>
+                    <Image src={erro} alt="erro" className={styles.erro} />
+                </div>
+                <div className={styles.Mensagem_erro_texto}>
+                    <h1>
+                        Erro ao enviar o e-mail de confirmação ao seu e-mail.
+                    </h1>
+                    <p>
+                        Verifique se os seus dados e o seu e-mail estão certos.
+                    </p>
+                </div>
             </div>
         </main>
     );
