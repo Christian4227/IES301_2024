@@ -29,12 +29,12 @@ export default function InfoTipoEvento() {
                     <h1>Nome do tipo do evento</h1>
                     <nav className={stylese.header_infoEventos_nav}>
                         <ul className={stylese.header_InfoEventos_menu}>
-                            <Link href="./InfoEventos">
-                                <li>Eventos</li>
-                            </Link>
-                            <Link href="./">
-                                <li>Home</li>
-                            </Link>
+                            <li>
+                                <Link href="./InfoEventos">Eventos</Link>
+                            </li>
+                            <li>
+                                <Link href="./">Home</Link>
+                            </li>
                         </ul>
                     </nav>
                 </div>

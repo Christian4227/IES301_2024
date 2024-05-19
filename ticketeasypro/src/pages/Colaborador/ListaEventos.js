@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import Cabecalho from "../Cabecalho";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../../styles/Colaborador.module.css";
 import { useRouter } from "next/router";
+import CabecalhoColaborador from "./CabecalhoColaborador";
+import CabecalhoInfoColaborador from "./CabecalhoInfoColaborador";
 
 export default function ListaEventos() {
     const router = useRouter();
@@ -19,12 +20,8 @@ export default function ListaEventos() {
     };
     return (
         <div>
-            <Cabecalho />
-            <div id="div-principal">
-                <div className={styles.header_colaborador}>
-                    <h1>Colaborador</h1>
-                </div>
-            </div>
+            <CabecalhoColaborador />
+            <CabecalhoInfoColaborador />
             <div className={styles.body_lista_colaborador}>
                 <div className={styles.formulario_colaborador}>
                     <div className={styles.cabecalho}>

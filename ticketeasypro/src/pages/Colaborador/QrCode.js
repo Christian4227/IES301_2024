@@ -1,15 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../styles/Colaborador.module.css";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import seta from "../../assets/seta para cima.jpg";
+import { Html5QrcodeScanner } from "html5-qrcode";
 
 export default function QrCode() {
     const router = useRouter();
     const [botao, setBotao] = useState(false);
-    // setTimeout(() => {
-    //     router.push("/Colaborador/ValidarIngresso");
-    // }, 1000);
+    const [scannedData, setScannedData] = useState(null);
+
+    useEffect(() => {
+        const scanner = new Html5QrcodeScanner("qrcode", {
+            qrbox: {
+                width: 300,
+                height: 300,
+            },
+            fps: 5,
+        });
+
+        scanner.render(success, error);
+
+        function success(result) {
+            scanner.clear();
+            setScannedData(result);
+        }
+
+        function error(err) {
+            console.warn(err);
+        }
+    }, []);
+
     const MenuValidar = () => {
         setBotao(!botao);
     };
@@ -17,7 +38,8 @@ export default function QrCode() {
         router.push("/Colaborador/CodigoIngresso");
     };
     return (
-        <div className={styles.qrcode_scanner}>
+        <div className={styles.body_qr_code}>
+            <div id="qrcode" className={styles.qrcode_scanner}></div>
             <div className={styles.embaixo}>
                 <button
                     className={styles.botao_img}

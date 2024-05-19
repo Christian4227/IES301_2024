@@ -14,10 +14,12 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const token = parseCookies();
-
         const valorCookie = token["ticket-token"];
-        if (valorCookie) {
+
+        if (valorCookie != undefined) {
             setAuth(true);
+        } else {
+            setAuth(false);
         }
     }, []);
 
@@ -27,6 +29,7 @@ export const AuthProvider = ({ children }) => {
 
     const DicrecionarRota = (token) => {
         const decoded = jwtDecode(token.accessToken);
+        setUser(decoded);
 
         // // O papel do usuário geralmente é armazenado em uma propriedade do payload do token
         const userRole = decoded.role;
@@ -38,7 +41,7 @@ export const AuthProvider = ({ children }) => {
         } else if (userRole === "EVENT_MANAGER") {
             router.push("/Organizador/DadosOrganizador");
         } else if (userRole === "STAFF") {
-            router.push("/Colaborador/ListaEventos");
+            router.push("/Colaborador/indexColaborador");
         }
     };
 
@@ -49,6 +52,7 @@ export const AuthProvider = ({ children }) => {
                 const accessToken = response.data;
                 ConverterToken(accessToken);
                 DicrecionarRota(accessToken);
+                setAuth(true);
             })
             .catch((error) => {
                 console.log("Erro na requisição. " + error);

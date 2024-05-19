@@ -40,13 +40,17 @@ export default function Menu() {
                 <div className={styles.menu_lateral_cliente}>
                     <div className={styles.menu_lateral_cliente_botao}>
                         {auth ? (
-                            <div className={styles.usuario_identificado}>
-                                <div
-                                    className={styles.usuario_identificado_logo}
-                                >
-                                    C
+                            <div>
+                                <div className={styles.usuario_identificado}>
+                                    <div
+                                        className={
+                                            styles.usuario_identificado_logo
+                                        }
+                                    >
+                                        C
+                                    </div>
+                                    <label>Christian Cubo</label>
                                 </div>
-                                <label>Christian Cubo</label>
                             </div>
                         ) : (
                             <div>
@@ -55,15 +59,15 @@ export default function Menu() {
                                 >
                                     <label>Usuário não identificado</label>
                                 </div>
-                                <input
-                                    type="button"
-                                    id="inputEntrar"
-                                    value="Entrar"
-                                    className={styles.botao_entrar}
-                                    onClick={() => EntrarCliente()}
-                                />
                             </div>
                         )}
+                        <input
+                            type="button"
+                            id="inputEntrar"
+                            value="Entrar"
+                            className={styles.botao_entrar}
+                            onClick={() => EntrarCliente()}
+                        />
                     </div>
                     <div className={styles.menu_lateral_cliente_texto}>
                         <label>Ainda não tem uma conta?</label>

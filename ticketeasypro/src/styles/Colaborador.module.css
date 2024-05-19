@@ -1,3 +1,69 @@
+/* Cabeçalho */
+.header_cabecalho_colaborador {
+    background-color: #EF0909;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 10px;
+    height: 80px;
+    width: 100%;
+    top: 0;
+}
+
+.header_cabecalho_colaborador label {
+    color: white;
+}
+
+.ul {
+    display: flex;
+    position: absolute;
+    top: 20%;
+    right: 60px;
+  }
+
+.li_colaborador_sair {
+    color: white;
+}
+
+/* Página inicial */
+.div_body_colaborador {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vender_ingressos_img_vender, .vender_ingressos_img_validar {
+    width: 150px;
+    height: 120px;
+}
+
+.validar_ingressos, .vender_ingressos {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 20px;
+    width: 175px;
+    height: 175px;
+    padding: 1em;
+}
+
+.validar_ingressos {
+    background-color: #EF0909;
+    margin-left: 20px;
+}
+
+.validar_ingressos label, .vender_ingressos label {
+    color: white;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+.vender_ingressos {
+    background-color: #EF0909;
+}
+
 /* Página do formulário do evento para validar Qr Code */
 .body_lista_colaborador {
     display: flex;
@@ -127,16 +193,25 @@
     font-weight: bold;
 }
 
-.header_colaborador_menu a:nth-of-type(1){
+.header_colaborador_menu li:nth-of-type(n + 2){
     border-left: 2px solid black;
 }
 
 /* Página do Qr Code */
-.qrcode_scanner {
+.body_qr_code {
     display: flex;
     justify-content: center;
-    background-color: black;
-    width: 100%;
+    align-items: center;
+    flex-direction: column;
+}
+
+.qrcode_scanner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
     height: 100vh;
 }
 
@@ -149,9 +224,9 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: black;
-    border: 5px solid #63100A;
-    box-shadow: 1px 2px 20px #b1281e;
+    background-color: white;
+    border: 5px solid #e32d20;
+    box-shadow: 1px 2px 10px 4px #e85348;
     border-bottom: 0;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;

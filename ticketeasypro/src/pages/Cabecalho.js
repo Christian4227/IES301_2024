@@ -13,7 +13,7 @@ export default function Cabecalho() {
     return (
         <div className={styles.Header}>
             <Link href="/">
-                <label>Excelsior Event Solution</label>
+                <label>Event Mais Você</label>
             </Link>
             <nav>
                 <ul className={styles.ul}>

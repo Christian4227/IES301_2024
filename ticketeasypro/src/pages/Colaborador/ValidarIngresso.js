@@ -1,8 +1,8 @@
 import React from "react";
-import Link from "next/link";
 import Cabecalho from "../Cabecalho";
 import styles from "../../styles/Colaborador.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import CabecalhoInfoColaborador from "./CabecalhoInfoColaborador";
 
 export default function ValidarIngresso() {
     const Validar = () => {
@@ -11,16 +11,7 @@ export default function ValidarIngresso() {
     return (
         <div>
             <Cabecalho />
-            <div className={styles.header_colaborador}>
-                <h1>Colaborador</h1>
-                <nav className={styles.header_colaborador_nav}>
-                    <ul className={styles.header_colaborador_menu}>
-                        <Link href="/Colaborador/ListaEventos">
-                            <li>Lista de eventos</li>
-                        </Link>
-                    </ul>
-                </nav>
-            </div>
+            <CabecalhoInfoColaborador />
             <div className={styles.body_colaborador}>
                 <div className={styles.info_ingressos}>
                     <label>Nº do ingresso</label>

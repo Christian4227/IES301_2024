@@ -4,37 +4,49 @@ import { jwtDecode } from "jwt-decode";
 export function middleware(request) {
     const meuCookie = request.cookies.get("ticket-token");
     if (!meuCookie) {
+        if (request.nextUrl.pathname.startsWith("/LoginCliente")) {
+            return;
+        }
         return Response.redirect(new URL("/", request.url));
     }
+
+    if (meuCookie === undefined) {
+        return;
+    }
+
     // Supondo que 'token' é o seu JWT
     const token = JSON.parse(meuCookie.value).accessToken;
     const decoded = jwtDecode(token);
     // // O papel do usuário geralmente é armazenado em uma propriedade do payload do token
     const userRole = decoded.role;
-    console.log(`O papel do usuário é: ${userRole}`);
+
     if (
         userRole === "SPECTATOR" &&
-        !request.nextUrl.pathname.startsWith("/Cliente")
+        (!request.nextUrl.pathname.startsWith("/Cliente") ||
+            request.nextUrl.pathname.startsWith("/LoginCliente"))
     ) {
         return Response.redirect(new URL("/Cliente/GeralCliente", request.url));
     }
     if (
         userRole === "ADMIN" &&
-        !request.nextUrl.pathname.startsWith("/Admin")
+        (!request.nextUrl.pathname.startsWith("/Admin") ||
+            request.nextUrl.pathname.startsWith("/LoginCliente"))
     ) {
         return Response.redirect(new URL("/Admin/Administracao", request.url));
     }
     if (
         userRole === "STAFF" &&
-        !request.nextUrl.pathname.startsWith("/Colaborador")
+        (!request.nextUrl.pathname.startsWith("/Colaborador") ||
+            request.nextUrl.pathname.startsWith("/LoginCliente"))
     ) {
         return Response.redirect(
-            new URL("/Colaborador/ListaEventos", request.url)
+            new URL("/Colaborador/indexColaborador", request.url)
         );
     }
     if (
         userRole === "EVENT_MANAGER" &&
-        !request.nextUrl.pathname.startsWith("/Organizador")
+        (!request.nextUrl.pathname.startsWith("/Organizador") ||
+            request.nextUrl.pathname.startsWith("/LoginCliente"))
     ) {
         return Response.redirect(new URL("/Organizador/Dados", request.url));
     }
@@ -43,6 +55,7 @@ export function middleware(request) {
 // See "Matching Paths" below to learn more
 export const config = {
     matcher: [
+        "/LoginCliente/:path*",
         "/Colaborador/:path*",
         "/Admin/:path*",
         "/Cliente/:path*",
