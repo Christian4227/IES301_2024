@@ -64,6 +64,22 @@ export interface RepoEventCreate {
     location_id: number;
 };
 
+export interface RepoEventUpdate {
+    name?: string;
+    description?: string;
+    initial_date?: Date;
+    final_date?: Date;
+    status?: EventStatus;
+    base_price?: number;
+    capacity?: number;
+    img_banner?: string;
+    img_thumbnail?: string | null;
+    color?: string;
+    category_id?: number;
+    manager_id?: string;
+    location_id?: number;
+}
+
 export interface EventResult extends EventCreate { };
 export interface EventCreateResult extends EventCreate { };
 
@@ -85,7 +101,23 @@ export interface BaseEvent {
     location_id: number;
 };
 
-export interface EventUpdate extends EventCreate { };
+export interface EventUpdate {
+    name: string;
+    description: string;
+    ts_initial_date: number;
+    ts_final_date: number;
+    status: EventStatus;
+    base_price: number;
+    capacity: number;
+    img_banner: string;
+    img_thumbnail: string | null;
+    color: string;
+    category_id: number;
+    manager_id: string;
+    location_id: number;
+};
+
+
 
 export interface EventSortParams {
 
@@ -93,12 +125,6 @@ export interface EventSortParams {
     initial_date?: Prisma.SortOrder;
     final_date?: Prisma.SortOrder;
 };
-
-interface EventOrder {
-    field: string; // The field to sort by (e.g., "name", "initial_date", "final_date")
-    direction: Prisma.SortOrder;
-}
-
 
 export interface OrderCriteria {
     name?: Prisma.SortOrder;

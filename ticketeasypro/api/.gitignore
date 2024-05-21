@@ -10,3 +10,4 @@ node_modules
 # Ignore backup files
 *.$*.drawio.bkp
 ~$*.docx
+creds.json

@@ -39,6 +39,7 @@ class UserService {
 		const user = await this.userRepo.find({ email });
 
 		if (!user) throw new Error("Invalid email or password");
+		if (!user.active) throw new Error("This user account is inactive.");
 
 		const { password: hashedPassword, salt, id: sub, role: role, name: userName } = user;
 

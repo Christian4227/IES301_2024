@@ -1,10 +1,10 @@
 
-import { EventStatus, Prisma, Role } from "@prisma/client";
+import { EventStatus, Prisma } from "@prisma/client";
 import { isValidDateRange } from "../utils/mixes";
 import EventRepository from "./../repositories/event.repository";
-import { BaseEvent, EventCreate, EventUpdate, EventUpdateResult } from "@interfaces/event.interface";
+import { BaseEvent, EventCreate, EventUpdateResult } from "@interfaces/event.interface";
 import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
-import { PaginatedEventResult } from "types/event.type";
+import { PaginatedEventResult, PartialEventUpdate } from "types/event.type";
 
 class EventService {
 	private eventRepository: EventRepository;
@@ -20,25 +20,49 @@ class EventService {
 		const initial_date = new Date(ts_initial_date);
 		const final_date = new Date(ts_final_date);
 
-
-		const eventCreated = await this.eventRepository.create({ ...rest, initial_date, final_date, manager_id: actorId });
-		return eventCreated;
-	}
-
-	update = async (eventID: number, dataUpdate: EventUpdate): Promise<EventUpdateResult> => {
-		const { ts_initial_date, ts_final_date, status: statusToUpdate } = dataUpdate;
-		const eventStored = await this.eventRepository.findDetails(eventID);
-
-
-		if (!isValidDateRange(ts_initial_date, ts_final_date)) throw new Error("The date range is invalid.");
-
-
 		try {
-			const event: BaseEvent = await this.eventRepository.update(eventID, dataUpdate);
-			return { ...event, ts_initial_date, ts_final_date };
+			const eventCreated = await this.eventRepository.create({ ...rest, initial_date, final_date, manager_id: actorId });
+			return eventCreated;
 		} catch (error) {
-			throw error;
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				if (error.code === 'P2025') {
+					throw new Error(`A record with the provided IDs was not found. Please check the category_id, manager_id, and location_id.`);
+				}
+			}
+			throw error; // Re-throw the error if it's not a known request error
 		}
+
+	}
+	filterNullsData = (data: PartialEventUpdate): PartialEventUpdate => {
+		return Object.fromEntries(Object.entries(data).filter(([_, value]) => value !== null && value !== undefined));
+	};
+
+	update = async (eventId: number, dataUpdate: PartialEventUpdate): Promise<EventUpdateResult> => {
+		const filteredDataUpdate = this.filterNullsData(dataUpdate);
+		eventId = Number(eventId);
+		const eventStored: BaseEvent = await this.eventRepository.findDetails(eventId);
+		const { ts_initial_date, ts_final_date, location_id, manager_id, category_id, ...rest } = filteredDataUpdate;
+		let { status } = filteredDataUpdate
+		const toBeUpdatedIntervalDates = resolveDates(eventStored, { ts_initial_date, ts_final_date });
+
+		const { ts_initial_date: initial_date, ts_final_date: final_date } = toBeUpdatedIntervalDates
+		const toUpdateData: any = rest;
+
+		if (status && !Object.values(EventStatus).includes(status))
+			throw new Error("Event status is invalid.");
+
+			if (initial_date) toUpdateData.initial_date = new Date(initial_date);
+		if (final_date) toUpdateData.final_date = new Date(final_date);
+		if (manager_id) toUpdateData.event_manager = { connect: { id: manager_id } };
+		if (category_id) toUpdateData.category = { connect: { id: category_id } };
+		if (location_id) toUpdateData.location = { connect: { id: location_id } };
+
+		const updatedEvent = await this.eventRepository.update(eventId, toUpdateData);
+
+
+		return {
+			...updatedEvent, ts_initial_date: updatedEvent.initial_date.getTime(), ts_final_date: updatedEvent.final_date.getTime()
+		};
 	}
 
 	searchEvents = async (query: string,
@@ -48,10 +72,6 @@ class EventService {
 		status?: EventStatus,
 		category_id?: number,
 	): Promise<PaginatedEventResult> => {
-
-		paginationParams.pageSize = Number(paginationParams.pageSize) || 10;
-		paginationParams.page = Number(paginationParams.page) || 1;
-
 		const auxDateNow = new Date();
 
 		if (category_id) category_id = Number(category_id)
@@ -77,5 +97,23 @@ class EventService {
 		);
 		return paginatedEventResults;
 	}
+}
+const resolveDates = (eventStored: { initial_date: Date, final_date: Date }, dataUpdate: PartialEventUpdate): PartialEventUpdate => {
+	const toBeChanged: PartialEventUpdate = {};
+	const ts_initial_date = dataUpdate.ts_initial_date ?? eventStored.initial_date.getTime();
+	const ts_final_date = dataUpdate.ts_final_date ?? eventStored.final_date.getTime();
+
+	if (ts_initial_date !== eventStored.initial_date.getTime()) {
+		toBeChanged.ts_initial_date = ts_initial_date;
+	}
+	if (ts_final_date !== eventStored.final_date.getTime()) {
+		toBeChanged.ts_final_date = ts_final_date;
+	}
+
+	if (ts_initial_date && ts_final_date && !isValidDateRange(ts_initial_date, ts_final_date)) {
+		throw new Error("The desired date/time range is invalid.");
+	}
+
+	return toBeChanged;
 }
 export default EventService;

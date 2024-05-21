@@ -1,90 +1,107 @@
 
 import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify"
 import EventService from "./../../services/event.service";
-import { PaginatedEventResult, QueryPaginationFilterOrder } from "types/event.type";
+import { PaginatedEventResult, PartialEventUpdate, QueryPaginationFilterOrder } from "types/event.type";
 import { BaseEvent, ControllerEventCreate, EventUpdate } from "@interfaces/event.interface";
 import { Prisma, Role, EventStatus } from "@prisma/client";
 import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
 
-const mappingCriteria: Record<string, string> = {
+const mappingOrderCriteria: Record<string, string> = {
     "price": "base_price",
     "date": "initial_date",
     "name": "name"
-}
-const mappingStatus: Record<string, EventStatus> = {
+};
+
+const mappingFilterStatus: Record<string, EventStatus> = {
     "planned": EventStatus.PLANNED,
     "in-progress": EventStatus.IN_PROGRESS,
     "completed": EventStatus.COMPLETED,
     "cancelled": EventStatus.CANCELLED,
-}
+};
 
-const defaultOrderCriteria: Prisma.EventOrderByWithRelationInput[] = [
-    { name: "asc" }, { initial_date: "desc" }, { final_date: "asc" }, { base_price: "desc" }
-];
+const defaultConfig = {
+    page: 1,
+    pageSize: 10,
+    orderBy: "price:asc,date:asc,name:desc",
+    status: "planned",
+    defaultOrderCriteria: [
+        { name: "asc" }, { initial_date: "desc" }, { final_date: "asc" }, { base_price: "desc" }
+    ] as Prisma.EventOrderByWithRelationInput[]
+};
+
+const parseOrderBy = (orderBy: string): Prisma.EventOrderByWithRelationInput[] => {
+    return orderBy.split(',').map(criterion => {
+        const [field, direction] = criterion.split(':');
+        const mappedField = mappingOrderCriteria[field] || field;
+        return { [mappedField]: direction } as Prisma.EventOrderByWithRelationInput;
+    });
+};
+
+const integerRegex = /^[0-9]+$/; // Regular expression for positive integers
 
 const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
     const eventService: EventService = new EventService();
 
-    api.get<{ Querystring: QueryPaginationFilterOrder }>('/',
-        async (
-            request: FastifyRequest<{ Querystring: QueryPaginationFilterOrder }>, reply: FastifyReply
-        ): Promise<PaginatedEventResult> => {
+    api.get<{ Querystring: QueryPaginationFilterOrder }>(
+        '/', async (request: FastifyRequest<{ Querystring: QueryPaginationFilterOrder }>, reply: FastifyReply): Promise<PaginatedEventResult> => {
             const {
-                filter, page = 1, "page-size": pageSize = 10, "start-date": tsStartDate,
-                "end-date": tsEndDate, "category-id": categoryId, "order-by": orderBy = "price:asc,date:asc,name:desc",
-                status = "planned"
+                filter, page = defaultConfig.page, "page-size": pageSize = defaultConfig.pageSize, "start-date": tsStartDate, "end-date": tsEndDate,
+                "category-id": categoryId, "order-by": orderBy = defaultConfig.orderBy, status = defaultConfig.status
             } = request.query;
-            let orderCriteria: Prisma.EventOrderByWithRelationInput[] = [...defaultOrderCriteria];
 
-            if (orderBy) {
-                orderCriteria = orderBy.split(',').map(criterion => {
-                    const [field, direction] = criterion.split(':');
-                    const mappedField = mappingCriteria[field] || field; // Se houver um mapeamento, use o nome mapeado, caso contrário, use o original
-                    return { [mappedField]: direction } as Prisma.EventOrderByWithRelationInput;
-                });
-            };
+            const orderCriteria = orderBy ? parseOrderBy(orderBy) : defaultConfig.defaultOrderCriteria;
 
             const paginationParams: PaginationParams = { page, pageSize };
             const queryIntervalDate: QueryIntervalDate = { tsStartDate, tsEndDate };
 
-            const eventStatus = mappingStatus[status];
+            const eventStatus = mappingFilterStatus[status];
 
-            const allFilterOrdenedEvents = await eventService.searchEvents(
-                filter, paginationParams, queryIntervalDate, orderCriteria, eventStatus, categoryId
-            );
+            const allFilterOrdenedEvents = await eventService.searchEvents(filter, paginationParams, queryIntervalDate, orderCriteria, eventStatus, categoryId);
 
             return reply.code(200).send(allFilterOrdenedEvents);
-        });
+        }
+    );
 
     api.post('/',
         { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER,])] },
         async (request: FastifyRequest<{ Body: ControllerEventCreate }>, reply: FastifyReply): Promise<BaseEvent> => {
+            const requiredFields = ["name", "description", "ts_initial_date", "ts_final_date",
+                "base_price", "capacity", "img_banner", "color", "category_id", "location_id"]
+
+            for (const field of requiredFields)
+                if (!request.body[field as keyof ControllerEventCreate]?.toString().length)
+                    return reply.code(400).send({ error: `Field ${field} is required` });
+
             const { user: { sub: actorId }, body } = request;
 
             const eventCreated = await eventService.create(actorId, body);
 
             return reply.code(201).send(eventCreated);
-
         });
 
-    api.put('/:eventId/updateAttribute',
-        { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER,])] },
+    api.put('/:eventId', { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER,])] },
         async (request: FastifyRequest<{
-            Params: { eventId: number, updateAttribute?: string }, Body: EventUpdate
+            Params: { eventId: number }, Body: EventUpdate
         }>, reply: FastifyReply): Promise<BaseEvent> => {
+            const { body: eventUpdate, params: { eventId } } = request;
+            if (!integerRegex.test(eventId.toString()))
+                return reply.code(400).send({ message: 'eventId must be valid value.' });
 
-            const { body: eventUpdate, params: { eventId, updateAttribute } } = request;
-            const allowedFields = ['status', 'manager-id', 'category-id', 'location-id'];
-            if (updateAttribute && !allowedFields.includes(updateAttribute)) {
-                return reply.code(400).send({ message: 'Invalid Field to Update.' });
-            }
+            const validAttributes: (keyof EventUpdate)[] = [
+                "name", "description", "ts_initial_date", "ts_final_date", "base_price", "capacity", "img_banner", "color",
+                "category_id", "status", "location_id"];
+            const validUpdatePayload = validAttributes.reduce((acc, key) => {
+                const updateValue = eventUpdate[key];
+                if (updateValue !== null && updateValue !== undefined) {
+                    (acc as any)[key] = updateValue;
+                }
+                return acc;
+            }, {} as Partial<EventUpdate>);
 
-
-            const eventCreated = await eventService.update(eventId, eventUpdate);
+            const eventCreated = await eventService.update(eventId, validUpdatePayload);
 
             return reply.code(201).send(eventCreated);
-
-        })
+        });
 
 }
 export default EventRoute;

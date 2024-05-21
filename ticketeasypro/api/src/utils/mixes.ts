@@ -1,4 +1,37 @@
 import { Identifier } from "types/common.type";
+// Compara se cada atriburo em comum a ambos objetos tem valores iguais
+export const areAttributesEqual = (objA: { [key: string]: any }, objB: { [key: string]: any }): boolean => {
+    for (const key in objA) {
+        if (objB.hasOwnProperty(key)) {
+            if (objA[key] !== objB[key]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+// Retorna um objeto contendo apenas os atributos compartilhados entre os objetos cujo os valores são diferentes
+// export const getAllDiff = (objA: { [key: string]: any }, objB: { [key: string]: any }): Object => {
+//     let objResult = Object();
+//     for (const key in objA) {
+//         if (objB.hasOwnProperty(key)) {
+//             if (objA[key] !== objB[key]) {
+//                 objResult[key] = objB[key]
+//             }
+//         }
+//     }
+//     return objResult;
+// }
+
+export const getDifferences = (original: any, updated: any): Partial<any> => {
+    const differences: Partial<any> = {};
+    for (const key in updated) {
+        if (updated[key] !== original[key]) {
+            differences[key] = updated[key];
+        }
+    }
+    return differences;
+};
 
 export const filterNullsData = (data: Record<string, any>) => {
     return Object.fromEntries(
