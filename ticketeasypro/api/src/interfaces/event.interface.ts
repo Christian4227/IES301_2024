@@ -1,4 +1,6 @@
-import { Category, EventStatus, Prisma, Ticket, User, Venue } from "@prisma/client";
+import { EventStatus, Prisma, Ticket, User } from "@prisma/client";
+import { Category } from "@interfaces/category.interface";
+import { Venue } from "@interfaces/venue.interface";
 
 
 export interface ControllerEventCreate {
@@ -33,6 +35,7 @@ export interface Event {
     location: Venue;
     tickets?: Ticket[];
 }
+
 export interface EventCreate {
     // id: number;
     name: string;

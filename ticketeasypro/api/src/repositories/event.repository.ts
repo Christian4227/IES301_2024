@@ -1,11 +1,11 @@
 import { PaginationParams } from "@interfaces/common.interface";
 import prisma from "./prisma";
-import { EventCreate, EventCreateResult, EventResult, Event, EventUpdate, BaseEvent, RepoEventCreate, RepoEventUpdate } from "@interfaces/event.interface";
-import { EventStatus, Prisma, Role } from "@prisma/client";
+import { EventResult, BaseEvent, RepoEventCreate, RepoEventUpdate, Event } from "@interfaces/event.interface";
+import { EventStatus, Prisma } from "@prisma/client";
 import { paginate } from "@utils/paginate";
 import { filterNullsData } from "@utils/mixes";
 import { PaginateParams } from "types/common.type";
-import { PaginatedEventResult } from "types/event.type";
+import { EventUniqueResult, PaginatedEventResult } from "types/event.type";
 
 
 class EventRepository {
@@ -42,7 +42,7 @@ class EventRepository {
         if (!event) throw new Error(`Event id: ${identifier} not found.`);
         return event
     };
-    findDetails = async (identifier: number): Promise<BaseEvent> => {
+    findDetails = async (identifier: number): Promise<EventUniqueResult> => {
         const whereClause = { id: identifier };
 
         const event = await this.eventDb.findUnique({
@@ -51,7 +51,13 @@ class EventRepository {
                 id: true,
                 name: true, description: true, initial_date: true, final_date: true, status: true,
                 base_price: true, capacity: true, img_banner: true, img_thumbnail: true, color: true,
-                category_id: true, location_id: true, manager_id: true //, Ticket: true
+                category: { select: { id: true, name: true, description: true } },
+                location: {
+                    select: {
+                        id: true, name: true, address_type: true, address: true, number: true, zip_code: true,
+                        city: true, uf: true, country: true, complements: true
+                    }
+                }, manager_id: true //, Ticket: true
             }
         });
 
@@ -74,8 +80,7 @@ class EventRepository {
         query: string,
         paginationParams: PaginationParams,
         orderBy: Prisma.EventOrderByWithRelationInput[],
-        startDate: Date,
-        endDate: Date,
+        startDate: Date, endDate: Date,
         status?: EventStatus,
         category_id?: number
 
@@ -105,8 +110,8 @@ class EventRepository {
         // if (endDate) whereClause.final_date = { lte: endDate }
         const select = {
             id: true, name: true, description: true, initial_date: true, final_date: true, status: true,
-            base_price: true, capacity: true, img_banner: true, img_thumbnail: true, color: true, category_id: true,
-            manager_id: true, location_id: true
+            base_price: true, capacity: true, img_banner: true, img_thumbnail: true, color: true, category: true,
+            manager_id: true, location: true
         };
         // Parâmetros de paginação incluindo orderBy
         const paginateParams: PaginateParams<Prisma.EventDelegate, Prisma.EventWhereInput, Prisma.EventOrderByWithRelationInput[]> = {

@@ -3,7 +3,7 @@ node_modules
 .env.production
 # Ignorar todos os arquivos que terminam com .bkp
 *.bkp
-
+*drawio.bkp
 # Ignorar todos os arquivos que começam com ~$
 ~$*
 

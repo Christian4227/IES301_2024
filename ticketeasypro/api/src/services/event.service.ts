@@ -2,9 +2,9 @@
 import { EventStatus, Prisma } from "@prisma/client";
 import { isValidDateRange } from "../utils/mixes";
 import EventRepository from "./../repositories/event.repository";
-import { BaseEvent, EventCreate, EventUpdateResult } from "@interfaces/event.interface";
+import { BaseEvent, EventCreate, EventResult, EventUpdateResult } from "@interfaces/event.interface";
 import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
-import { PaginatedEventResult, PartialEventUpdate } from "types/event.type";
+import { EventUniqueResult, PaginatedEventResult, PartialEventUpdate } from "types/event.type";
 
 class EventService {
 	private eventRepository: EventRepository;
@@ -40,7 +40,7 @@ class EventService {
 	update = async (eventId: number, dataUpdate: PartialEventUpdate): Promise<EventUpdateResult> => {
 		const filteredDataUpdate = this.filterNullsData(dataUpdate);
 		eventId = Number(eventId);
-		const eventStored: BaseEvent = await this.eventRepository.findDetails(eventId);
+		const eventStored: EventUniqueResult = await this.eventRepository.findDetails(eventId);
 		const { ts_initial_date, ts_final_date, location_id, manager_id, category_id, ...rest } = filteredDataUpdate;
 		let { status } = filteredDataUpdate
 		const toBeUpdatedIntervalDates = resolveDates(eventStored, { ts_initial_date, ts_final_date });
@@ -51,7 +51,7 @@ class EventService {
 		if (status && !Object.values(EventStatus).includes(status))
 			throw new Error("Event status is invalid.");
 
-			if (initial_date) toUpdateData.initial_date = new Date(initial_date);
+		if (initial_date) toUpdateData.initial_date = new Date(initial_date);
 		if (final_date) toUpdateData.final_date = new Date(final_date);
 		if (manager_id) toUpdateData.event_manager = { connect: { id: manager_id } };
 		if (category_id) toUpdateData.category = { connect: { id: category_id } };
@@ -63,7 +63,13 @@ class EventService {
 		return {
 			...updatedEvent, ts_initial_date: updatedEvent.initial_date.getTime(), ts_final_date: updatedEvent.final_date.getTime()
 		};
-	}
+	};
+
+	getEvent = async (eventId: number): Promise<EventUniqueResult> => {
+		const event = this.eventRepository.findDetails(eventId)
+		return event
+
+	};
 
 	searchEvents = async (query: string,
 		paginationParams: PaginationParams,

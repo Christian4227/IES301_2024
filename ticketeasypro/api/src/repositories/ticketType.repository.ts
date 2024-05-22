@@ -1,0 +1,131 @@
+import prisma from "./prisma";
+import { Prisma, Role } from "@prisma/client";
+import { BaseTypeTicket } from "@interfaces/tycketType.interface";
+import { TypeTicketCreate } from "types/ticketType.type";
+
+
+class TicketTypeRepository {
+    private userDb: Prisma.TypeTicketDelegate;
+    constructor() {
+        this.userDb = prisma.typeTicket;
+    }
+
+    create = async (typeTicketCreate: TypeTicketCreate): Promise<BaseTypeTicket> => {
+
+        const typeTicket: BaseTypeTicket = await this.userDb.create({ data: typeTicketCreate });
+        return typeTicket;
+    }
+
+    // find = async (identifier: Identifier): Promise<AccountResult | null> => {
+
+    //     const whereClause = buildWhereClause(identifier)
+
+
+    //     const account = await this.userDb.findUnique({
+    //         where: whereClause,
+    //         select: {
+    //             id: true, email: true, name: true, email_confirmed: true,
+    //             birth_date: true, phone: true, phone_fix: true, role: true, active: true
+    //         }
+    //     })
+
+    //     // if (!account) throw new Error(`User ${whereClause.email ?? whereClause.id} not found`);
+
+    //     return account
+    // }
+
+    // findDetails = async (identifier: Identifier): Promise<Account> => {
+    //     // Constrói o objeto 'where' de forma dinâmica baseado no input fornecido
+    //     const whereClause = buildWhereClause(identifier)
+
+    //     const user = await this.userDb.findUnique({
+    //         where: whereClause
+    //     });
+
+    //     if (!user) throw new Error(`User ${whereClause.email ?? whereClause.id} not found`);
+    //     return user;
+    // }
+
+    // toggleActive = async (identifier: Identifier, activeStatus?: boolean): Promise<boolean> => {
+    //     const whereClause = buildWhereClause(identifier)
+
+    //     try {
+    //         let accountUpdated = null;
+    //         if (!!activeStatus) {// apenas inverte o estado
+    //             const account: Account = await this.findDetails(whereClause);
+    //             accountUpdated = await this.userDb.update({
+    //                 where: { id: account.id },
+    //                 data: { active: account.active ?? !account.active }
+    //             });
+
+    //         } else {
+    //             accountUpdated = await this.userDb.update({
+    //                 where: whereClause,
+    //                 data: { active: activeStatus }
+    //             });
+    //         }
+    //         return !!accountUpdated;
+    //     } catch (error) {
+    //         throw new Error(`Failed to change status active for account: ${whereClause}\nError: ${error}`);
+    //     }
+    // };
+
+
+    // update = async (identifier: Identifier, data: AccountUpdate): Promise<AccountResult> => {
+
+    //     const whereClause = buildWhereClause(identifier)
+    //     const filteredData = filterNullsData(data);
+
+    //     const accountUpdated = await this.userDb.update(
+    //         {
+    //             where: whereClause,
+    //             data: filteredData,
+    //             select: {
+    //                 id: true, email: true, name: true, email_confirmed: true, birth_date: true, phone: true,
+    //                 phone_fix: true, role: true, active: true
+    //             }
+    //         }
+    //     );
+    //     return accountUpdated;
+    // }
+    // findAccounts = async (query: string, role?: Role, page: number = 1, pageSize: number = 10, orderBy: AccountSortParams = { name: 'asc' }): Promise<PaginatedAccountResult> => {
+
+    //     let whereClause: Prisma.UserWhereInput = {};
+    //     if (query || role) {
+    //         whereClause = {
+    //             ...(query && {
+    //                 OR: [
+    //                     { email: { contains: query, mode: 'insensitive' } },
+    //                     { name: { contains: query, mode: 'insensitive' } },
+    //                     { phone: { contains: query, mode: 'insensitive' } }
+    //                 ]
+    //             }),
+    //             ...role && { role: { equals: role } }
+    //         };
+    //     }
+
+    //     // Equivale a Select (id, email, name, email_confirmed ..) from USERS
+    //     const select = {
+    //         id: true, email: true, name: true, email_confirmed: true,
+    //         birth_date: true, phone: true, phone_fix: true, role: true, active: true
+    //     };
+
+    //     // Parâmetros de paginação incluindo orderBy
+    //     const paginateParams: PaginateParams<Prisma.UserDelegate, Prisma.UserWhereInput, Prisma.UserOrderByWithRelationInput> = {
+    //         model: this.userDb,
+    //         where: whereClause,
+    //         paginationParams: { page, pageSize },
+    //         select,
+    //         orderBy
+    //     };
+
+    //     // const paginated = await paginate<AccountResult, Prisma.UserWhereInput, typeof this.userDb>(paginateParams);
+    //     const paginated = await paginate<AccountResult, Prisma.UserWhereInput, AccountSortParams, typeof this.userDb>(paginateParams);
+
+
+    //     return paginated;
+
+
+    // }
+}
+export default TicketTypeRepository;

@@ -1,5 +1,5 @@
 import { PaginatedResult } from "@interfaces/common.interface";
-import { EventResult, EventUpdate, OrderCriteria } from "@interfaces/event.interface";
+import { EventResult, EventUpdate, OrderCriteria,Event } from "@interfaces/event.interface";
 export type OrderByArray = OrderCriteria[];
 export type PaginatedEventResult = PaginatedResult<EventResult>;
 
@@ -9,3 +9,4 @@ export type QueryPaginationFilterOrder = { filter: string; } & { "page": 1; "pag
 
 // 
 export type PartialEventUpdate = Partial<EventUpdate>;
+export type EventUniqueResult = Omit<Event, "event_manager">;

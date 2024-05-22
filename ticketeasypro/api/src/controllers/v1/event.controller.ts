@@ -1,8 +1,8 @@
 
-import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify"
+import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
 import EventService from "./../../services/event.service";
 import { PaginatedEventResult, PartialEventUpdate, QueryPaginationFilterOrder } from "types/event.type";
-import { BaseEvent, ControllerEventCreate, EventUpdate } from "@interfaces/event.interface";
+import { BaseEvent, ControllerEventCreate, EventResult, EventUpdate } from "@interfaces/event.interface";
 import { Prisma, Role, EventStatus } from "@prisma/client";
 import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
 
@@ -59,6 +59,16 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
             const allFilterOrdenedEvents = await eventService.searchEvents(filter, paginationParams, queryIntervalDate, orderCriteria, eventStatus, categoryId);
 
             return reply.code(200).send(allFilterOrdenedEvents);
+        }
+    );
+    api.get('/:eventId', { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER,])] },
+        async (request: FastifyRequest<{ Params: { eventId: number } }>, reply: FastifyReply): Promise<EventResult> => {
+            const { body: eventUpdate, params: { eventId } } = request;
+            if (!integerRegex.test(eventId.toString()))
+                return reply.code(400).send({ message: 'eventId must be valid value.' });
+            const eventFinded = await eventService.getEvent(Number(eventId));
+
+            return reply.code(200).send(eventFinded);
         }
     );
 
