@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 
 export default function InfoEventos() {
     const router = useRouter();
-    const [dados, setDados] = useState(null);
+    const [dados, setDados] = useState([]);
     const Filtrar = () => {
         alert("Filtrado");
     };
@@ -24,8 +24,79 @@ export default function InfoEventos() {
     };
 
     useEffect(() => {
-        setDados("");
-    });
+        setDados([
+            {
+                id: 1,
+                name: "Show do Supla",
+                description: "Show da Véio do Rock",
+                initial_date: "2024-05-21T03:33:47.000Z",
+                final_date: "2024-05-29T06:00:27.000Z",
+                status: "PLANNED",
+                base_price: 1450,
+                capacity: 125,
+                img_banner:
+                    "https://plus.unsplash.com/premium_photo-1682855222843-0cd0827ed6e3",
+                img_thumbnail:
+                    "https://plus.unsplash.com/premium_photo-1682855222930-210943bfdd6c",
+                color: "#FF5733",
+                category: {
+                    name: "Esportes",
+                    description:
+                        "Eventos esportivos incluindo futebol, basquete, etc.",
+                },
+                manager_id: "d78568d8-8ad4-4eda-9b61-9bb8dce74126",
+                location: {
+                    id: 2,
+                    name: "Allianz Parque",
+                    address_type: "Rua",
+                    address: "Rua Palestra Itália",
+                    number: "200",
+                    zip_code: "05005-030",
+                    city: "São Paulo",
+                    uf: "SP",
+                    country: "BRASIL",
+                    complements: "Perdizes",
+                    created_at: "2024-05-21T21:28:08.000Z",
+                    updated_at: "2024-05-21T21:28:08.000Z",
+                },
+            },
+            {
+                id: 2,
+                name: "Show de Eduardo",
+                description: "Show da Véio do Rock",
+                initial_date: "2024-05-21T03:33:47.000Z",
+                final_date: "2024-05-29T06:00:27.000Z",
+                status: "PLANNED",
+                base_price: 1450,
+                capacity: 125,
+                img_banner:
+                    "https://plus.unsplash.com/premium_photo-1682855222843-0cd0827ed6e3",
+                img_thumbnail:
+                    "https://plus.unsplash.com/premium_photo-1682855222930-210943bfdd6c",
+                color: "#000000",
+                category: {
+                    name: "Esportes",
+                    description:
+                        "Eventos esportivos incluindo futebol, basquete, etc.",
+                },
+                manager_id: "d78568d8-8ad4-4eda-9b61-9bb8dce74126",
+                location: {
+                    id: 2,
+                    name: "Allianz Parque",
+                    address_type: "Rua",
+                    address: "Rua Palestra Itália",
+                    number: "200",
+                    zip_code: "05005-030",
+                    city: "São Paulo",
+                    uf: "SP",
+                    country: "BRASIL",
+                    complements: "Perdizes",
+                    created_at: "2024-05-21T21:28:08.000Z",
+                    updated_at: "2024-05-21T21:28:08.000Z",
+                },
+            },
+        ]);
+    }, []);
 
     return (
         <div id="div-principal">
@@ -126,127 +197,153 @@ export default function InfoEventos() {
                     ) : (
                         <table>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <div className={stylese.tabela_eventos}>
+                                {dados.map((dado) => (
+                                    <tr key={dado.id}>
+                                        <td>
                                             <div
                                                 className={
-                                                    stylese.secao_tabela_eventos_titulo
-                                                }
-                                            >
-                                                <h2>Torre de Miroku</h2>
-                                                <label>Cultural</label>
-                                            </div>
-                                            <div>
-                                                <div
-                                                    style={{
-                                                        backgroundColor:
-                                                            "black",
-                                                        width: "100%",
-                                                        height: "8px",
-                                                        marginBottom: "10px",
-                                                    }}
-                                                ></div>
-                                                <Image
-                                                    src={torre}
-                                                    alt="imagem1"
-                                                    className={
-                                                        stylese.img_tabela_eventos
-                                                    }
-                                                />
-                                            </div>
-                                            <div
-                                                className={
-                                                    stylese.secao_tabela_eventos
+                                                    stylese.tabela_eventos
                                                 }
                                             >
                                                 <div
                                                     className={
-                                                        stylese.tabela_eventos_info
+                                                        stylese.secao_tabela_eventos_titulo
                                                     }
                                                 >
-                                                    <ul
+                                                    <h2>{dado.name}</h2>
+                                                    <label>
+                                                        {dado.category.name}
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <div
+                                                        style={{
+                                                            backgroundColor:
+                                                                dado.color,
+                                                            width: "100%",
+                                                            height: "8px",
+                                                            marginBottom:
+                                                                "10px",
+                                                        }}
+                                                    ></div>
+                                                    <Image
+                                                        src={dado.img_thumbnail}
+                                                        height={250}
+                                                        width={250}
+                                                        alt="imagem1"
                                                         className={
-                                                            stylese.tabela_eventos_info_topico
+                                                            stylese.img_tabela_eventos
+                                                        }
+                                                    />
+                                                </div>
+                                                <div
+                                                    className={
+                                                        stylese.secao_tabela_eventos
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            stylese.tabela_eventos_info
                                                         }
                                                     >
-                                                        <li>
-                                                            <label>
-                                                                Nome da empresa
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label>Local</label>
-                                                        </li>
-                                                        <li>
-                                                            <label>Data</label>
-                                                        </li>
-                                                        <li>
-                                                            <label>
-                                                                Capacidade
-                                                            </label>
-                                                        </li>
-                                                    </ul>
-                                                    <ul>
-                                                        <li>
-                                                            <label>
-                                                                Nome da empresa
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label>
-                                                                Ribeirão Pires,
-                                                                SP - Brasil
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label>
-                                                                25/01/2024
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label>100</label>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <hr />
-                                                <p>
-                                                    *** Nota: confirme o seu
-                                                    e-mail para receber o seu
-                                                    ingresso.
-                                                </p>
-                                                <div
-                                                    className={
-                                                        stylese.tabela_eventos_botoes
-                                                    }
-                                                >
-                                                    <input
-                                                        type="button"
-                                                        id="btnReservar"
+                                                        <ul
+                                                            className={
+                                                                stylese.tabela_eventos_info_topico
+                                                            }
+                                                        >
+                                                            <li>
+                                                                <label>
+                                                                    Nome da
+                                                                    empresa
+                                                                </label>
+                                                            </li>
+                                                            <li>
+                                                                <label>
+                                                                    Local
+                                                                </label>
+                                                            </li>
+                                                            <li>
+                                                                <label>
+                                                                    Data
+                                                                </label>
+                                                            </li>
+                                                            <li>
+                                                                <label>
+                                                                    Capacidade
+                                                                </label>
+                                                            </li>
+                                                        </ul>
+                                                        <ul>
+                                                            <li>
+                                                                <label>
+                                                                    Ticket Easy
+                                                                    Pro
+                                                                </label>
+                                                            </li>
+                                                            <li>
+                                                                <label>
+                                                                    {
+                                                                        dado
+                                                                            .location
+                                                                            .name
+                                                                    }
+                                                                </label>
+                                                            </li>
+                                                            <li>
+                                                                <label>
+                                                                    {new Date(
+                                                                        dado.final_date
+                                                                    ).toLocaleDateString()}
+                                                                </label>
+                                                            </li>
+                                                            <li>
+                                                                <label>
+                                                                    {
+                                                                        dado.capacity
+                                                                    }
+                                                                </label>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <hr />
+                                                    <p>
+                                                        *** Nota: confirme o seu
+                                                        e-mail para receber o
+                                                        seu ingresso.
+                                                    </p>
+                                                    <div
                                                         className={
-                                                            stylese.botao_comprar
+                                                            stylese.tabela_eventos_botoes
                                                         }
-                                                        onClick={() =>
-                                                            ReservarIngresso()
-                                                        }
-                                                        value="Reservar"
-                                                    />
-                                                    <input
-                                                        type="button"
-                                                        id="btnVerMais"
-                                                        className={
-                                                            stylese.botao_ver
-                                                        }
-                                                        onClick={() =>
-                                                            VisualizarEvento()
-                                                        }
-                                                        value="Ver mais"
-                                                    />
+                                                    >
+                                                        <input
+                                                            type="button"
+                                                            id="btnReservar"
+                                                            className={
+                                                                stylese.botao_comprar
+                                                            }
+                                                            onClick={() =>
+                                                                ReservarIngresso()
+                                                            }
+                                                            value="Reservar"
+                                                        />
+                                                        <input
+                                                            type="button"
+                                                            id="btnVerMais"
+                                                            className={
+                                                                stylese.botao_ver
+                                                            }
+                                                            onClick={() =>
+                                                                VisualizarEvento()
+                                                            }
+                                                            value="Ver mais"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     )}
