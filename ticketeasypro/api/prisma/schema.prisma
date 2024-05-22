@@ -30,6 +30,7 @@ model User {
 
 model Venue {
   id           Int       @id @default(autoincrement())
+  name         String    @unique @db.VarChar
   address_type String    @db.VarChar(256)
   address      String    @db.VarChar(512)
   number       String    @db.VarChar(10)

@@ -1,88 +1,132 @@
 import { Role } from "@prisma/client";
-import { UserCreate } from "./interfaces/repository/user.interface";
 import UserRepository from "./repositories/user.repository";
 import { hashPassword } from "./utils/hash";
 import prisma from "./repositories/prisma";
 
 const createVenues = async () => {
-    await prisma.venue.createMany({
-        data: [
-            {
-                address_type: "Avenida",
-                address: "Avenida Paulista",
-                number: "1000",
-                zip_code: "01310-100",
-                city: "São Paulo",
-                uf: "SP",
-                country: "BRASIL",
-                complements: "Edifício Central"
-            },
-            {
-                address_type: "Rua",
-                address: "Rua XV de Novembro",
-                number: "205",
-                zip_code: "80020-310",
-                city: "Curitiba",
-                uf: "PR",
-                country: "BRASIL",
-                complements: "Próximo ao Teatro Guaíra"
-            },
-            {
-                address_type: "Avenida",
-                address: "Avenida Atlântica",
-                number: "420",
-                zip_code: "22010-000",
-                city: "Rio de Janeiro",
-                uf: "RJ",
-                country: "BRASIL",
-                complements: "Em frente à praia de Copacabana"
-            },
-            {
-                address_type: "Setor",
-                address: "Setor Comercial Norte",
-                number: "500",
-                zip_code: "70719-000",
-                city: "Brasília",
-                uf: "DF",
-                country: "BRASIL",
-                complements: "Edifício Enterprise"
-            },
-            {
-                address_type: "Rua",
-                address: "Rua dos Andradas",
-                number: "1234",
-                zip_code: "90020-008",
-                city: "Porto Alegre",
-                uf: "RS",
-                country: "BRASIL",
-                complements: "Largo dos Leões"
-            },
-            {
-                address_type: "Avenida",
-                address: "Avenida dos Estados",
-                number: "1089",
-                zip_code: "50070-260",
-                city: "Recife",
-                uf: "PE",
-                country: "BRASIL",
-                complements: "Shopping Recife"
-            },
-            {
-                address_type: "Boulevard",
-                address: "Boulevard Álvares Cabral",
-                number: "200",
-                zip_code: "30170-000",
-                city: "Belo Horizonte",
-                uf: "MG",
-                country: "BRASIL",
-                complements: "Torre Minas"
-            }
-        ]
-    });
+    // await prisma.venue.deleteMany({});
+    const venues = [
+        {
+            "name": "Maracanã",
+            "address_type": "Avenida",
+            "address": "Avenida Presidente Castelo Branco",
+            "number": "Portão 3",
+            "zip_code": "20271-130",
+            "city": "Rio de Janeiro",
+            "uf": "RJ",
+            "country": "BRASIL",
+            "complements": "Maracanã"
+        },
+        {
+            "name": "Allianz Parque",
+            "address_type": "Rua",
+            "address": "Rua Palestra Itália",
+            "number": "200",
+            "zip_code": "05005-030",
+            "city": "São Paulo",
+            "uf": "SP",
+            "country": "BRASIL",
+            "complements": "Perdizes"
+        },
+        {
+            "name": "Mineirão",
+            "address_type": "Avenida",
+            "address": "Avenida Antônio Abrahão Caram",
+            "number": "1001",
+            "zip_code": "31275-000",
+            "city": "Belo Horizonte",
+            "uf": "MG",
+            "country": "BRASIL",
+            "complements": "Pampulha"
+        },
+        {
+            "name": "Arena Fonte Nova",
+            "address_type": "Ladeira",
+            "address": "Ladeira da Fonte das Pedras",
+            "number": "S/N",
+            "zip_code": "40050-565",
+            "city": "Salvador",
+            "uf": "BA",
+            "country": "BRASIL",
+            "complements": "Nazaré"
+        },
+        {
+            "name": "Arena da Baixada",
+            "address_type": "Rua",
+            "address": "Rua Buenos Aires",
+            "number": "1260",
+            "zip_code": "80250-070",
+            "city": "Curitiba",
+            "uf": "PR",
+            "country": "BRASIL",
+            "complements": "Água Verde"
+        },
+        {
+            "name": "Arena Pernambuco",
+            "address_type": "Avenida",
+            "address": "Avenida Deus é Fiel",
+            "number": "S/N",
+            "zip_code": "54753-510",
+            "city": "São Lourenço da Mata",
+            "uf": "PE",
+            "country": "BRASIL",
+            "complements": "Cidade da Copa"
+        },
+        {
+            "name": "Beira-Rio",
+            "address_type": "Avenida",
+            "address": "Avenida Padre Cacique",
+            "number": "891",
+            "zip_code": "90810-240",
+            "city": "Porto Alegre",
+            "uf": "RS",
+            "country": "BRASIL",
+            "complements": "Praia de Belas"
+        },
+        {
+            "name": "Estádio Olímpico Nilton Santos",
+            "address_type": "Rua",
+            "address": "Rua José dos Reis",
+            "number": "425",
+            "zip_code": "20921-320",
+            "city": "Rio de Janeiro",
+            "uf": "RJ",
+            "country": "BRASIL",
+            "complements": "Engenho de Dentro"
+        },
+        {
+            "name": "Morumbi",
+            "address_type": "Praça",
+            "address": "Praça Roberto Gomes Pedrosa",
+            "number": "1",
+            "zip_code": "05653-070",
+            "city": "São Paulo",
+            "uf": "SP",
+            "country": "BRASIL",
+            "complements": "Morumbi"
+        },
+        {
+            "name": "Arena Castelão",
+            "address_type": "Avenida",
+            "address": "Avenida Alberto Craveiro",
+            "number": "2901",
+            "zip_code": "60860-212",
+            "city": "Fortaleza",
+            "uf": "CE",
+            "country": "BRASIL",
+            "complements": "Castelão"
+        }
+    ]
+    const storedVenuesCount = await prisma.venue.count()
+    if (storedVenuesCount !== venues.length) {
+        await prisma.venue.createMany({
+            data: venues
+        });
+    }
 }
 
 
-async function createCategories() {
+const createCategories = async () => {
     try {
         await prisma.category.createMany({
             data: [
@@ -214,7 +258,7 @@ const usersToCreate = [
         "phone_fix": "118612-1345",
         "role": Role.STAFF
     },
-     {
+    {
         "email": "manager1@ticketeasypro.com.br",
         "password": "Manager123!",
         "email_confirmed": true,
@@ -270,6 +314,10 @@ const usersToCreate = [
 
 // Função que inicia logo após API estar online, cria dados para teste
 export const initialData = async () => {
+
+    await createVenues();
+    await createCategories();
+
     for (const account of usersToCreate) {
         try {
             const { email, password, role, ...rest } = account;
@@ -282,6 +330,5 @@ export const initialData = async () => {
             console.error(`Usuário ${account.email} já existe.\nErro:${error}`);
         }
     };
-    await createVenues();
-    await createCategories();
+
 }

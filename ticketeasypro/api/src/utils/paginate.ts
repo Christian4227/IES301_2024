@@ -1,6 +1,6 @@
 import prisma from "./../repositories/prisma";
-import { PaginateParams, PrismaDelegate } from "../types/common.type";
-import { PaginatedResult } from "./../interfaces/common.interface";
+import { PaginateParams, PrismaDelegate } from "types/common.type";
+import { PaginatedResult } from "@interfaces/common.interface";
 
 export async function paginate<T, TWhereInput, TOrderBy, TDelegate extends PrismaDelegate>(
     { model, where, select, orderBy, paginationParams }: PaginateParams<TDelegate, TWhereInput, TOrderBy>

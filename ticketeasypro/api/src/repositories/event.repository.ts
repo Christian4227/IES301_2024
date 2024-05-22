@@ -1,6 +1,6 @@
 import { PaginationParams } from "@interfaces/common.interface";
 import prisma from "./prisma";
-import { EventCreate, EventCreateResult, EventResult, Event, EventUpdate, BaseEvent, RepoEventCreate } from "@interfaces/event.interface";
+import { EventCreate, EventCreateResult, EventResult, Event, EventUpdate, BaseEvent, RepoEventCreate, RepoEventUpdate } from "@interfaces/event.interface";
 import { EventStatus, Prisma, Role } from "@prisma/client";
 import { paginate } from "@utils/paginate";
 import { filterNullsData } from "@utils/mixes";
@@ -17,18 +17,17 @@ class EventRepository {
     create = async (eventCreate: RepoEventCreate): Promise<BaseEvent> => {
         const { category_id, manager_id, location_id, ...rest } = eventCreate;
 
+
         const event = await this.eventDb.create({
             data: {
-                ...rest, category: {
-                    connect: { id: category_id }
-                }, event_manager: {
-                    connect: { id: manager_id }
-                }, location: {
-                    connect: { id: location_id }
-                }
+                ...rest,
+                category: { connect: { id: category_id } },
+                event_manager: { connect: { id: manager_id } },
+                location: { connect: { id: location_id } }
             }
         });
         return event;
+
     };
 
     find = async (identifier: number): Promise<BaseEvent> => {
@@ -52,8 +51,7 @@ class EventRepository {
                 id: true,
                 name: true, description: true, initial_date: true, final_date: true, status: true,
                 base_price: true, capacity: true, img_banner: true, img_thumbnail: true, color: true,
-                category_id: true, event_manager: true, location: true, location_id: true,
-                manager_id: true, Ticket: true
+                category_id: true, location_id: true, manager_id: true //, Ticket: true
             }
         });
 
@@ -61,7 +59,7 @@ class EventRepository {
         return event;
     };
 
-    update = async (identifier: number, data: EventUpdate): Promise<BaseEvent> => {
+    update = async (identifier: number, data: RepoEventUpdate): Promise<BaseEvent> => {
         const whereClause = { id: identifier };
         const filteredData = filterNullsData(data);
 
@@ -82,21 +80,29 @@ class EventRepository {
         category_id?: number
 
     ): Promise<PaginatedEventResult> => {
+        // Inicializando o whereClause com a condição de data
+        let whereClause: Prisma.EventWhereInput = { AND: { initial_date: { gte: startDate }, final_date: { lte: endDate } } };
 
-        let whereClause: Prisma.EventWhereInput = {};
+        console.log({ query, startDate, endDate, category_id, status });
 
-        whereClause = {
-            ...(query && {
+        if (query) {
+            whereClause = ({
+                ...whereClause,
                 OR: [
                     { name: { contains: query, mode: 'insensitive' } },
                     { description: { contains: query, mode: 'insensitive' } }
                 ]
-            }), AND: { initial_date: { gte: startDate } }
+            });
         };
-        if (category_id) whereClause.category_id = { equals: category_id };
-        if (status) whereClause.status = { equals: status };
 
-        if (endDate) whereClause.final_date = { lte: endDate }
+        if (category_id)
+            whereClause.AND = { ...whereClause.AND, category_id: { equals: category_id } };
+
+        if (status)
+            whereClause.AND = { ...whereClause.AND, status: { equals: status } };
+
+        console.log('Constructed whereClause:', JSON.stringify(whereClause, null, 2));
+        // if (endDate) whereClause.final_date = { lte: endDate }
         const select = {
             id: true, name: true, description: true, initial_date: true, final_date: true, status: true,
             base_price: true, capacity: true, img_banner: true, img_thumbnail: true, color: true, category_id: true,

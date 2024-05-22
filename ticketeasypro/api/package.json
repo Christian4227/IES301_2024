@@ -20,8 +20,7 @@
     "@fastify/jwt": "^8.0.0",
     "@prisma/client": "^5.11.0",
     "fastify": "^4.26.2",
-    "nodemailer": "^6.9.13",
-    "sharp": "^0.33.3"
+    "nodemailer": "^6.9.13"
   },
   "devDependencies": {
     "@types/node": "^20.12.2",
