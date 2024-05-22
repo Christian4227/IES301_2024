@@ -14,6 +14,18 @@
     color: white;
 }
 
+.header_cabecalho_colaborador label a {
+    color: white;
+}
+
+.li_colaborador_sair a {
+    color: white;
+}
+
+.header_colaborador a {
+    color: black;
+}
+
 .ul {
     display: flex;
     position: absolute;

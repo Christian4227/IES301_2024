@@ -16,7 +16,7 @@ export default function ListaEventos() {
             return;
         }
 
-        router.push("/Colaborador/QrCode");
+        router.push("/Colaborador/ScannerQrCode");
     };
     return (
         <div>

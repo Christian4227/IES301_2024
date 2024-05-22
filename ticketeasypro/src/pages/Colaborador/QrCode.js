@@ -1,66 +1,28 @@
-import React, { useEffect, useState } from "react";
-import styles from "../../styles/Colaborador.module.css";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import seta from "../../assets/seta para cima.jpg";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import React, { useRef, useState } from "react";
+import QRCode from "qrcode";
 
 export default function QrCode() {
-    const router = useRouter();
-    const [botao, setBotao] = useState(false);
-    const [scannedData, setScannedData] = useState(null);
-
-    useEffect(() => {
-        const scanner = new Html5QrcodeScanner("qrcode", {
-            qrbox: {
-                width: 300,
-                height: 300,
-            },
-            fps: 5,
+    const canvasRef = useRef(null);
+    const [image, setImage] = useState("");
+    const Gerar = () => {
+        QRCode.toCanvas(canvasRef.current, "Teste", { width: 250 }, (error) => {
+            if (error) {
+                console.error("Erro ao gerar o QR Code.", error);
+            } else {
+                // Capture the image as a Data URL
+                const dataUrl = canvasRef.current.toDataURL();
+                setImage(dataUrl);
+                console.log(image);
+            }
         });
-
-        scanner.render(success, error);
-
-        function success(result) {
-            scanner.clear();
-            setScannedData(result);
-        }
-
-        function error(err) {
-            console.warn(err);
-        }
-    }, []);
-
-    const MenuValidar = () => {
-        setBotao(!botao);
-    };
-    const ValidarCodigo = () => {
-        router.push("/Colaborador/CodigoIngresso");
     };
     return (
-        <div className={styles.body_qr_code}>
-            <div id="qrcode" className={styles.qrcode_scanner}></div>
-            <div className={styles.embaixo}>
-                <button
-                    className={styles.botao_img}
-                    onClick={() => MenuValidar()}
-                >
-                    <Image src={seta} alt="" className={styles.img_botao} />
-                </button>
-                {botao ? (
-                    <div className={styles.botao_grupo}>
-                        <input
-                            id="btnCodigoIngresso"
-                            className={styles.botao_codigo}
-                            type="button"
-                            value="Validar com código do ingresso"
-                            onClick={() => ValidarCodigo()}
-                        />
-                    </div>
-                ) : (
-                    <></>
-                )}
-            </div>
+        <div>
+            <button onClick={() => Gerar()}>Gerar</button>
+            <canvas
+                ref={canvasRef}
+                style={{ width: "100vw", height: "100vh" }}
+            ></canvas>
         </div>
     );
 }

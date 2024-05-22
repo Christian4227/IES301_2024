@@ -60,6 +60,8 @@ export default function TelaCadastroCliente() {
         let data = JSON.stringify({
             email: email,
             password: senha,
+            confirm_password: novaSenha,
+            email_confirmed: true,
             name: nome,
             birth_date: dataNascimentoC,
             phone: celular,
