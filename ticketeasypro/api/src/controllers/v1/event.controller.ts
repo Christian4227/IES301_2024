@@ -1,16 +1,11 @@
 
 import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
-import EventService from "./../../services/event.service";
+import EventService from "@services/event.service";
+import { integerRegex } from "@utils/validators";
 import { PaginatedEventResult, PartialEventUpdate, QueryPaginationFilterOrder } from "types/event.type";
 import { BaseEvent, ControllerEventCreate, EventResult, EventUpdate } from "@interfaces/event.interface";
 import { Prisma, Role, EventStatus } from "@prisma/client";
 import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
-
-const mappingOrderCriteria: Record<string, string> = {
-    "price": "base_price",
-    "date": "initial_date",
-    "name": "name"
-};
 
 const mappingFilterStatus: Record<string, EventStatus> = {
     "planned": EventStatus.PLANNED,
@@ -18,6 +13,13 @@ const mappingFilterStatus: Record<string, EventStatus> = {
     "completed": EventStatus.COMPLETED,
     "cancelled": EventStatus.CANCELLED,
 };
+
+const mappingOrderCriteria: Record<string, string> = {
+    "price": "base_price",
+    "date": "initial_date",
+    "name": "name"
+};
+
 
 const defaultConfig = {
     page: 1,
@@ -29,6 +31,7 @@ const defaultConfig = {
     ] as Prisma.EventOrderByWithRelationInput[]
 };
 
+
 const parseOrderBy = (orderBy: string): Prisma.EventOrderByWithRelationInput[] => {
     return orderBy.split(',').map(criterion => {
         const [field, direction] = criterion.split(':');
@@ -36,8 +39,6 @@ const parseOrderBy = (orderBy: string): Prisma.EventOrderByWithRelationInput[] =
         return { [mappedField]: direction } as Prisma.EventOrderByWithRelationInput;
     });
 };
-
-const integerRegex = /^[0-9]+$/; // Regular expression for positive integers
 
 const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
     const eventService: EventService = new EventService();

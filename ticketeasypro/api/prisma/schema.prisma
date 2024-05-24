@@ -68,7 +68,7 @@ model OrderTicket {
   created_at DateTime   @default(now()) @db.Timestamp(0)
   updated_at DateTime   @updatedAt @db.Timestamp(0)
   type_id    Int        @db.Integer()
-  type       TypeTicket @relation(fields: [type_id], references: [id])
+  type       TicketType @relation(fields: [type_id], references: [id])
 
   @@map("ORDERTICKETS")
 }
@@ -85,7 +85,7 @@ model Ticket {
   @@map("TICKETS")
 }
 
-model TypeTicket {
+model TicketType {
   id          Int           @id @default(autoincrement())
   name        String        @unique @db.VarChar(256)
   discount    Int           @default(0) @db.SmallInt
@@ -94,7 +94,7 @@ model TypeTicket {
   updated_at  DateTime      @updatedAt @db.Timestamp(0)
   OrderTicket OrderTicket[]
 
-  @@map("TYPETICKETS")
+  @@map("TICKETTYPES")
 }
 
 model Event {

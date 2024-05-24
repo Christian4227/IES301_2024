@@ -11,3 +11,4 @@ node_modules
 *.$*.drawio.bkp
 ~$*.docx
 creds.json
+*.bkp

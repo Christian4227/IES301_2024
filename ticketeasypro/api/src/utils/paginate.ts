@@ -24,3 +24,23 @@ export async function paginate<T, TWhereInput, TOrderBy, TDelegate extends Prism
 
     return { data, total, totalPages, currentPage: page, pageSize };
 }
+
+interface MappingOrderCriteria {
+    [key: string]: string;
+}
+
+export const parseOrderBy = <T>(orderBy: string, mappingOrderCriteria: MappingOrderCriteria): { [P in keyof T]?: 'asc' | 'desc' }[] => {
+    return orderBy.split(',').map(criterion => {
+        const [field, direction] = criterion.split(':');
+        const mappedField = mappingOrderCriteria[field] || field;
+        return { [mappedField]: direction as 'asc' | 'desc' } as { [P in keyof T]?: 'asc' | 'desc' };
+    });
+};
+
+// export const parseOrderBy = <T>(orderBy: string, mappingOrderCriteria: Record<string, keyof T>): { [P in keyof T]?: 'asc' | 'desc' }[] => {
+//     return orderBy.split(',').map(criterion => {
+//         const [field, direction] = criterion.split(':');
+//         const mappedField = mappingOrderCriteria[field] || field;
+//         return { [mappedField]: direction } as { [P in keyof T]?: 'asc' | 'desc' };
+//     });
+// };

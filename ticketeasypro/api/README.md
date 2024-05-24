@@ -42,7 +42,7 @@ Este endpoint permite atualizar campos específicos de um evento existente.
 
 As rotas de atualização seguem o seguinte formato:
 
-Por exemplo: `{{base_v1}}/events/1`
+Por exemplo: `{{base_v1}}/events/eventId`
 
 ### Payload:
 
@@ -118,15 +118,59 @@ exemplo de retorno:
 
 
 
+### GET /ticket-types
+Retorna os tipos de tickets  filtrados e ordenados conforme os parâmetros fornecidos.
+
+**Query Parameters**:
+- `filter` (string, opcional): Busca por nome ou descrição do evento. Default: `null`.
+- `status` (enum, opcional): Status do evento { "planned" | "in-progress" | "completed" | "cancelled" }. Default: `"planned"`.
+- `category-id` (integer, obrigatório): ID da categoria do evento.
+- `start-date` (integer, opcional): Timestamp UTC em milissegundos para filtrar eventos com início posterior ou igual à data/hora informada. Default: início do dia atual.
+- `end-date` (integer, opcional): Timestamp UTC em milissegundos para filtrar eventos com inicio anterior ou igual à data/hora informada. Default: último dia do mês seguinte.
+- `order-by` (string, opcional): Critérios de ordenação por [price(asc|desc), date:(asc|desc), name:(asc|desc)].
+
+**Exemplo de Requisição**:
+```http
+GET: '{{base_v1}}/events?status=planned&category-id=4&filter=rock&order-by=price:asc,date:asc,name:desc'
+
+exemplo de retorno:
+{
+    "data": [
+        {
+            "id": 3,
+            "name": "Show do Supla",
+            "description": "Show da Véio do Rock",
+            "initial_date": "2024-05-21T03:33:47.000Z",
+            "final_date": "2024-05-29T06:00:27.000Z",
+            "status": "PLANNED",
+            "base_price": 1450,
+            "capacity": 125,
+            "img_banner": "https://plus.unsplash.com/premium_photo-1682855222843-0cd0827ed6e3",
+            "img_thumbnail": "https://plus.unsplash.com/premium_photo-1682855222930-210943bfdd6c",
+            "color": "#FF5733",
+            "category_id": 4,
+            "manager_id": "5bc65cbc-8d2d-42c3-9f63-b98c929c2fa6",
+            "location_id": 2
+        }
+    ],
+    "total": 1,
+    "totalPages": 1,
+    "currentPage": 1,
+    "pageSize": 10
+}
+
+
+
 
 
 #TO-DO
- - Deve haver uma forma de validar ingresso usando apenas dados impressos no ticket (id da ordem de compra, id do ticket)
+ - Deve haver uma forma alternativa ao qrCode de validar ingresso usando apenas dados impressos no ticket (id da ordem de compra, id do cliente, id do ticket);
 
+ - O ticket de entrada (ingresso) deve conter além dos ids acima, identificador do próprio ingresso e o tipo de ingresso;
 
+ - validar se o qrcode do evento está sendo usado no local/evento correto (no jeito que está um ingresso comprado pra qualquer local/evento rodaria a catraca de qualquer outro local/evento );
 
-
-
+ - no guichê só serão feitos pagamentos das ordens de compra feitas pelo cliente em seu perfil logado e re/impressões de tickets;
 
 
 

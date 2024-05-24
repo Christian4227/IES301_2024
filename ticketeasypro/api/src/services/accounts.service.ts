@@ -1,7 +1,7 @@
 
 import { Role } from "@prisma/client";
 import { canDoIt } from "@utils/roles";
-import { PaginatedAccountResult, AccountUpdate, AccountCreate, AccountUpdateResult } from "./../interfaces/service/account.interface";
+import { PaginatedAccountResult, AccountUpdate, AccountCreate, AccountUpdateResult } from "@interfaces/service/account.interface";
 import { randomUUID } from "crypto";
 import AccountRepository from "../repositories/account.repository";
 import { hashPassword } from "@utils/hash";
