@@ -5,6 +5,7 @@ import { PaginatedTicketTypeResult, PartialTypeTicket, TypeTicketCreate } from "
 import { PaginationParams } from "@interfaces/common.interface";
 import { paginate } from "@utils/paginate";
 import { PaginateParams } from "types/common.type";
+import { filterNullsData } from "@utils/mixes";
 
 
 
@@ -46,7 +47,7 @@ class TicketTypeRepository {
             orderBy
         };
 
-        const paginated = await paginate<BaseTypeTicket, Prisma.TicketTypeWhereInput, Prisma.OrderByWithRelationInput[], typeof this.ticketTypeDb>(paginateParams);
+        const paginated = await paginate<BaseTypeTicket, Prisma.TicketTypeWhereInput, Prisma.TicketTypeOrderByWithRelationInput[], typeof this.ticketTypeDb>(paginateParams);
         return paginated;
     };
 
@@ -55,9 +56,7 @@ class TicketTypeRepository {
         // Iniciar uma transação
         const result = await prisma.$transaction(async (prisma) => {
             // Verificar se o TypeTicket existe
-            const typeTicket = await this.ticketTypeDb.findUnique({
-                where: { id: ticketTypeId }
-            });
+            const typeTicket = await this.ticketTypeDb.findUnique({ where: { id: ticketTypeId } });
 
             // Se o TypeTicket não existir, lançar um erro
             if (!typeTicket) {
@@ -71,9 +70,9 @@ class TicketTypeRepository {
 
             // Se houver OrderTickets relacionados, lançar um erro
             if (orderTicketCount > 0) {
-                return null
-                console.log('Cannot delete TypeTicket as it has related OrderTickets.');
-                //throw new Error('Cannot delete TypeTicket as it has related OrderTickets.');
+                // return null
+                // console.log('Cannot delete TypeTicket as it has related OrderTickets.');
+                throw new Error('Cannot delete TypeTicket as it has related OrderTickets.');
             }
 
             // Se não houver OrderTickets relacionados, excluir o TypeTicket
@@ -93,86 +92,19 @@ class TicketTypeRepository {
         return typeTicket
     }
 
-    // toggleActive = async (identifier: Identifier, activeStatus?: boolean): Promise<boolean> => {
-    //     const whereClause = buildWhereClause(identifier)
 
-    //     try {
-    //         let accountUpdated = null;
-    //         if (!!activeStatus) {// apenas inverte o estado
-    //             const account: Account = await this.findDetails(whereClause);
-    //             accountUpdated = await this.userDb.update({
-    //                 where: { id: account.id },
-    //                 data: { active: account.active ?? !account.active }
-    //             });
-
-    //         } else {
-    //             accountUpdated = await this.userDb.update({
-    //                 where: whereClause,
-    //                 data: { active: activeStatus }
-    //             });
-    //         }
-    //         return !!accountUpdated;
-    //     } catch (error) {
-    //         throw new Error(`Failed to change status active for account: ${whereClause}\nError: ${error}`);
-    //     }
-    // };
-
-
-    // update = async (identifier: Identifier, data: AccountUpdate): Promise<AccountResult> => {
-
-    //     const whereClause = buildWhereClause(identifier)
-    //     const filteredData = filterNullsData(data);
-
-    //     const accountUpdated = await this.userDb.update(
-    //         {
-    //             where: whereClause,
-    //             data: filteredData,
-    //             select: {
-    //                 id: true, email: true, name: true, email_confirmed: true, birth_date: true, phone: true,
-    //                 phone_fix: true, role: true, active: true
-    //             }
-    //         }
-    //     );
-    //     return accountUpdated;
-    // }
-    // findAccounts = async (query: string, role?: Role, page: number = 1, pageSize: number = 10, orderBy: AccountSortParams = { name: 'asc' }): Promise<PaginatedAccountResult> => {
-
-    //     let whereClause: Prisma.UserWhereInput = {};
-    //     if (query || role) {
-    //         whereClause = {
-    //             ...(query && {
-    //                 OR: [
-    //                     { email: { contains: query, mode: 'insensitive' } },
-    //                     { name: { contains: query, mode: 'insensitive' } },
-    //                     { phone: { contains: query, mode: 'insensitive' } }
-    //                 ]
-    //             }),
-    //             ...role && { role: { equals: role } }
-    //         };
-    //     }
-
-    //     // Equivale a Select (id, email, name, email_confirmed ..) from USERS
-    //     const select = {
-    //         id: true, email: true, name: true, email_confirmed: true,
-    //         birth_date: true, phone: true, phone_fix: true, role: true, active: true
-    //     };
-
-    //     // Parâmetros de paginação incluindo orderBy
-    //     const paginateParams: PaginateParams<Prisma.UserDelegate, Prisma.UserWhereInput, Prisma.UserOrderByWithRelationInput> = {
-    //         model: this.userDb,
-    //         where: whereClause,
-    //         paginationParams: { page, pageSize },
-    //         select,
-    //         orderBy
-    //     };
-
-    //     // const paginated = await paginate<AccountResult, Prisma.UserWhereInput, typeof this.userDb>(paginateParams);
-    //     const paginated = await paginate<AccountResult, Prisma.UserWhereInput, AccountSortParams, typeof this.userDb>(paginateParams);
-
-
-    //     return paginated;
-
-
-    // }
-}
+    async update(eventId: number, data: PartialTypeTicket): Promise<BaseTypeTicket> {
+        const filteredData = filterNullsData(data); // Certifique-se que filterNullsData esteja definida e funcionando corretamente
+        try {
+            const accountUpdated = await this.ticketTypeDb.update({
+                where: { id: eventId },
+                data: filteredData
+            });
+            return accountUpdated;
+        } catch (error) {
+            console.error("Error in TicketTypeRepository.update:", error); // Adicione logs para depuração
+            throw error; // Re-lance o erro para ser capturado no nível superior
+        }
+    }
+};
 export default TicketTypeRepository;

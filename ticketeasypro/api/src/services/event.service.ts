@@ -2,9 +2,11 @@
 import { EventStatus, Prisma } from "@prisma/client";
 import { isValidDateRange } from "../utils/mixes";
 import EventRepository from "./../repositories/event.repository";
-import { BaseEvent, EventCreate, EventResult, EventUpdateResult } from "@interfaces/event.interface";
+import { BaseEvent, Event, EventCreate, EventResult, EventUpdateResult } from "@interfaces/event.interface";
 import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
 import { EventUniqueResult, PaginatedEventResult, PartialEventUpdate } from "types/event.type";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { integerRegex } from "@utils/validators";
 
 class EventService {
 	private eventRepository: EventRepository;
@@ -37,16 +39,16 @@ class EventService {
 		return Object.fromEntries(Object.entries(data).filter(([_, value]) => value !== null && value !== undefined));
 	};
 
-	update = async (eventId: number, dataUpdate: PartialEventUpdate): Promise<EventUpdateResult> => {
+	modify = async (eventId: number, dataUpdate: PartialEventUpdate): Promise<EventUpdateResult> => {
 		const filteredDataUpdate = this.filterNullsData(dataUpdate);
 		eventId = Number(eventId);
 		const eventStored: EventUniqueResult = await this.eventRepository.findDetails(eventId);
-		const { ts_initial_date, ts_final_date, location_id, manager_id, category_id, ...rest } = filteredDataUpdate;
-		let { status } = filteredDataUpdate
+		const { ts_initial_date, ts_final_date, location_id, manager_id, category_id, status, ...rest } = filteredDataUpdate;
+
 		const toBeUpdatedIntervalDates = resolveDates(eventStored, { ts_initial_date, ts_final_date });
 
 		const { ts_initial_date: initial_date, ts_final_date: final_date } = toBeUpdatedIntervalDates
-		const toUpdateData: any = rest;
+		const toUpdateData: any = { ...rest };
 
 		if (status && !Object.values(EventStatus).includes(status))
 			throw new Error("Event status is invalid.");
@@ -57,12 +59,23 @@ class EventService {
 		if (category_id) toUpdateData.category = { connect: { id: category_id } };
 		if (location_id) toUpdateData.location = { connect: { id: location_id } };
 
-		const updatedEvent = await this.eventRepository.update(eventId, toUpdateData);
+		try {
+			const updatedEvent = await this.eventRepository.update(eventId, toUpdateData);
+
+			return {
+				...updatedEvent, ts_initial_date: updatedEvent.initial_date.getTime(), ts_final_date: updatedEvent.final_date.getTime()
+			};
+		} catch (error) {
+			console.error("Error in EventService.modify:", error); // Adicione logs para depuração
+			if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+				const meta = error.meta as { target?: string[] }; // Adiciona um tipo explícito para meta
+				const targetField = Array.isArray(meta?.target) ? meta.target.join(', ') : 'unknown field';
+				throw new Error(`Field(s): "${targetField}" on Event must be unique.`);
+			}
+			throw error; // Lance novamente o erro original se for um tipo inesperado
+		}
 
 
-		return {
-			...updatedEvent, ts_initial_date: updatedEvent.initial_date.getTime(), ts_final_date: updatedEvent.final_date.getTime()
-		};
 	};
 
 	getEvent = async (eventId: number): Promise<EventUniqueResult> => {
@@ -78,22 +91,33 @@ class EventService {
 		status?: EventStatus,
 		category_id?: number,
 	): Promise<PaginatedEventResult> => {
-		const auxDateNow = new Date();
+
+		let { page, pageSize } = paginationParams;
 
 		if (category_id) category_id = Number(category_id)
 
-		if (paginationParams.page <= 0) throw new Error("The page is min equals 1.");
+		if (!(integerRegex.test(page.toString()) && integerRegex.test(page.toString())))
+			throw new Error('Page and PageSize must be valid integer value.');
 
+		paginationParams.page = Number(page);
+		paginationParams.pageSize = Number(pageSize);
+
+		if (paginationParams.page <= 0) throw new Error("The page is min equals 1.");
 		if (paginationParams.pageSize > 20) throw new Error("The page-size is to largest.");
 
 		let { tsStartDate, tsEndDate } = queryIntervalDate;
+		const auxDateNow = new Date();
+		// caso não tenha uma data inicial e/ou final para filtrar o sistema irá retorna da data atual
+		// até o último dia do mês seguinte a data atual.
 
-		// caso não tenha uma data final para filtrar o sistema irá tornar a data final o ulitmo dia do mês seguinte.
-		const endDate = new Date(Date.UTC(auxDateNow.getUTCFullYear(), auxDateNow.getUTCMonth() + 2, 0, 0, 0, 0, 0));
-		const startDate = new Date(Date.UTC(auxDateNow.getUTCFullYear(), auxDateNow.getUTCMonth(), auxDateNow.getUTCDate())
-		);
-		if (tsStartDate) startDate.setTime(Number(tsStartDate));
-		if (tsEndDate) endDate.setTime(Number(tsEndDate));
+		const startDate: Date = auxDateNow;
+		const endDate: Date = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth() + 2, 0, 0, 0, 0, 0));
+
+		if (tsStartDate) {
+			startDate.setTime(Number(tsStartDate))
+			// caso tenha uma data inicial o sistema irá tornar a data final o último dia do mês seguinte a data informada
+			endDate.setTime((new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth() + 2, 0, 0, 0, 0, 0))).getTime());
+		}
 
 		if (!isValidDateRange(startDate.getTime(), endDate.getTime()))
 			throw new Error("The date range is invalid.");

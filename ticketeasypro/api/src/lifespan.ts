@@ -1,9 +1,44 @@
-import { Role } from "@prisma/client";
+import { PrismaClient, Role } from "@prisma/client";
 import UserRepository from "./repositories/user.repository";
 import { hashPassword } from "./utils/hash";
 import prisma from "./repositories/prisma";
+const createTicketTypes = async (prisma: PrismaClient) => {
+    const ticketTypes = [
+        {
+            "name": "Ingresso Comum",
+            "discount": 0,
+            "description": "Ingresso regular sem desconto."
+        },
+        {
+            "name": "Meia-Entrada para Estudantes",
+            "discount": 50,
+            "description": "Ingresso com desconto para estudantes."
+        },
+        {
+            "name": "Ingresso VIP",
+            "discount": 20,
+            "description": "Ingresso VIP com benefícios adicionais."
+        },
+        {
+            "name": "Meia-Entrada para Idosos",
+            "discount": 30,
+            "description": "Ingresso com desconto para idosos."
+        },
+        {
+            "name": "Especial",
+            "discount": 15,
+            "description": "Ingresso com desconto especial."
+        }
+    ]
+    const storedTicketTypesCount = await prisma.ticketType.count();
+    if (storedTicketTypesCount <= ticketTypes.length) {
+        await prisma.ticketType.createMany({
+            data: ticketTypes
+        });
+    }
+};
 
-const createVenues = async () => {
+const createVenues = async (prismaCliente: PrismaClient) => {
     // await prisma.venue.deleteMany({});
     const venues = [
         {
@@ -117,18 +152,18 @@ const createVenues = async () => {
             "complements": "Castelão"
         }
     ]
-    const storedVenuesCount = await prisma.venue.count()
+    const storedVenuesCount = await prismaCliente.venue.count()
     if (storedVenuesCount !== venues.length) {
-        await prisma.venue.createMany({
+        await prismaCliente.venue.createMany({
             data: venues
         });
     }
 }
 
 
-const createCategories = async () => {
+const createCategories = async (prismaCliente: PrismaClient) => {
     try {
-        await prisma.category.createMany({
+        await prismaCliente.category.createMany({
             data: [
                 { name: "Música", description: "Eventos relacionados a apresentações musicais e shows." },
                 { name: "Esportes", description: "Eventos esportivos incluindo futebol, basquete, etc." },
@@ -314,9 +349,9 @@ const usersToCreate = [
 
 // Função que inicia logo após API estar online, cria dados para teste
 export const initialData = async () => {
-
-    await createVenues();
-    await createCategories();
+    await createTicketTypes(prisma);
+    await createVenues(prisma);
+    await createCategories(prisma);
 
     for (const account of usersToCreate) {
         try {

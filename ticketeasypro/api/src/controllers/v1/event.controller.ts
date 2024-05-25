@@ -109,7 +109,7 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
                 return acc;
             }, {} as Partial<EventUpdate>);
 
-            const eventCreated = await eventService.update(eventId, validUpdatePayload);
+            const eventCreated = await eventService.modify(eventId, validUpdatePayload);
 
             return reply.code(201).send(eventCreated);
         });

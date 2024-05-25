@@ -85,36 +85,38 @@ Retorna eventos filtrados e ordenados conforme os parâmetros fornecidos.
 - `start-date` (integer, opcional): Timestamp UTC em milissegundos para filtrar eventos com início posterior ou igual à data/hora informada. Default: início do dia atual.
 - `end-date` (integer, opcional): Timestamp UTC em milissegundos para filtrar eventos com inicio anterior ou igual à data/hora informada. Default: último dia do mês seguinte.
 - `order-by` (string, opcional): Critérios de ordenação por [price(asc|desc), date:(asc|desc), name:(asc|desc)].
+- `page` (number, opcional): Página selecionada. Default: 1, min=1
+- `page-size` (number, opcional): Qtd de resultados por página. Default: 10, min=1, max=200
 
 **Exemplo de Requisição**:
 ```http
 GET: '{{base_v1}}/events?status=planned&category-id=4&filter=rock&order-by=price:asc,date:asc,name:desc'
 
 exemplo de retorno:
-{
-    "data": [
         {
-            "id": 3,
-            "name": "Show do Supla",
-            "description": "Show da Véio do Rock",
-            "initial_date": "2024-05-21T03:33:47.000Z",
-            "final_date": "2024-05-29T06:00:27.000Z",
-            "status": "PLANNED",
-            "base_price": 1450,
-            "capacity": 125,
-            "img_banner": "https://plus.unsplash.com/premium_photo-1682855222843-0cd0827ed6e3",
-            "img_thumbnail": "https://plus.unsplash.com/premium_photo-1682855222930-210943bfdd6c",
-            "color": "#FF5733",
-            "category_id": 4,
-            "manager_id": "5bc65cbc-8d2d-42c3-9f63-b98c929c2fa6",
-            "location_id": 2
+            "data": [
+                {
+                    "id": 3,
+                    "name": "Show do Supla",
+                    "description": "Show da Véio do Rock",
+                    "initial_date": "2024-05-21T03:33:47.000Z",
+                    "final_date": "2024-05-29T06:00:27.000Z",
+                    "status": "PLANNED",
+                    "base_price": 1450,
+                    "capacity": 125,
+                    "img_banner": "https://plus.unsplash.com/premium_photo-1682855222843-0cd0827ed6e3",
+                    "img_thumbnail": "https://plus.unsplash.com/premium_photo-1682855222930-210943bfdd6c",
+                    "color": "#FF5733",
+                    "category_id": 4,
+                    "manager_id": "5bc65cbc-8d2d-42c3-9f63-b98c929c2fa6",
+                    "location_id": 2
+                }
+            ],
+            "total": 1,
+            "totalPages": 1,
+            "currentPage": 1,
+            "pageSize": 10
         }
-    ],
-    "total": 1,
-    "totalPages": 1,
-    "currentPage": 1,
-    "pageSize": 10
-}
 
 
 
@@ -122,44 +124,59 @@ exemplo de retorno:
 Retorna os tipos de tickets  filtrados e ordenados conforme os parâmetros fornecidos.
 
 **Query Parameters**:
-- `filter` (string, opcional): Busca por nome ou descrição do evento. Default: `null`.
-- `status` (enum, opcional): Status do evento { "planned" | "in-progress" | "completed" | "cancelled" }. Default: `"planned"`.
-- `category-id` (integer, obrigatório): ID da categoria do evento.
-- `start-date` (integer, opcional): Timestamp UTC em milissegundos para filtrar eventos com início posterior ou igual à data/hora informada. Default: início do dia atual.
-- `end-date` (integer, opcional): Timestamp UTC em milissegundos para filtrar eventos com inicio anterior ou igual à data/hora informada. Default: último dia do mês seguinte.
-- `order-by` (string, opcional): Critérios de ordenação por [price(asc|desc), date:(asc|desc), name:(asc|desc)].
+- `filter` (string, opcional): Busca por nome ou descrição do tipo de ticket. Default: `null`.
+- `order-by` (string, opcional): Critérios de ordenação por [ name(asc|desc), description(asc|desc), discount(asc|desc) ].
+- `page` (number, opcional): Página selecionada. Default: 1, min=1
+- `page-size` (number, opcional): Qtd de resultados por página. Default: 10, min=1, max=20
 
 **Exemplo de Requisição**:
 ```http
-GET: '{{base_v1}}/events?status=planned&category-id=4&filter=rock&order-by=price:asc,date:asc,name:desc'
+GET: '{{base_v1}}/ticket-types?filter=ingres'
 
-exemplo de retorno:
-{
-    "data": [
+exemplo de retorno (filtro descrição ou nome):
         {
-            "id": 3,
-            "name": "Show do Supla",
-            "description": "Show da Véio do Rock",
-            "initial_date": "2024-05-21T03:33:47.000Z",
-            "final_date": "2024-05-29T06:00:27.000Z",
-            "status": "PLANNED",
-            "base_price": 1450,
-            "capacity": 125,
-            "img_banner": "https://plus.unsplash.com/premium_photo-1682855222843-0cd0827ed6e3",
-            "img_thumbnail": "https://plus.unsplash.com/premium_photo-1682855222930-210943bfdd6c",
-            "color": "#FF5733",
-            "category_id": 4,
-            "manager_id": "5bc65cbc-8d2d-42c3-9f63-b98c929c2fa6",
-            "location_id": 2
+            "data": [
+                {
+                    "id": 4,
+                    "name": "INGRESSO MEIA-ESTUDANTE",
+                    "discount": 50,
+                    "description": "Em cumprimento a lei de benficios sociais."
+                },
+                {
+                    "id": 6,
+                    "name": "INGRESSO MEIA-Idoso",
+                    "discount": 24,
+                    "description": "Em cumprimento a lei de benficios sociais."
+                },
+                {
+                    "id": 1,
+                    "name": "INGRESSO COMUM",
+                    "discount": 0,
+                    "description": "Ingresso Comum - Inteira"
+                }
+            ],
+            "total": 3,
+            "totalPages": 1,
+            "currentPage": 1,
+            "pageSize": 10
+        };
+```http
+GET: '{{base_v1}}/ticket-types?filter=ingres&order-by=discount:desc&page=2&page-size=1'
+exemplo de retorno (paginação - page:2, page-size:1):
+        {
+            "data": [
+                {
+                    "id": 6,
+                    "name": "INGRESSO MEIA-Idoso",
+                    "discount": 24,
+                    "description": "Em cumprimento a lei de benficios sociais."
+                }
+            ],
+            "total": 3,
+            "totalPages": 3,
+            "currentPage": 2,
+            "pageSize": 1
         }
-    ],
-    "total": 1,
-    "totalPages": 1,
-    "currentPage": 1,
-    "pageSize": 10
-}
-
-
 
 
 

@@ -3,6 +3,8 @@ export interface BaseTypeTicket {
     name: string;
     discount: number;
     description: string;
+    created_at: Date;
+    updated_at: Date;
 }
 export interface ControllerTicketTypeCreate {
     name: string;

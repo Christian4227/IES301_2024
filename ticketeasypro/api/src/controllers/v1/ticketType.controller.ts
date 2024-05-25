@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } fro
 import TicketTypeService from "@services/ticketType.service"
 import { integerRegex } from "@utils/validators";
 import { Prisma, Role } from "@prisma/client";
-import { PaginatedTicketTypeResult } from "types/ticketType.type";
+import { PaginatedTicketTypeResult, PartialTypeTicket } from "types/ticketType.type";
 import { PaginationParams } from "@interfaces/common.interface";
 import { BaseTypeTicket, ControllerTicketTypeCreate } from "@interfaces/tycketType.interface";
 
@@ -38,7 +38,7 @@ const TicketTypeRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
     const ticketTypeService: TicketTypeService = new TicketTypeService();
 
     api.post('/',
-        { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER,])] },
+        { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER, Role.ADMIN,])] },
         async (request: FastifyRequest<{ Body: ControllerTicketTypeCreate }>, reply: FastifyReply): Promise<BaseTypeTicket> => {
             const requiredFields = ["name", "discount", "description"];
 
@@ -48,8 +48,8 @@ const TicketTypeRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
                 if (!body[field as keyof ControllerTicketTypeCreate]?.toString().length)
                     return reply.code(400).send({ error: `Field ${field} is required` });
 
-            if (!integerRegex.test(body.discount.toString()) && body.discount < 0)
-                return reply.code(400).send({ message: 'Discount must be valid integer number.' });
+            if (!integerRegex.test(body.discount.toString()) || body.discount < 0 || body.discount > 100)
+                return reply.code(400).send({ message: 'Discount must be valid integer value.' });
 
             const eventCreated = await ticketTypeService.create(body);
 
@@ -72,42 +72,49 @@ const TicketTypeRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
             return reply.code(200).send(allFilterOrdenedTicketTypes);
         }
     );
-    // api.get('/:eventId', { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER,])] },
-    //     async (request: FastifyRequest<{ Params: { eventId: number } }>, reply: FastifyReply): Promise<EventResult> => {
-    //         const { body: eventUpdate, params: { eventId } } = request;
-    //         if (!integerRegex.test(eventId.toString()))
-    //             return reply.code(400).send({ message: 'eventId must be valid value.' });
-    //         const eventFinded = await eventService.getEvent(Number(eventId));
+    api.get('/:ticketTypeId', { preHandler: [api.authenticate, api.authorizeRoles(Role.EVENT_MANAGER, Role.ADMIN,)] },
+        async (request: FastifyRequest<{ Params: { ticketTypeId: number } }>, reply: FastifyReply): Promise<BaseTypeTicket> => {
+            const { params: { ticketTypeId } } = request;
+            if (!integerRegex.test(ticketTypeId.toString()))
+                return reply.code(400).send({ message: 'ticketTypeId must be valid value.' });
+            const ticketType = await ticketTypeService.getTicketTypes(Number(ticketTypeId));
 
-    //         return reply.code(200).send(eventFinded);
-    //     }
-    // );
+            return reply.code(200).send(ticketType);
+        }
+    );
 
 
 
-    // api.put('/:eventId', { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER,])] },
-    //     async (request: FastifyRequest<{
-    //         Params: { eventId: number }, Body: EventUpdate
-    //     }>, reply: FastifyReply): Promise<BaseEvent> => {
-    //         const { body: eventUpdate, params: { eventId } } = request;
-    //         if (!integerRegex.test(eventId.toString()))
-    //             return reply.code(400).send({ message: 'eventId must be valid value.' });
+    api.put('/:ticketTypeId', { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER,])] },
+        async (
+            request: FastifyRequest<{ Params: { ticketTypeId: number }, Body: PartialTypeTicket }>,
+            reply: FastifyReply): Promise<BaseTypeTicket> => {
+            const { body: typeTicketToUpdate } = request;
+            let { params: { ticketTypeId } } = request;
+            // Validate ticketTypeId            
+            if (!integerRegex.test(ticketTypeId.toString()))
+                return reply.code(400).send({ message: 'ticketTypeId must be a valid integer value.' });
 
-    //         const validAttributes: (keyof EventUpdate)[] = [
-    //             "name", "description", "ts_initial_date", "ts_final_date", "base_price", "capacity", "img_banner", "color",
-    //             "category_id", "status", "location_id"];
-    //         const validUpdatePayload = validAttributes.reduce((acc, key) => {
-    //             const updateValue = eventUpdate[key];
-    //             if (updateValue !== null && updateValue !== undefined) {
-    //                 (acc as any)[key] = updateValue;
-    //             }
-    //             return acc;
-    //         }, {} as Partial<EventUpdate>);
+            if (!typeTicketToUpdate)
+                return reply.code(400).send({ message: 'Ticket type update data is missing.' });
 
-    //         const eventCreated = await eventService.update(eventId, validUpdatePayload);
+            const validAttributes: (keyof PartialTypeTicket)[] = ["name", "discount", "description"];
 
-    //         return reply.code(201).send(eventCreated);
-    //     });
+            const validUpdatePayload: PartialTypeTicket = validAttributes.reduce((acc, key) => {
+                const updateValue = typeTicketToUpdate[key];
+                if (updateValue !== null && updateValue !== undefined)
+                    (acc as any)[key] = updateValue;
+                return acc;
+            }, {} as PartialTypeTicket);
+
+
+
+            ticketTypeId = Number(ticketTypeId);
+            // Perform the update
+            const updatedTicketType = await ticketTypeService.modify(ticketTypeId, validUpdatePayload);
+            return reply.code(200).send(updatedTicketType);
+        }
+    )
 
 }
 export default TicketTypeRoute;
