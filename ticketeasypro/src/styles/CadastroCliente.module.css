@@ -6,7 +6,7 @@
 
 .form_cadastrar {
     border: 1px solid black;
-    box-shadow: 4px 4px 7px gray;
+    box-shadow: 1px 1px 10px 1px gray;
     background-color: white;
     padding: 2%;
     width: 90%;
@@ -83,6 +83,7 @@
 .recuperar_email {
     background-color: white;
     border: 1px solid black;
+    box-shadow: 1px 1px 10px 1px gray;
     margin: 1em;
     padding: 1em;
     width: 50%;
@@ -90,10 +91,15 @@
 
 .recuperar_email_titulo {
     text-align: center;
-    margin-bottom: 1em;
+    margin-bottom: 2em;
 }
 
 .recuperar_email_titulo h1 {
     font-weight: bold;
     font-size: 1.5em;
+}
+
+.footer_form label a {
+    color: blue;
+    text-decoration: none !important;
 }

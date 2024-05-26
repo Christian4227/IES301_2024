@@ -17,7 +17,7 @@ export default function CabecalhoColaborador() {
             <nav>
                 <ul className={styles.ul}>
                     <li className={styles.li_colaborador_sair}>
-                        <Link href="#" onClick={() => Sair()}>
+                        <Link href="/" onClick={() => Sair()}>
                             Sair
                         </Link>
                     </li>

@@ -1,0 +1,41 @@
+.div_corpo_body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1em;
+}
+
+.div_corpo_recuperacao {
+    background-color: white;
+    border: 1px solid black;
+    box-shadow: 1px 1px 10px 1px gray;
+    width: 30%;
+    padding: 1em;
+    border-radius: 5px;
+    width: 380px;
+}
+
+.div_corpo_recuperacao_titulo {
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+.div_corpo_recuperacao_titulo label {
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 1.2em;
+}
+
+.label {
+    font-weight: bold;
+    width: 14em;
+    margin-bottom: 0.5em;
+}
+
+.label_senha label {
+    font-weight: bold;
+}
+
+.label_senha ul li {
+    list-style: disc !important;
+}

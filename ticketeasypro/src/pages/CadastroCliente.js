@@ -135,7 +135,7 @@ export default function TelaCadastroCliente() {
             <div id="div-principal">
                 <Cabecalho className={styleh.header} />
                 <div className={styles.div_cadastrar}>
-                    <form className={styles.form_cadastrar}>
+                    <form className="div_container_grande">
                         <div className={styles.cabecalho_cadastro}>
                             <b>
                                 <h1>Cadastro das informações</h1>

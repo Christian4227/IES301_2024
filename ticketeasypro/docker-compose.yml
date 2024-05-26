@@ -3,14 +3,13 @@ version: "3"
 volumes:
     postgres-data:
 
-
 services:
     frontend:
         container_name: front_tickets_container
         build: .
         ports:
             - "3000:3000"
-        working_dir: '/app/ticketeasypro/src'
+        working_dir: "/app/ticketeasypro/src"
         depends_on:
             - backend
         networks:
@@ -20,9 +19,9 @@ services:
         build: ./api
         ports:
             - "3210:3210"
-        working_dir: '/app/ticketeasypro/api'
+        working_dir: "/app/ticketeasypro/api"
         env_file:
-            - ./api/.env.production
+            - ./api/.env
         depends_on:
             - postgres
         networks:

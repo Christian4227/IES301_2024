@@ -2,15 +2,12 @@ import React, { useContext } from "react";
 import styles from "../../styles/Cliente.module.css";
 import Link from "next/link";
 import { AuthContext } from "../../context/Auth";
-import { useRouter } from "next/router";
 
 export default function CabecalhoCliente() {
-    const { signOut } = useContext(AuthContext);
-    const router = useRouter();
+    const { logout } = useContext(AuthContext);
 
     const Sair = () => {
-        signOut();
-        router.push("/");
+        logout();
     };
     return (
         <div className={styles.Header}>
@@ -19,9 +16,11 @@ export default function CabecalhoCliente() {
             </Link>
             <nav>
                 <ul className={styles.ul}>
-                    <button onClick={() => Sair()}>
-                        <li className={styles.li_Login}>Sair</li>
-                    </button>
+                    <li className={styles.li_colaborador_sair}>
+                        <Link href="/" onClick={() => Sair()}>
+                            Sair
+                        </Link>
+                    </li>
                 </ul>
             </nav>
         </div>

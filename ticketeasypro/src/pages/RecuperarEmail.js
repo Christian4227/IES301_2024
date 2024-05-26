@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Cabecalho from "./Cabecalho";
-import Menu from "./Menu";
+// import Menu from "./Menu";
 import styles from "../styles/CadastroCliente.module.css";
 import styleh from "../styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -42,16 +42,15 @@ export default function RecuperarEmail() {
         <div>
             <Cabecalho className={styleh.header} />
             <div className={styles.divPrincipal_recuperar_email}>
-                <div className={styles.recuperar_email}>
+                <div className="div_container_grande">
                     <div className={styles.recuperar_email_titulo}>
-                        <h1>
-                            Perdeu ou não recebeu o seu e-mail de confirmação?
-                        </h1>
+                        <h1>Não recebeu o e-mail de confirmação?</h1>
                         <label>
                             Digite novamente o seu e-mail no campo abaixo.
-                            Clique no botão <b>Reenviar</b>.
+                            Depois, clique no botão <b>Reenviar</b>.
                         </label>
                     </div>
+                    <hr />
                     <div className="mb-3">
                         <label>E-mail cadastrado</label>
                         <input
@@ -69,7 +68,7 @@ export default function RecuperarEmail() {
                     />
                 </div>
             </div>
-            <Menu id="menu-lateral" className={styleh.menu_lateral} />
+            {/* <Menu id="menu-lateral" className={styleh.menu_lateral} /> */}
             <div id="divMensagemSucesso" className={styles.Mensagem_sucesso}>
                 <div className={styles.Mensagem_sucesso_imagem}>
                     <Image

@@ -130,8 +130,9 @@
   
   .home_body_titulo {
     font-weight: bold;
-    font-size: 20px;
-    text-shadow: 2px 2px 5px gray;
+    font-size: 30px;
+    text-decoration: underline;
+    margin-bottom: 1em;
   }
   
   .menu_direita {
@@ -162,6 +163,8 @@
     font-weight: bold;
     font-size: 50px;
     margin-bottom: 20px;
+    text-shadow: 3px 2px 3px gray;
+    text-decoration: underline;
   }
   
   .frase_botao {
@@ -194,7 +197,7 @@
     font-weight: bold;
     font-size: 30px;
     margin-bottom: 20px;
-    text-shadow: 2px 2px 5px gray;
+    text-decoration: underline;
   }
 
   .titulo_novidades {

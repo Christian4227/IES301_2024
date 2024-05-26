@@ -13,10 +13,6 @@
     transition: 0.7s;    
   }
 
-  .menu_lateral_area_restrita {
-    text-align: right;
-  }
-
   .menu_lateral nav {
     width: 260px;
     overflow: hidden;
@@ -50,19 +46,6 @@
 
   .menu_lateral_cliente a {
     flex-grow: 1;
-  }
-
-  .botao_area_restrita {
-    background-color: black;
-    box-shadow: 4px 4px 6px gray;
-    border-radius: 5px;
-    color: white;
-    padding: 10px;
-    width: 130px;
-    background-image: url("../assets/cadeado.png");
-    background-repeat: no-repeat;
-    text-align: right;
-    margin-top: 20px;
   }
 
   .botao_corpo, .botao_entrar {

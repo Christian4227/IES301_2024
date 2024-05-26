@@ -10,11 +10,7 @@ export default function Menu() {
     const router = useRouter();
     const { auth } = useContext(AuthContext);
     const EntrarCliente = () => {
-        router.push("./LoginCliente");
-    };
-
-    const EntrarAreaRestrita = () => {
-        router.push("./LoginAdm");
+        router.push("./Login");
     };
 
     const FecharMenuLateral = () => {
@@ -74,16 +70,6 @@ export default function Menu() {
                         <br />
                         <Link href="./CadastroCliente">Cadastre-se</Link>
                     </div>
-                </div>
-                <hr />
-                <div className={styles.menu_lateral_area_restrita}>
-                    <input
-                        type="button"
-                        id="inputAreaRestrita"
-                        value="Área restrita"
-                        className={styles.botao_area_restrita}
-                        onClick={() => EntrarAreaRestrita()}
-                    />
                 </div>
             </nav>
         </div>
