@@ -72,10 +72,22 @@ class AccountRepository {
         }
     };
 
+    // updateEmailState = async (identifier: Identifier, data: AccountUpdate): Promise<AccountResult> => {
+    //     const whereClause = buildWhereClause(identifier);
+    //     const filteredData = filterNullsData(data);
+    //     const whereClause = buildWhereClause(identifier);
+    //     const filteredData = filterNullsData(data);
+
+    //     const accountUpdated = await this.userDb.update(
+    //         {
+    //             where: whereClause,
+    //             data: filteredData,
+    // }
+
 
     update = async (identifier: Identifier, data: AccountUpdate): Promise<AccountResult> => {
 
-        const whereClause = buildWhereClause(identifier)
+        const whereClause = buildWhereClause(identifier);
         const filteredData = filterNullsData(data);
 
         const accountUpdated = await this.userDb.update(

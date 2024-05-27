@@ -1,4 +1,3 @@
-
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { JWT } from '@fastify/jwt';
 
