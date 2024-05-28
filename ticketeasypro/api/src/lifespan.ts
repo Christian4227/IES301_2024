@@ -2,6 +2,7 @@ import { PrismaClient, Role } from "@prisma/client";
 import UserRepository from "./repositories/user.repository";
 import { hashPassword } from "./utils/hash";
 import prisma from "./repositories/prisma";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 const createTicketTypes = async (prisma: PrismaClient) => {
     const ticketTypes = [
         {
@@ -31,11 +32,16 @@ const createTicketTypes = async (prisma: PrismaClient) => {
         }
     ]
     const storedTicketTypesCount = await prisma.ticketType.count();
-    if (storedTicketTypesCount <= ticketTypes.length) {
-        await prisma.ticketType.createMany({
-            data: ticketTypes
-        });
-    }
+    try {
+        if (storedTicketTypesCount <= ticketTypes.length) {
+            await prisma.ticketType.createMany({
+                data: ticketTypes
+            });
+        }
+        console.log("Tipos de Ticket criados com sucesso!");
+    } catch (error) {
+        console.error("Erro ao criar Tipos de Ticket:", error);
+    };
 };
 
 const createVenues = async (prismaCliente: PrismaClient) => {
@@ -176,16 +182,16 @@ const createCategories = async (prismaCliente: PrismaClient) => {
         });
         console.log("Categorias criadas com sucesso!");
     } catch (error) {
-        console.error("Erro ao criar categorias:", error);
+        // console.error("Erro ao criar categorias:", error);
+        if ((error instanceof PrismaClientKnownRequestError)) {
+            if (error.code === 'P2002') {
+                console.error(`Categoria de Teste já existe.`);
+            } else {
+                throw error;
+            }
+        };
     }
-}
-
-
-
-
-
-
-
+};
 
 const userRepo = new UserRepository();
 const usersToCreate = [
@@ -357,13 +363,20 @@ export const initialData = async () => {
         try {
             const { email, password, role, ...rest } = account;
             const { hash, salt } = hashPassword(password);
-            const result = await userRepo.create({ ...rest, role, email, salt, password: hash });
+            const userCreated = await userRepo.create({ ...rest, role, email, salt, password: hash });
 
-            const userCreated = await userRepo.create(account);
+            // const userCreated = await userRepo.create(account);
+            // prisma.user.update({ where: { id: userCreated.id }, data: { email_confirmed: true } });
+
             console.log('Usuário criado:', userCreated);
         } catch (error) {
-            console.error(`Usuário ${account.email} já existe.\nErro:${error}`);
+            if ((error instanceof PrismaClientKnownRequestError)) {
+                if (error.code === 'P2002') {
+                    console.error(`Usuário de Teste ${account.email} já existe.`);
+                } else {
+                    throw error;
+                }
+            };
         }
-    };
-
+    }
 }

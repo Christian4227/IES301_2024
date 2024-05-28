@@ -57,7 +57,7 @@ export interface Account {
 }
 
 export interface AccountUpdate {
-
+    email_confirmed?: boolean;
     role?: Role;
     status?: boolean;
     email?: string;

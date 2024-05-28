@@ -26,6 +26,7 @@ interface AccountBase {
 }
 
 export interface AccountCreate {
+    id: string;
     email: string;
     name: string;
     email_confirmed?: boolean;

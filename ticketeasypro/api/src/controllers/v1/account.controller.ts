@@ -1,22 +1,26 @@
 import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
 import AccountService from "../../services/accounts.service";
-import { AccountCreate, AccountRoleUpdate, AccountUpdateResult, PaginatedAccountResult, QueryPaginationFilter } from "../../interfaces/controller/account.interface";
+import { AccountRoleUpdate, AccountUpdateResult, PaginatedAccountResult, QueryPaginationFilter } from "../../interfaces/controller/account.interface";
+import { AccountCreate } from "@interfaces/service/account.interface";
 import { Role } from "@prisma/client";
+import { generateConfirmationToken } from "@utils/auth";
+import { AccountResult } from "@interfaces/repository/account.interface";
 
 
 
 const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 
     const accountService: AccountService = new AccountService();
-
     api.post('/', { preHandler: [api.authenticate] },
         async (request: FastifyRequest<{ Body: AccountCreate }>, reply: FastifyReply) => {
             const { user: { role: actorRole }, body: updateData } = request;
             try {
-                const data = await accountService.create(actorRole as Role, updateData);
-                return reply.code(201).send(data);
+                const account = await accountService.create(actorRole as Role, updateData);
+                const { email, id } = account;
+                const tokenConfirmation = await generateConfirmationToken({ email, id }, api)
+                return reply.code(201).send(account);
             } catch (error) {
-                reply.send(error);
+                return reply.code(409).send(error);
             }
         });
 
@@ -33,14 +37,45 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
                 const { id, email, name, email_confirmed, birth_date, phone, phone_fix, role }: AccountUpdateResult = resultUpdate;
                 return { id, email, name, email_confirmed, birth_date, phone, phone_fix, role };
             } catch (error) {
-                return reply.code(401).send(error);
+                return reply.code(401).send({ "Error": error });
             }
         });
 
     api.get('/whoami', { preHandler: [api.authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
-        reply.send({ hello: request.user });
+        reply.send({ "Success": request.user });
     });
 
+
+    api.get<{ Querystring: { token: string } }>(
+        '/confirm-email',
+        async (request: FastifyRequest<{ Querystring: { token: string } }>, reply: FastifyReply): Promise<boolean> => {
+            api.log.info('Email confirm endpoint hit');
+
+            const confirmToken = request.query?.token;
+            if (!confirmToken) {
+                api.log.error('Token must not be empty');
+                return reply.code(400).send({ "Error": 'Token must be not empty.' });
+            }
+            const response = await accountService.validateEmailConfirmationToken(confirmToken, api);
+            if (!response)
+                return reply.code(409).send({ "Error": "Invalid token provided." });
+            return reply.code(201).send({ "Success": response });
+        });
+
+    api.get<{ Params: { email: string } }>('/resend-email-confirmation/:email',
+        async (request: FastifyRequest<{ Params: { email: string } }>, reply: FastifyReply): Promise<boolean> => {
+            api.log.info('Resend email confirmation endpoint hit');
+            const userEmail = request.params?.email;
+            if (!userEmail) {
+                api.log.error('Token must not be empty');
+                return reply.code(400).send({ "Error": 'email must be not empty.' });
+            }
+
+            const user = await accountService.reSendConfirmationEmail(userEmail, api);
+
+
+            return reply.code(200).send({ "Success": true });
+        });
     api.get<{ Querystring: QueryPaginationFilter }>(
         '/', { preHandler: [api.authenticate] },
         async (request: FastifyRequest<{ Querystring: QueryPaginationFilter }>, reply: FastifyReply): Promise<PaginatedAccountResult> => {
