@@ -50,7 +50,6 @@ export default function RecuperarEmail() {
                             Depois, clique no botão <b>Reenviar</b>.
                         </label>
                     </div>
-                    <hr />
                     <div className="mb-3">
                         <label>E-mail cadastrado</label>
                         <input

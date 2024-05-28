@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Link from "next/link";
 import Menu from "./Menu";
 import Image from "next/image";
-import torre from "../assets/torre_miroku.jpg";
+// import torre from "../assets/torre_miroku.jpg";
 import { useRouter } from "next/router";
 // import client from "@/utils/client_axios";
 

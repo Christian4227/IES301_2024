@@ -11,13 +11,13 @@ import { useRouter } from "next/router";
 export default function indexColaborador() {
     const router = useRouter();
     const VenderIngressos = () => {
-        router.push("/Colaborador/VenderIngressos");
+        router.push("/Colaborador/Vender/VenderIngressos");
     };
     const ValidarIngressos = () => {
-        router.push("/Colaborador/ListaEventos");
+        router.push("/Colaborador/Validar/ListaEventos");
     };
     const VerificarIngressos = () => {
-        router.push("/Colaborador/ColaboradorVerificar");
+        router.push("/Colaborador/Verificar/VerificarIngresso");
     };
     return (
         <div>

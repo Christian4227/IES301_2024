@@ -37,7 +37,7 @@ export default function RedefinicaoSenha() {
         });
         client
             .post("", data)
-            .then((response) => {})
+            .then(() => {})
             .catch((error) => {
                 console.log("Erro na requisição. " + error);
             });

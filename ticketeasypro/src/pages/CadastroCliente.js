@@ -264,6 +264,7 @@ export default function TelaCadastroCliente() {
                             onClick={() => InserirDados()}
                             defaultValue="Cadastrar"
                         />
+                        <hr />
                         <div className={styles.footer_form}>
                             <label>
                                 Não recebeu o e-mail de confirmação?{" "}

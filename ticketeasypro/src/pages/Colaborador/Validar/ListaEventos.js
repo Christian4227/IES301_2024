@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "../../styles/Colaborador.module.css";
+import styles from "../../../styles/Colaborador.module.css";
 import { useRouter } from "next/router";
-import CabecalhoColaborador from "./CabecalhoColaborador";
-import CabecalhoInfoColaborador from "./CabecalhoInfoColaborador";
+import CabecalhoColaborador from "../CabecalhoColaborador";
+import CabecalhoInfoColaborador from "../CabecalhoInfoColaborador";
 
 export default function ListaEventos() {
     const router = useRouter();
@@ -16,7 +16,7 @@ export default function ListaEventos() {
             return;
         }
 
-        router.push("/Colaborador/ScannerQrCode");
+        router.push("./ScannerQrCode");
     };
     return (
         <div>

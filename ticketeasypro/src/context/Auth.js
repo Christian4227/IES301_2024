@@ -53,11 +53,11 @@ export const AuthProvider = ({ children }) => {
                 ConverterToken(accessToken);
                 DicrecionarRota(accessToken);
                 setAuth(true);
+                setUser(data);
             })
             .catch((error) => {
                 console.log("Erro na requisição. " + error);
             });
-        setUser(data);
     };
 
     const logout = () => {

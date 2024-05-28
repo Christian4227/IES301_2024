@@ -1,8 +1,8 @@
 import React from "react";
-import Cabecalho from "../Cabecalho";
-import styles from "../../styles/Colaborador.module.css";
+import styles from "../../../styles/Colaborador.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import CabecalhoInfoColaborador from "./CabecalhoInfoColaborador";
+import CabecalhoInfoColaborador from "../CabecalhoInfoColaborador";
+import Cabecalho from "@/pages/Cabecalho";
 
 export default function ValidarIngresso() {
     const Validar = () => {

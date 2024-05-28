@@ -25,6 +25,7 @@ a {
     color: blue;
 }
 
+/* Botões */
 input[type=button], input[type=submit] {
     cursor: pointer;
 }
@@ -34,6 +35,11 @@ input[type=button]:disabled{
     opacity: 0.6;
 }
 
+input[type=button]:active, button:active {
+    filter: brightness(90%);
+}
+
+/* Separadores */
 hr {
     background-color: black;
     height: 2px;

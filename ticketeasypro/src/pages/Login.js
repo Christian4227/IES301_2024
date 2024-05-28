@@ -38,7 +38,7 @@ export default function Login() {
                         <div className="mb-3">
                             <input
                                 id="txtEmail"
-                                type="text"
+                                type="email"
                                 className="form-control"
                                 placeholder="E-mail"
                                 value={email}
