@@ -2,14 +2,16 @@
 import { Role } from "@prisma/client";
 import { canDoIt } from "@utils/roles";
 import { PaginatedAccountResult, AccountUpdate, AccountCreate, AccountUpdateResult } from "@interfaces/service/account.interface";
-import { randomUUID } from "crypto";
 import AccountRepository from "../repositories/account.repository";
 import { hashPassword } from "@utils/hash";
 import { Identifier } from "types/common.type";
 import { FastifyInstance } from "types/fastify";
 import { AccountCreateResult, AccountResult } from "@interfaces/repository/account.interface";
 import { generateConfirmationToken } from "@utils/auth";
-
+import sendEmail from "@utils/sendEmail";
+import { makeConfirmEmailContent } from "@utils/templates";
+import { generateRandomPassword, getLocalbaseURL } from "@utils/mixes";
+type Err = { message: string, code: string }
 class AccountService {
   private accountRepository: AccountRepository;
 
@@ -17,25 +19,26 @@ class AccountService {
     this.accountRepository = new AccountRepository();
   }
   create = async (actorRole: Role, accountCreate: AccountCreate): Promise<AccountCreateResult> => {
-    const { email, role, ...rest } = accountCreate;
-    if (!canDoIt(actorRole, role)) throw new Error('Insufficient permissions.');
+    const { email, role: roleAccountCreate, ...rest } = accountCreate;
+    if (!(actorRole === roleAccountCreate && (actorRole === Role.ADMIN || actorRole === Role.EVENT_MANAGER)))
+      if (!canDoIt(actorRole, roleAccountCreate)) throw new Error('Insufficient permissions.');
+
 
     const verifyIfAccountExists = await this.accountRepository.find({ email: email } as Identifier);
 
     if (verifyIfAccountExists) throw new Error('Account already exists');
 
     // cria senha temporária
-    const tempPassword = `_-_tEmP_${randomUUID()}RAry_${randomUUID()}pa$sW&ord._+=`;
+
+    // const tempPassword = `_-_tEmP_${randomUUID()}RAry_${randomUUID()}pa$sW&ord._+=`;
+    const tempPassword = `_-_tEmP_pa$sW&ord._+=${generateRandomPassword(24)}`;
 
     const { hash, salt } = hashPassword(tempPassword);
 
-    const account: AccountCreateResult = await this.accountRepository.create({ ...rest, role, email, salt, password: hash });
+    const accountToCreate = { ...rest, role: roleAccountCreate, email, salt, password: hash };
 
-    // const accountCreateData: AccountCreateResult = {
-    //   id: account.id,
-    //   email: account.email, name: account.name, email_confirmed: account.email_confirmed, birth_date: account.birth_date,
-    //   phone: account.phone, phone_fix: account.phone_fix, role: account.role, 
-    // };
+    const account: AccountCreateResult = await this.accountRepository.create(accountToCreate);
+
     return account;
   }
 
@@ -72,61 +75,51 @@ class AccountService {
  * @returns O resultado da validação e confirmação do email.
  */
   validateEmailConfirmationToken = async (token: string, api: FastifyInstance): Promise<AccountResult> => {
-
-    const decoded = api.jwt.verify(token) as { sub: string };
-    const userId = decoded.sub;
-
-    const account = await this.accountRepository.find({ id: userId });
-    if (!account) throw new Error('Account not found');
-
     try {
-      const account = await this.accountRepository.update({ id: userId }, { email_confirmed: true });
-      return account;
-    } catch (erro) {
-      console.error("Error in AccountService.validateEmailConfirmationToken:", "error"); //
-      // if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-      throw new Error('Invalid or expired token');
-    }
-    // throw error;:
+      const decoded = api.jwt.verify(token) as { sub: string };
+      const userId = decoded.sub;
+
+      const account = await this.accountRepository.find({ id: userId });
+      if (!account) throw new Error('AccountNotFound');
+      if (account.email_confirmed) throw new Error('EmailAlreadyConfirmed');
+
+      const updatedAccount = await this.accountRepository.update({ id: userId }, { email_confirmed: true });
+      return updatedAccount;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+
+        if (error.message.toLowerCase().startsWith('the token has expired')) {
+          throw new Error('InvalidOrExpiredToken');
+        } else if (error.message === 'AccountNotFound' || error.message === 'EmailAlreadyConfirmed') {
+          throw error;
+        }
+      }
+      throw new Error('UnknownError');
+    };
+    
   };
+
   reSendConfirmationEmail = async (email: string, api: FastifyInstance): Promise<AccountResult> => {
     try {
       const account = await this.accountRepository.find({ email: email } as Identifier);
-      if (!account) throw new Error('Account not found');
+      if (!account) throw new Error('AccountNotFound');
 
-      if (account.email_confirmed) throw new Error("Email already confirmed.");
+      if (account.email_confirmed) throw new Error('EmailAlreadyConfirmed');
 
-      const token = await generateConfirmationToken(account, api);
-      // const serverAddress = api.server.address();
+      const tokenConfirmation = await generateConfirmationToken(account, api);
+      const baseUrl = getLocalbaseURL(api);
+      const confirmationBaseUrl = `${baseUrl}/Contas/RecuperarEmail`;
+      const confirmationUrl = `${confirmationBaseUrl}?token=${encodeURIComponent(tokenConfirmation)}`;
 
-      const protocol = api.server instanceof require('https').Server ? 'https' : 'http';
-      const serverAddress = '127.0.0.1';
-      const port = 3210;
-      const confirmationBaseUrl = `${protocol}://${serverAddress}:${port}/v1/accounts/confirm-email`;
-      const confirmationUrl = `${confirmationBaseUrl}?token=${encodeURIComponent(token)}`;
-      // let confirmationBaseUrl;
-      // if (typeof serverAddress === 'string') {
-      //   // Handle case where address is a string (older Node.js versions)
-      //   confirmationBaseUrl = `https://${serverAddress}`;
-      // } else if (serverAddress) { // Assuming serverAddress is an object
-      //   // Handle case where address is an object (likely AddressInfo)
-      //   confirmationBaseUrl = `https://${serverAddress.address}:${serverAddress.port}`;
-      // } else {
-      //   // Handle case where serverAddress is undefined (unlikely but possible)
-      //   console.error('Failed to get server address for confirmation URL');
-      //   // You might want to handle this error gracefully, e.g., return an error response
-      // }
-      // const confirmationUrl = `${confirmationBaseUrl}/accounts/confirm-email?token=${encodeURIComponent(token)}`
+      const emailContent = makeConfirmEmailContent(account, confirmationUrl);
+      await sendEmail(email, "Confirme o seu e-mail.", emailContent);
+
+
       // api.log.debug(`link de validação de email :-> ${confirmationUrl}`);
       api.log.debug(`link de validação de email :-> ${confirmationUrl}`);
 
 
       return account;
-      // await this.transporter.sendMail({
-      //   to: email,
-      //   subject: 'Confirmation Email Resent',
-      //   html: `Please click this link to confirm your email: <a href="${confirmationUrl}">${confirmationUrl}</a>`,
-      // });
     } catch (error) {
       console.error('Error resending confirmation email:', error);
       throw error

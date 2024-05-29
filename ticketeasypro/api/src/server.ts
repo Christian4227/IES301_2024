@@ -44,7 +44,7 @@ const start = async () => {
     }
     )
     try {
-        await api.listen({ port: 3210, host: '0.0.0.0' });
+        await api.listen({ port: Number(process.env.PORT_API ?? '3210'), host: process.env.HOST_API });
     } catch (err) {
         api.log.error(err);
         process.exit(1);

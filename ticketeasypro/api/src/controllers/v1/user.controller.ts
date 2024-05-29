@@ -31,10 +31,6 @@ const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         }
     });
 
-    api.get('/whoami', { preHandler: [api.authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
-        reply.send({ hello: request.user });
-    });
-
     // O user pode alterar os dados dele mesmo apenas
     api.put('/', { preHandler: [api.authenticate] }, async (request: FastifyRequest<{ Body: UserUpdate }>, reply: FastifyReply) => {
 

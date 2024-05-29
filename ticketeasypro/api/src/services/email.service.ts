@@ -15,9 +15,7 @@ class EmailService {
         if (!verifyIfUserExists) {
             throw new Error('User not exists');
         }
-
         await sendEmail(to, subject, text);
-
         return "Email enviado!";
     };
 }

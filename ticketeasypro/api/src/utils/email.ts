@@ -1,14 +1,13 @@
 import nodemailer, { Transporter } from 'nodemailer';
 
-// Configuração do transporte
-const transporter: Transporter = nodemailer.createTransport({
-    host: 'smtp.example.com', // substitua com o host do seu serviço de email
-    port: 587, // substitua com a porta do seu serviço de email (geralmente 587 ou 465)
-    secure: false, // true para SSL
+const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
-        user: 'seu-email@example.com', // substitua com o seu email
-        pass: 'sua-senha' // substitua com a sua senha
-    }
+        user: process.env.TEP_EMAIL_ACCOUNT,
+        pass: process.env.TEP_EMAIL_PWD,
+    },
 });
-
 export default transporter;

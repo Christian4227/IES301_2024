@@ -3,9 +3,6 @@ import AccountService from "../../services/accounts.service";
 import { AccountRoleUpdate, AccountUpdateResult, PaginatedAccountResult, QueryPaginationFilter } from "../../interfaces/controller/account.interface";
 import { AccountCreate } from "@interfaces/service/account.interface";
 import { Role } from "@prisma/client";
-import { generateConfirmationToken } from "@utils/auth";
-import { AccountResult } from "@interfaces/repository/account.interface";
-
 
 
 const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
@@ -17,7 +14,7 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
             try {
                 const account = await accountService.create(actorRole as Role, updateData);
                 const { email, id } = account;
-                const tokenConfirmation = await generateConfirmationToken({ email, id }, api)
+                await accountService.reSendConfirmationEmail(email, api)
                 return reply.code(201).send(account);
             } catch (error) {
                 return reply.code(409).send(error);
@@ -48,33 +45,40 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 
     api.get<{ Querystring: { token: string } }>(
         '/confirm-email',
-        async (request: FastifyRequest<{ Querystring: { token: string } }>, reply: FastifyReply): Promise<boolean> => {
-            api.log.info('Email confirm endpoint hit');
+        async (request: FastifyRequest<{ Querystring: { token: string } }>, reply: FastifyReply): Promise<any> => {
+            // api.log.info('Email confirm endpoint hit');
 
             const confirmToken = request.query?.token;
-            if (!confirmToken) {
-                api.log.error('Token must not be empty');
-                return reply.code(400).send({ "Error": 'Token must be not empty.' });
+            if (!confirmToken)
+                return reply.code(200).send({ "Error": 'Token must not be empty.' });
+            try {
+
+                const response = await accountService.validateEmailConfirmationToken(confirmToken, api);
+                return reply.code(200).send(!!response);
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    return reply.code(200).send( error);
+                }
             }
-            const response = await accountService.validateEmailConfirmationToken(confirmToken, api);
-            if (!response)
-                return reply.code(409).send({ "Error": "Invalid token provided." });
-            return reply.code(201).send({ "Success": response });
         });
 
     api.get<{ Params: { email: string } }>('/resend-email-confirmation/:email',
         async (request: FastifyRequest<{ Params: { email: string } }>, reply: FastifyReply): Promise<boolean> => {
-            api.log.info('Resend email confirmation endpoint hit');
+            // api.log.info('Resend email confirmation endpoint hit');
             const userEmail = request.params?.email;
             if (!userEmail) {
                 api.log.error('Token must not be empty');
                 return reply.code(400).send({ "Error": 'email must be not empty.' });
             }
-
-            const user = await accountService.reSendConfirmationEmail(userEmail, api);
-
-
+            try {
+                const user = await accountService.reSendConfirmationEmail(userEmail, api);
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    return reply.code(200).send(error);//AccountNotFound
+                }
+            }
             return reply.code(200).send({ "Success": true });
+
         });
     api.get<{ Querystring: QueryPaginationFilter }>(
         '/', { preHandler: [api.authenticate] },

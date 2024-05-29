@@ -7,6 +7,13 @@
             "name": "Run npm start",
             "command": "npm run dev",
             "cwd": "${workspaceFolder}/ticketeasypro/api",
+        },
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/ticketeasypro"
         }
     ]
 }

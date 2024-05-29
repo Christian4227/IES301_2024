@@ -1,3 +1,4 @@
+import { FastifyInstance } from "fastify";
 import { Identifier } from "types/common.type";
 // Compara se cada atriburo em comum a ambos objetos tem valores iguais
 export const areAttributesEqual = (objA: { [key: string]: any }, objB: { [key: string]: any }): boolean => {
@@ -10,18 +11,6 @@ export const areAttributesEqual = (objA: { [key: string]: any }, objB: { [key: s
     }
     return true;
 }
-// Retorna um objeto contendo apenas os atributos compartilhados entre os objetos cujo os valores são diferentes
-// export const getAllDiff = (objA: { [key: string]: any }, objB: { [key: string]: any }): Object => {
-//     let objResult = Object();
-//     for (const key in objA) {
-//         if (objB.hasOwnProperty(key)) {
-//             if (objA[key] !== objB[key]) {
-//                 objResult[key] = objB[key]
-//             }
-//         }
-//     }
-//     return objResult;
-// }
 
 export const getDifferences = (original: any, updated: any): Partial<any> => {
     const differences: Partial<any> = {};
@@ -70,4 +59,39 @@ export const isValidDateRange = (startDate: number, endDate: number) => {
     }
 
     return true;
+}
+
+export const generateRandomPassword = (length = 12) => {
+    const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+    const numbers = '0123456789';
+    const specialCharacters = '!@#$%^&*()_+[]{}|;:,.<>?';
+
+    const allCharacters = upperCaseLetters + lowerCaseLetters + numbers + specialCharacters;
+
+    let password = '';
+
+    // Garantir que a senha contenha pelo menos um de cada tipo de caractere
+    password += upperCaseLetters[Math.floor(Math.random() * upperCaseLetters.length)];
+    password += lowerCaseLetters[Math.floor(Math.random() * lowerCaseLetters.length)];
+    password += numbers[Math.floor(Math.random() * numbers.length)];
+    password += specialCharacters[Math.floor(Math.random() * specialCharacters.length)];
+
+    // Preencher o restante da senha com caracteres aleatórios
+    for (let i = 4; i < length; i++) {
+        password += allCharacters[Math.floor(Math.random() * allCharacters.length)];
+    }
+
+    // Embaralhar a senha para garantir que os caracteres não estejam em uma ordem previsível
+    password = password.split('').sort(() => 0.5 - Math.random()).join('');
+
+    return password;
+}
+
+export const getLocalbaseURL = (api: FastifyInstance) => {
+    const protocol = api.server instanceof require('https').Server ? 'https' : 'http';
+    const port = process.env.PORT_FRONTEND;
+    const serverAddress = process.env.HOST_FRONTEND
+    const baseURL = `${protocol}://${serverAddress}:${port}`
+    return baseURL
 }
