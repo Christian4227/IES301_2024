@@ -1,4 +1,5 @@
 
+import fp from "fastify"
 import { Role } from "@prisma/client";
 import { canDoIt } from "@utils/roles";
 import { PaginatedAccountResult, AccountUpdate, AccountCreate, AccountUpdateResult } from "@interfaces/service/account.interface";
@@ -11,7 +12,9 @@ import { generateConfirmationToken } from "@utils/auth";
 import sendEmail from "@utils/sendEmail";
 import { makeConfirmEmailContent } from "@utils/templates";
 import { generateRandomPassword, getLocalbaseURL } from "@utils/mixes";
-type Err = { message: string, code: string }
+import crypto from "crypto";
+
+
 class AccountService {
   private accountRepository: AccountRepository;
 
@@ -24,9 +27,9 @@ class AccountService {
       if (!canDoIt(actorRole, roleAccountCreate)) throw new Error('Insufficient permissions.');
 
 
-    const verifyIfAccountExists = await this.accountRepository.find({ email: email } as Identifier);
+    const verifyIfAccountExists = await this.getOne(email);
 
-    if (verifyIfAccountExists) throw new Error('Account already exists');
+    if (verifyIfAccountExists) throw new Error('AccountAlreadyExists');
 
     // cria senha temporária
 
@@ -68,14 +71,70 @@ class AccountService {
     const paginatedUserResults: PaginatedAccountResult = await this.accountRepository.findAccounts(query, role as Role, page, pageSize);
     return paginatedUserResults;
   }
+
+
+  // Reset Password Verification Function
+  verifyResetToken = async (token: string, newPassword: string) => {
+    token = decodeURIComponent(token);
+    const user = await this.accountRepository.findWhere({ token, token_expires: { gt: new Date() } });
+
+    if (!user) throw new Error('InvalidOrExpiredToken');
+
+    const { hash, salt } = hashPassword(newPassword);
+
+    const passwordUpdateData = { salt, password: hash, token: undefined, token_expires: undefined };
+
+    // Update the password and clear the reset token fields
+    await this.accountRepository.update({ id: user.id }, passwordUpdateData);
+
+  };
+  passwordReset = async (email: string, api: FastifyInstance) => {
+
+    const account = await this.getOne(email);
+    if (!account) throw new Error('AccountNotFound');
+
+    const resetPasswordToken = crypto.randomBytes(64).toString('hex');
+    const resetPasswordExpires = new Date(Date.now() + 60 * 15 * 1000); // 15 minutos
+
+    await this.accountRepository.update({ email }, { token: resetPasswordToken, token_expires: resetPasswordExpires });
+
+    const baseUrl = getLocalbaseURL(api);
+    const resetBaseURL = `${baseUrl}/Contas/reset-password`
+    const resetURL = `${resetBaseURL}?token=${encodeURIComponent(resetPasswordToken)}`;
+
+    const emailContent = makeConfirmEmailContent({ ...account }, resetURL);
+    await sendEmail(email, "Redefina sua senha.", emailContent);
+  };
+
+  reSendConfirmationEmail = async (email: string, api: FastifyInstance): Promise<AccountResult> => {
+    try {
+      const account = await this.getOne(email);
+
+      if (account.email_confirmed) throw new Error('EmailAlreadyConfirmed');
+
+      const tokenConfirmation = await generateConfirmationToken(account, api);
+      const baseUrl = getLocalbaseURL(api);
+      const confirmationBaseUrl = `${baseUrl}/Contas/RecuperarEmail`;
+      const confirmationUrl = `${confirmationBaseUrl}?token=${encodeURIComponent(tokenConfirmation)}`;
+
+
+      const emailContent = makeConfirmEmailContent(account, confirmationUrl);
+      await sendEmail(email, "Confirme o seu e-mail.", emailContent);
+      return account;
+    } catch (error) {
+      console.error('Error resending confirmation email:', error);
+      throw error
+    }
+  };
   /**
- * Método para validar o token de confirmação de email.
- * @param token O token de confirmação de email.
- * @param api A instancia de Fastify.
- * @returns O resultado da validação e confirmação do email.
- */
+  * Método para validar o token de confirmação de email.
+  * @param token O token de confirmação de email.
+  * @param api A instancia de Fastify.
+  * @returns O resultado da validação e confirmação do email.
+  */
   validateEmailConfirmationToken = async (token: string, api: FastifyInstance): Promise<AccountResult> => {
     try {
+      token = decodeURIComponent(token);
       const decoded = api.jwt.verify(token) as { sub: string };
       const userId = decoded.sub;
 
@@ -87,7 +146,6 @@ class AccountService {
       return updatedAccount;
     } catch (error: unknown) {
       if (error instanceof Error) {
-
         if (error.message.toLowerCase().startsWith('the token has expired')) {
           throw new Error('InvalidOrExpiredToken');
         } else if (error.message === 'AccountNotFound' || error.message === 'EmailAlreadyConfirmed') {
@@ -96,35 +154,15 @@ class AccountService {
       }
       throw new Error('UnknownError');
     };
-    
+
   };
 
-  reSendConfirmationEmail = async (email: string, api: FastifyInstance): Promise<AccountResult> => {
-    try {
-      const account = await this.accountRepository.find({ email: email } as Identifier);
-      if (!account) throw new Error('AccountNotFound');
+  getOne = async (email: string): Promise<AccountResult> => {
+    const account = await this.accountRepository.find({ email: email } as Identifier);
+    if (!account) throw new Error('AccountNotFound');
+    return account;
+  }
 
-      if (account.email_confirmed) throw new Error('EmailAlreadyConfirmed');
-
-      const tokenConfirmation = await generateConfirmationToken(account, api);
-      const baseUrl = getLocalbaseURL(api);
-      const confirmationBaseUrl = `${baseUrl}/Contas/RecuperarEmail`;
-      const confirmationUrl = `${confirmationBaseUrl}?token=${encodeURIComponent(tokenConfirmation)}`;
-
-      const emailContent = makeConfirmEmailContent(account, confirmationUrl);
-      await sendEmail(email, "Confirme o seu e-mail.", emailContent);
-
-
-      // api.log.debug(`link de validação de email :-> ${confirmationUrl}`);
-      api.log.debug(`link de validação de email :-> ${confirmationUrl}`);
-
-
-      return account;
-    } catch (error) {
-      console.error('Error resending confirmation email:', error);
-      throw error
-    }
-  };
 
 }
 export default AccountService;

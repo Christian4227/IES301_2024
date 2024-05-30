@@ -3,6 +3,7 @@ import AccountService from "../../services/accounts.service";
 import { AccountRoleUpdate, AccountUpdateResult, PaginatedAccountResult, QueryPaginationFilter } from "../../interfaces/controller/account.interface";
 import { AccountCreate } from "@interfaces/service/account.interface";
 import { Role } from "@prisma/client";
+import { AccountResult } from "@interfaces/repository/account.interface";
 
 
 const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
@@ -45,29 +46,58 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 
     api.get<{ Querystring: { token: string } }>(
         '/confirm-email',
-        async (request: FastifyRequest<{ Querystring: { token: string } }>, reply: FastifyReply): Promise<any> => {
-            // api.log.info('Email confirm endpoint hit');
+        async (request: FastifyRequest<{ Querystring: { token: string } }>, reply: FastifyReply): Promise<boolean> => {
 
             const confirmToken = request.query?.token;
-            if (!confirmToken)
-                return reply.code(200).send({ "Error": 'Token must not be empty.' });
-            try {
+            if (!confirmToken) return reply.code(200).send({ "Error": 'Token must not be empty.' });
 
+            try {
                 const response = await accountService.validateEmailConfirmationToken(confirmToken, api);
                 return reply.code(200).send(!!response);
             } catch (error: unknown) {
                 if (error instanceof Error) {
-                    return reply.code(200).send( error);
+                    return reply.code(200).send(error);
                 }
+            };
+            return reply.code(200).send(false);
+        }
+    );
+
+    // Endpoint para solicitação do email com link de redefeinição de senha
+    api.get('/password-reset',
+        async (request: FastifyRequest<{ Querystring: { email: string } }>, reply: FastifyReply): Promise<boolean> => {
+            const { email } = request.query as { email?: string };
+            if (!email) return reply.code(400).send({ "Error": 'email must be not empty.' });
+
+            try {
+                await accountService.passwordReset(email, api);
+                return reply.code(200).send({ "Success": true });
+            } catch (error) {
+                if (error instanceof Error)
+                    if (error.message === "EmailNotFound") return reply.code(404).send({ "Success": false });
             }
+            return reply.code(200).send({ "Success": true });
         });
+
+    api.post('/reset-password', async (request: FastifyRequest<{ Body: { token: string, newPassword: string } }>, reply: FastifyReply): Promise<boolean> => {
+        const { token, newPassword } = request.body;;
+        try {
+            await accountService.verifyResetToken(token, newPassword);
+            return reply.code(200).send({ "Success": true });
+        } catch (error) {
+            if (error instanceof Error)
+                if (error.message === "InvalidOrExpiredToken")
+                    reply.status(400).send({ "Success": false });
+        };
+        return reply.code(200).send({ "Success": true });
+    });
 
     api.get<{ Params: { email: string } }>('/resend-email-confirmation/:email',
         async (request: FastifyRequest<{ Params: { email: string } }>, reply: FastifyReply): Promise<boolean> => {
             // api.log.info('Resend email confirmation endpoint hit');
             const userEmail = request.params?.email;
             if (!userEmail) {
-                api.log.error('Token must not be empty');
+
                 return reply.code(400).send({ "Error": 'email must be not empty.' });
             }
             try {
