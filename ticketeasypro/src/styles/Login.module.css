@@ -13,6 +13,10 @@
     font-size: 18px;
 }
 
+.descricao_cadastrar a {
+    color: blue !important;
+}
+
 .div_Login_titulo {
     text-align: center;
     font-weight: bold;

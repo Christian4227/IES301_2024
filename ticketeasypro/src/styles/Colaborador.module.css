@@ -15,11 +15,11 @@
 }
 
 .header_cabecalho_colaborador label a {
-    color: white;
+    color: white !important;
 }
 
 .li_colaborador_sair a {
-    color: white;
+    color: white !important;
 }
 
 .header_colaborador a {

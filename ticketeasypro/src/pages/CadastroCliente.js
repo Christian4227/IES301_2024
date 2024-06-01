@@ -3,12 +3,13 @@ import Cabecalho from "./Cabecalho";
 import styles from "../styles/CadastroCliente.module.css";
 import styleh from "../styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
 import Menu from "./Menu";
 import certo from "../assets/ticky_verde.png";
 import erro from "../assets/x_vermelho.png";
 import Image from "next/image";
 import Link from "next/link";
+import client from "@/utils/client_axios";
+import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
 
 export default function TelaCadastroCliente() {
     const [nome, setNome] = useState("");
@@ -18,6 +19,9 @@ export default function TelaCadastroCliente() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [novaSenha, setNovaSenha] = useState("");
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+    const [loading, setLoading] = useState(false);
 
     function MascaraContato(tipo, value) {
         if (tipo == "Telefone") {
@@ -61,79 +65,63 @@ export default function TelaCadastroCliente() {
             email: email,
             password: senha,
             confirm_password: novaSenha,
-            email_confirmed: true,
+            email_confirmed: false,
             name: nome,
             birth_date: dataNascimentoC,
             phone: celular,
             phone_fix: telefone,
         });
-        /*
-        let dataEmail = JSON.stringify({
-            to: email,
-            subject: "Envio de confirmação: Ticket Easy Pro",
-            text: "",
-        });
-        */
-        axios
-            .post("http://localhost:3210/v1/users/signin", data, {
+
+        client
+            .post("users/signin", data, {
                 headers: {
                     "Content-Type": "application/json",
                 },
             })
             .then(() => {
                 alert("Dados cadastrados com sucesso!");
-                document.getElementById("divMensagemSucesso").style.display =
-                    "";
-                setTimeout(() => {
-                    document.getElementById(
-                        "divMensagemSucesso"
-                    ).style.display = "";
-                }, 7000);
                 // Começa a requisição para enviar o e-mail
-                /*
-                axios
-                    .post(
-                        "http://localhost:3210/v1/users/send-email",
-                        dataEmail,
-                        {
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                        }
-                    )
-                    // Se obter sucesso na hora de enviar o e-mail
-                    .then(() => {
-                        document.getElementById(
-                            "divMensagemSucesso"
-                        ).style.display = "";
-                        setTimeout(() => {
-                            document.getElementById(
-                                "divMensagemSucesso"
-                            ).style.display = "";
-                        }, 7000);
+                client
+                    .get(`accounts/resend-email-confirmation/${email}`)
+                    .then((response) => {
+                        if (response.status === 200)
+                            setSuccess(
+                                "Email de confirmação reenviado com sucesso!"
+                            );
+                        else
+                            setError("Erro ao reenviar o email de confirmação");
                     })
-                    // Caso dê algum erro na hora de enviar o e-mail
-                    .catch(() => {
-                        document.getElementById(
-                            "divMensagemErro"
-                        ).style.display = "";
-                        setTimeout(() => {
-                            document.getElementById(
-                                "divMensagemErro"
-                            ).style.display = "";
-                        }, 7000);
+                    .catch((error) => {
+                        if (
+                            error.response?.data?.message ===
+                            "EmailAlreadyConfirmed"
+                        ) {
+                            setError("Email já confirmado.");
+                        } else if (
+                            error.response?.data?.message === "AccountNotFound"
+                        ) {
+                            setError("Email não encontrado.");
+                        } else {
+                            setError("Erro ao reenviar email de confirmação.");
+                        }
+                    })
+                    .finally(() => {
+                        setLoading(false);
                     });
-                // Termina
-                */
             })
-            .catch((error) => {
-                alert("Erro na requisição: " + error);
+            .catch(() => {
+                setError("Usuário já cadastrado no sistema.");
             });
+        setTimeout(() => {
+            setError(false);
+            setSuccess(false);
+        }, 4000);
     }
     return (
         <main>
-            <div id="div-principal">
+            <div>
                 <Cabecalho className={styleh.header} />
+                <CabecalhoHomeMenu componente={"Cadastrar"} />
                 <div className={styles.div_cadastrar}>
                     <form className="div_container_grande">
                         <div className={styles.cabecalho_cadastro}>
@@ -268,44 +256,57 @@ export default function TelaCadastroCliente() {
                         <div className={styles.footer_form}>
                             <label>
                                 Não recebeu o e-mail de confirmação?{" "}
-                                <Link href="/RecuperarEmail">Clique aqui</Link>
+                                <Link href="/Contas/RecuperarEmail">
+                                    Clique aqui
+                                </Link>
                             </label>
                         </div>
                     </form>
                 </div>
                 <Menu id="menu-lateral" className={styleh.menu_lateral} />
             </div>
-            <div id="divMensagemSucesso" className={styles.Mensagem_sucesso}>
-                <div className={styles.Mensagem_sucesso_imagem}>
-                    <Image
-                        src={certo}
-                        alt="certo"
-                        className={styles.tick_verde}
-                    />
+            {error && (
+                <div id="divMensagemErro" className={styles.Mensagem_erro}>
+                    <div className={styles.Mensagem_erro_imagem}>
+                        <Image src={erro} alt="erro" className={styles.erro} />
+                    </div>
+                    <div className={styles.Mensagem_erro_texto}>
+                        <h1>{error}</h1>
+                        <p>
+                            Verifique o seu e-mail está certo ou se já tem
+                            cadastro no sistema.
+                        </p>
+                    </div>
                 </div>
-                <div className={styles.Mensagem_sucesso_texto}>
-                    <h1>Dados cadastrados com sucesso!</h1>
-                    <p>
-                        Verifique no seu e-mail cadastrado uma mensagem de
-                        confirmação. Clique em <b>Confirmar e-mail</b> para
-                        acessar os seus dados cadastraqdos na área restrita do
-                        participante.
-                    </p>
+            )}
+            {success && (
+                <div
+                    id="divMensagemSucesso"
+                    className={styles.Mensagem_sucesso}
+                >
+                    <div className={styles.Mensagem_sucesso_imagem}>
+                        <Image
+                            src={certo}
+                            alt="certo"
+                            className={styles.tick_verde}
+                        />
+                    </div>
+                    <div className={styles.Mensagem_sucesso_texto}>
+                        <h1>{success}</h1>
+                        <p>
+                            Verifique na sua caixa de mensagens o e-mail de
+                            confirmação e clique no botão no final da mensagem.
+                            Se já confirmou o seu cadastro, ignore esta
+                            mensagem.
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div id="divMensagemErro" className={styles.Mensagem_erro}>
-                <div className={styles.Mensagem_erro_imagem}>
-                    <Image src={erro} alt="erro" className={styles.erro} />
+            )}
+            {loading && (
+                <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-25 z-50">
+                    <div className="loader">Loading...</div>
                 </div>
-                <div className={styles.Mensagem_erro_texto}>
-                    <h1>
-                        Erro ao enviar o e-mail de confirmação ao seu e-mail.
-                    </h1>
-                    <p>
-                        Verifique se os seus dados e o seu e-mail estão certos.
-                    </p>
-                </div>
-            </div>
+            )}
         </main>
     );
 }

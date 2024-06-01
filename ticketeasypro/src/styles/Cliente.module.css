@@ -30,4 +30,8 @@
     right: 60px;
   }
 
+  .li_colaborador_sair a {
+    color: white !important;
+  }
+
 /* Outras telas */

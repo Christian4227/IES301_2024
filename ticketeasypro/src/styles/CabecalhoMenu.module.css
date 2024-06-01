@@ -1,0 +1,31 @@
+.header_Home {
+    border-bottom: 1px solid black;
+    width: 98%;
+    margin-left: 1%;
+    display: flex;
+    padding: 10px 0 0 0;
+    position: relative;
+}
+
+.header_Home h1 {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.header_Home_nav {
+    position: absolute;
+    right: calc(100% - 95%);
+}
+
+.header_Home_menu {
+    display: flex;
+}
+
+.header_Home_menu li {
+    padding: 0 20px;
+    font-weight: bold;
+}
+
+.header_Home_menu li:nth-of-type(n + 2){
+    border-left: 2px solid black;
+}

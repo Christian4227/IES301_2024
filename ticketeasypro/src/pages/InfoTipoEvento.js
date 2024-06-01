@@ -6,7 +6,7 @@ import styles from "../styles/Home.module.css";
 import stylese from "../styles/InfoEventos.module.css";
 import Image from "next/image";
 import torre from "../assets/torre_miroku.jpg";
-import Link from "next/link";
+import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
 // import client from "@/utils/client_axios";
 
 export default function InfoTipoEvento() {
@@ -27,16 +27,7 @@ export default function InfoTipoEvento() {
             <div>
                 <div className={stylese.header_infoEventos}>
                     <h1>Nome do tipo do evento</h1>
-                    <nav className={stylese.header_infoEventos_nav}>
-                        <ul className={stylese.header_InfoEventos_menu}>
-                            <li>
-                                <Link href="./InfoEventos">Eventos</Link>
-                            </li>
-                            <li>
-                                <Link href="./">Home</Link>
-                            </li>
-                        </ul>
-                    </nav>
+                    <CabecalhoHomeMenu />
                 </div>
                 <div className={stylese.body_imagem_tipoEvento}>
                     <Image

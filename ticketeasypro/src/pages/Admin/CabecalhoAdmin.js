@@ -17,9 +17,9 @@ export default function CabecalhoAdmin() {
             <nav>
                 <ul className={styles.ul}>
                     <li className={styles.li_admin_sair}>
-                        <Link href="#" onClick={() => Sair()}>
+                        <a href="#" onClick={() => Sair()}>
                             Sair
-                        </Link>
+                        </a>
                     </li>
                 </ul>
             </nav>

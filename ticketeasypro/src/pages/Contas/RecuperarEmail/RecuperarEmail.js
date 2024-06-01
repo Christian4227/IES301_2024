@@ -3,19 +3,14 @@ import styles from "../../../styles/CadastroCliente.module.css";
 import Cabecalho from "./../../Cabecalho";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
 import React from "react";
 import Image from "next/image";
 import certo from "../../../assets/ticky_verde.png";
 import erro from "../../../assets/x_vermelho.png";
 import CabecalhoHomeMenu from "@/pages/CabecalhoHomeMenu";
+import client from "@/utils/client_axios";
 
-const client = axios.create({
-    baseURL: "http://127.0.0.1:3210/v1/",
-    headers: { "Content-Type": "application/json" },
-});
-
-const RecuperarEmail = () => {
+export default function RecuperarEmail() {
     const router = useRouter();
     const { query } = router;
     const token = query.token;
@@ -24,7 +19,6 @@ const RecuperarEmail = () => {
     const [emailconfirmado, setEmailConfirmado] = useState(false);
     const [emailNaoConfirmado, setEmailNaoConfirmado] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [loadingConfirmacao, setLoadingConfirmacao] = useState(false);
     const [showForm, setShowForm] = useState(true); // Controla a exibição do formulário
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -32,11 +26,11 @@ const RecuperarEmail = () => {
         const validateToken = async () => {
             if (!token) {
                 // Redirecionar para /RecuperarEmail/index.js se não houver token
-                router.replace("/RecuperarEmail");
+                router.push("/RecuperarEmail");
                 return;
             }
             try {
-                setLoadingConfirmacao(true);
+                setLoading(true);
                 const response = await client.get(
                     `accounts/confirm-email?token=${encodeURIComponent(token)}`
                 );
@@ -45,15 +39,15 @@ const RecuperarEmail = () => {
                     setShowForm(false);
                     setEmailConfirmado("Email confirmado!");
                     setTimeout(() => {
-                        router.replace("/Login");
+                        router.push("/Login");
                     }, 4000);
                 } else if (response.data.error === "EmailAlreadyConfirmed") {
                     setEmailConfirmado("Email já confirmado.");
                     setTimeout(() => {
-                        router.replace("/Login");
+                        router.push("/Login");
                     }, 6000);
                 } else if (response.data.error === "InvalidOrExpiredToken") {
-                    router.replace("/RecuperarEmail");
+                    router.push("/RecuperarEmail");
                 } else {
                     setEmailNaoConfirmado("Erro desconhecido");
                 }
@@ -64,7 +58,7 @@ const RecuperarEmail = () => {
                     "Falha ao validar email. Por favor tente novamente."
                 );
             } finally {
-                setLoadingConfirmacao(false);
+                setLoading(false);
             }
         };
         if (token) {
@@ -85,6 +79,7 @@ const RecuperarEmail = () => {
 
         try {
             setLoading(true);
+            setShowForm(false); // Oculta o formulário durante o envio
 
             setError("");
             setSuccess("");
@@ -105,6 +100,7 @@ const RecuperarEmail = () => {
             }
         } finally {
             setLoading(false);
+            setShowForm(true); // Mostra o formulário após o término do envio
         }
         setTimeout(() => {
             setSuccess(false);
@@ -120,14 +116,10 @@ const RecuperarEmail = () => {
                 <div className="div_container_grande">
                     {loading && (
                         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-25 z-50">
-                            <div className="loader-container p-4 m-4 border border-black bg-white flex items-center justify-center">
-                                <div className="loader">
-                                    <p className="loader-text">Loading...</p>
-                                </div>
-                            </div>
+                            <div className="loader">Loading...</div>
                         </div>
                     )}
-                    {showForm && !loadingConfirmacao && (
+                    {showForm && !loading && (
                         <>
                             <div className="text-center">
                                 <h1 className="text-2xl font-bold mb-4">
@@ -251,6 +243,4 @@ const RecuperarEmail = () => {
             </div>
         </div>
     );
-};
-
-export default RecuperarEmail;
+}
