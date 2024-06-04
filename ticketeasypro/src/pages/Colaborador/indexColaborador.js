@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../styles/Colaborador.module.css";
+import styles from "@styles/Colaborador.module.css";
 import Image from "next/image";
 import tick from "../../assets/ticky branco.png";
 import ticket from "../../assets/ticket.png";

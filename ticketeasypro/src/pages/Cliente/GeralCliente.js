@@ -2,7 +2,7 @@ import React from "react";
 import CabecalhoCliente from "./CabecalhoCliente";
 import CabecalhoInfoCliente from "./CabecalhoInfoCliente";
 import { useRouter } from "next/router";
-// import styles from "../../styles/Cliente.module.css";
+import styles from "@styles/Cliente.module.css";
 
 export default function GeralCliente() {
     const router = useRouter();

@@ -25,7 +25,11 @@ class UserRepository {
         const whereClause = buildWhereClause(indentifier)
         // try {
         const user = await this.userDb.findUnique({
-            where: whereClause
+            where: whereClause, select: {
+                id: true,
+                email: true, password: true, email_confirmed: true, birth_date: true, name: true, phone: true, phone_fix: true,
+                role: true, salt: true, active: true, created_at: true, updated_at: true
+            }
         });
         return user;
     }

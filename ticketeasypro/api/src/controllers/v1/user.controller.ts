@@ -10,10 +10,40 @@ const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 
     api.post('/signin', async (request: FastifyRequest<{ Body: UserSignin }>, reply: FastifyReply): Promise<UserSigninResult> => {
         try {
-            const user = await userService.create(request.body);
-            const { email, id } = user;
-            const tokenConfirmation = await generateConfirmationToken({ email, id }, api)
-            return reply.code(201).send(user);
+            const { body: userToSignin } = request;
+
+            const requiredFields: (keyof UserSignin)[] = ['email', 'birth_date', 'password', 'confirm_password', 'name'];
+
+            const allFields: (keyof UserSignin)[] = ['phone_fix', 'phone', ...requiredFields];
+
+            // Check for missing required fields
+            for (const field of requiredFields)
+                if (!userToSignin[field])
+                    return reply.code(409).send({ error: `Field ${field} is required` });
+
+            // Verifica se birth_date é uma data válida
+            const birthDate = new Date(userToSignin.birth_date);
+            if (Number.isNaN(birthDate.getTime()))
+                return reply.code(409).send({ error: 'Invalid birth_date' });
+
+
+            // Create a valid payload by picking only the fields from the interface
+            const validSigninPayload: Partial<UserSignin> = { birth_date: birthDate };
+            for (const field of allFields) {
+                const fieldValue = userToSignin[field] ?? false
+                if (fieldValue)
+                    if (field !== 'birth_date') validSigninPayload[field] = userToSignin[field];
+            }
+
+            // Create the user
+            const user = await userService.create(validSigninPayload as UserSignin);
+
+
+            // Generate a confirmation token
+            const tokenConfirmation = await generateConfirmationToken({ ...user }, api);
+            const { id, email, name, email_confirmed, birth_date, phone, phone_fix, role } = user
+
+            return reply.code(201).send({ id, email, name, email_confirmed, birth_date, phone, phone_fix, role });
         } catch (error) {
             return reply.code(409).send(error);
         }

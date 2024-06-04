@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import CabecalhoColaborador from "../CabecalhoColaborador";
 import CabecalhoInfoColaborador from "../CabecalhoInfoColaborador";
-import styles from "../../../styles/Colaborador.module.css";
+import styles from "@styles/Colaborador.module.css";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import Image from "next/image";
 import email from "../../../assets/e-mail sb.png";

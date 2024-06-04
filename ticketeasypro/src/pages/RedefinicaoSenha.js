@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Cabecalho from "./Cabecalho";
 import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "../styles/Recuperacao.module.css";
+import styles from "@styles/Recuperacao.module.css";
 import client from "@/utils/client_axios";
 
 export default function RedefinicaoSenha() {
@@ -37,7 +37,7 @@ export default function RedefinicaoSenha() {
         });
         client
             .post("", data)
-            .then(() => {})
+            .then(() => { })
             .catch((error) => {
                 console.log("Erro na requisição. " + error);
             });

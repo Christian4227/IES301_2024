@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import styles from "../../styles/Cliente.module.css";
+import styles from "@styles/Cliente.module.css";
 import Link from "next/link";
 import { AuthContext } from "../../context/Auth";
 

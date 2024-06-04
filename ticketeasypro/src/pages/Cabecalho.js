@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import styles from "../styles/Cabecalho.module.css";
+import styles from "@styles/Cabecalho.module.css";
 // import menu from "../assets/menu lateral.png";
 // import Image from "next/image";
 

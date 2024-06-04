@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import styles from "../styles/Login.module.css";
+import styles from "@styles/Login.module.css";
 import Link from "next/link";
 import { AuthContext } from "@/context/Auth";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -69,7 +69,7 @@ export default function Login() {
                     <label className={styles.descricao_cadastrar}>
                         <b>Não tem uma conta? </b>
                         <Link
-                            href="/CadastroCliente"
+                            href="Contas/CadastroCliente"
                             className={styles.link_cadastrar}
                         >
                             Cadastre-se

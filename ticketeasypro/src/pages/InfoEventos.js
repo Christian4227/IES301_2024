@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Cabecalho from "./Cabecalho";
-import styles from "../styles/Home.module.css";
+import styles from "@styles/Home.module.css";
 import stylese from "../styles/InfoEventos.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Menu from "./Menu";
@@ -17,9 +17,9 @@ export default function InfoEventos() {
     const Filtrar = () => {
         alert("Filtrado");
     };
-    const FiltroPeriodo = () => {};
-    const FiltroCategoria = () => {};
-    const FiltroCapacidade = () => {};
+    const FiltroPeriodo = () => { };
+    const FiltroCategoria = () => { };
+    const FiltroCapacidade = () => { };
     const FiltroLocalidade = (estado, posicao, marcado) => {
         const listaEstados = [];
 

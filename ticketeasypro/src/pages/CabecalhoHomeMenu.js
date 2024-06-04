@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../styles/CabecalhoMenu.module.css";
+import styles from "@styles/CabecalhoMenu.module.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
 

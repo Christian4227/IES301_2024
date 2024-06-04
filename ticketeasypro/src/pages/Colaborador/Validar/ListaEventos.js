@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "../../../styles/Colaborador.module.css";
+import styles from "@styles/Colaborador.module.css";
 import { useRouter } from "next/router";
 import CabecalhoColaborador from "../CabecalhoColaborador";
 import CabecalhoInfoColaborador from "../CabecalhoInfoColaborador";

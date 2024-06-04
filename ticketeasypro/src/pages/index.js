@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import React, { useRef, useState } from "react";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import styles from "@styles/Home.module.css";
 import facebook from "../assets/facebook.png";
 import whatsapp from "../assets/whatsapp.png";
 import instagram from "../assets/instagram.jpg";

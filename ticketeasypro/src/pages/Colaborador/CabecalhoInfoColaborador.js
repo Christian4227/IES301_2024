@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import styles from "../../styles/Colaborador.module.css";
+import styles from "@styles/Colaborador.module.css";
 import { useRouter } from "next/router";
 
 export default function CabecalhoInfoColaborador() {
