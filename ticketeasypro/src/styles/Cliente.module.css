@@ -30,8 +30,40 @@
     right: 60px;
   }
 
-  .li_colaborador_sair a {
+  .li_cliente_sair a {
     color: white !important;
   }
+
+  .header_cliente {
+    border-bottom: 1px solid black;
+    width: 98%;
+    margin-left: 1%;
+    display: flex;
+    padding: 10px 0 0 0;
+    position: relative;
+}
+
+.header_cliente h1 {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.header_cliente_nav {
+    position: absolute;
+    right: calc(100% - 95%);
+}
+
+.header_cliente_menu {
+    display: flex;
+}
+
+.header_cliente_menu li {
+    padding: 0 20px;
+    font-weight: bold;
+}
+
+.header_cliente_menu li:nth-of-type(n + 2){
+    border-left: 2px solid black;
+}
 
 /* Outras telas */

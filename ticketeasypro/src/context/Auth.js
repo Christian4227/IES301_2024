@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => {
-        destroyCookie(null, "ticket-token");
+        destroyCookie(undefined, "ticket-token");
         router.push("/");
         return;
     };
