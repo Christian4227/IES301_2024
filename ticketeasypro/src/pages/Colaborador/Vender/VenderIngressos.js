@@ -2,7 +2,7 @@ import React from "react";
 import CabecalhoInfoColaborador from "../CabecalhoInfoColaborador";
 import CabecalhoColaborador from "../CabecalhoColaborador";
 import Image from "next/image";
-import styles from "../../../styles/Colaborador.module.css";
+import styles from "@styles/Colaborador.module.css";
 import sacola from "../../../assets/Sacola 2.png";
 import qrcode from "../../../assets/qr code.png";
 import { useRouter } from "next/router";

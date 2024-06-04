@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../../styles/Colaborador.module.css";
+import styles from "@styles/Colaborador.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CabecalhoInfoColaborador from "../CabecalhoInfoColaborador";
 import Cabecalho from "@/pages/Cabecalho";

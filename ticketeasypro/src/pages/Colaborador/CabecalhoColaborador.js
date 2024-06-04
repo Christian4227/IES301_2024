@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Link from "next/link";
 import { AuthContext } from "@/context/Auth";
-import styles from "../../styles/Colaborador.module.css";
+import styles from "@styles/Colaborador.module.css";
 
 export default function CabecalhoColaborador() {
     const { logout } = useContext(AuthContext);

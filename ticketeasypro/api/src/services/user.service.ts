@@ -1,6 +1,6 @@
 import UserRepository from "../repositories/user.repository";
 import { hashPassword, verifyPassword } from "../utils/hash";
-import { PaginatedUserResult, UserCreateResult } from "../types/service/user.type";
+import { UserCreateResult } from "../types/service/user.type";
 import { AsignJwt, SetCookie, UserCredentials, UserResult, UserSignin, UserUpdate } from "../interfaces/service/user.interface";
 import { Role } from "@prisma/client";
 import { UserPayload } from "../types";
@@ -13,17 +13,17 @@ class UserService {
 
 	constructor() {
 		this.userRepo = new UserRepository();
-	}
+	};
 
 	create = async (userSignin: UserSignin, role: Role = Role.SPECTATOR): Promise<UserCreateResult> => {
 		const { email, password, confirm_password, ...rest } = userSignin;
 
 		// Verifica se as senhas correspondem
-		if (password !== confirm_password) throw new Error("Passwords do not match.");
+		if (password !== confirm_password) throw new Error("PasswordsDoNotMatch.");
 
 		const userFound = await this.userRepo.find({ email: email } as Identifier);
 
-		if (!!userFound) throw new Error('User already exists');
+		if (!!userFound) throw new Error('UserAlreadyExists');
 
 		const { hash, salt } = hashPassword(password);
 
@@ -38,15 +38,15 @@ class UserService {
 		// find a user by email
 		const user = await this.userRepo.find({ email });
 
-		if (!user) throw new Error("Invalid email or password");
-		if (!user.active) throw new Error("This user account is inactive.");
+		if (!user) throw new Error("InvalidEmailOrPassword");
+		if (!user.active) throw new Error("AccountEmailIsInactive.");
 
-		const { password: hashedPassword, salt, id: sub, role: role, name: userName } = user;
-
+		const { password: hashedPassword, salt, id: sub, role: role, name: userName, email_confirmed } = user;
+		if (!email_confirmed) throw new Error("AccountEmailMustBeValidated.");
 		// verify password
 		const correctPassword = verifyPassword({ candidatePassword, salt, hashedPassword });
 
-		if (!correctPassword) throw new Error("Invalid email or password");
+		if (!correctPassword) throw new Error("InvalidEmailOrPassword");
 
 		const payload: UserPayload = { sub: sub, login: email, role: role, name: userName }
 		const token = await asignJwt(payload, { sign: { expiresIn: '6h' } });

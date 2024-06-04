@@ -1,312 +1,186 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Cabecalho from "./Cabecalho";
 import styles from "../styles/CadastroCliente.module.css";
 import styleh from "../styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Menu from "./Menu";
-import certo from "../assets/ticky_verde.png";
-import erro from "../assets/x_vermelho.png";
-import Image from "next/image";
+import LoadingOverlay from '@components/LoadingOverlay';
 import Link from "next/link";
+import PasswordAndConfirmForm from "@/components/forms/PasswordAndConfirmForm";
 import client from "@/utils/client_axios";
-import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
+import { emailRegex, dateFormat, formatFixPhone, formatCellPhone } from "@/utils";
+import ToastMessage from "@/components/ToastMessage/ToastMessage";
 
-export default function TelaCadastroCliente() {
-    const [nome, setNome] = useState("");
-    const [telefone, setTelefone] = useState("");
-    const [celular, setCelular] = useState("");
-    const [dataNascimento, setDataNascimento] = useState("");
-    const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
-    const [novaSenha, setNovaSenha] = useState("");
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
-    const [loading, setLoading] = useState(false);
+const TelaCadastroCliente = () => {
+  const [nome, setNome] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [celular, setCelular] = useState("");
+  const [dataNascimento, setDataNascimento] = useState(new Date());
+  const [birthDatevalid, setBirthDatevalid] = useState(true);
+  const [email, setEmail] = useState("");
+  const [emailValid, setEmailValid] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [password, setPassword] = useState("");
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [loading, setLoading] = useState(false);
+  // const [messages, setMessages] = useState({ showSuccess: false, showError: false });
+  const [message, setMessage] = useState({ text: '', type: '' });
 
-    function MascaraContato(tipo, value) {
-        if (tipo == "Telefone") {
-            value = value.replace(/\D/g, "");
-            value = value.replace(/(\d{2})(\d)/, "($1) $2");
-            value = value.replace(/(\d)(\d{4})$/, "$1-$2");
-            setTelefone(value);
-        } else {
-            value = value.replace(/\D/g, "");
-            value = value.replace(/(\d{2})(\d)/, "($1) $2");
-            value = value.replace(/(\d{5})(\d{4})$/, "$1-$2");
-            setCelular(value);
-        }
+  useEffect(() => {
+    if (loading) setMessage({ text: '', type: '' });
+    // Só reseta as mensagens antes de renderizar a tela de carregamento
 
-        return value;
+  }, [loading]);
+
+
+  const setLoadingWithDelay = (isLoading) => {
+    if (isLoading) setLoading(true);
+    else setTimeout(() => setLoading(false), 100);
+  };
+
+  const minDate = new Date("1910-01-01");
+  const maxDate = new Date();
+
+  useEffect(() => {
+    const isDataNascimentoValid = (dataNascimento >= minDate) && dataNascimento <= maxDate;
+    setBirthDatevalid(isDataNascimentoValid);
+
+  }, [dataNascimento]);
+
+  useEffect(() => {
+    const isNomeValid = nome.length > 0;
+    const isTelefoneValid = telefone.length === 0 || telefone.length === 14;
+    const isCelularValid = celular.length === 0 || celular.length === 15;
+    const isEmailValid = emailRegex.test(email);
+    const allBasicFieldsValid = isNomeValid && isTelefoneValid && isCelularValid && birthDatevalid && isEmailValid;
+    const isFormCurrentlyValid = allBasicFieldsValid && isPasswordValid;
+
+    { console.log(`allBasicFieldsValid: ${allBasicFieldsValid}`) }
+    { console.log(`isFormCurrentlyValid: ${isFormCurrentlyValid}`) }
+
+
+    setIsFormValid(isFormCurrentlyValid);
+  }, [nome, telefone, celular, email, isPasswordValid]);
+
+
+  const handleSetMessage = (message, type) => {
+    setMessage({ text: message, type });
+  };
+
+  const handleValidityChange = (isValid) => setIsPasswordValid(isValid);
+  const handlePasswordChange = (password) => setPassword(password);
+
+  const validateEmail = (email) => emailRegex.test(email);
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setEmailValid(validateEmail(e.target.value));
+  };
+
+  const handleTelefoneChange = (e) => setTelefone(formatFixPhone(e.target.value));
+  const handleCelularChange = (e) => setCelular(formatCellPhone(e.target.value));
+
+
+  const inserirDados = async () => {
+    // if (!isFormValid) {
+    //   alert("Por favor, preencha todos os campos corretamente.");
+    //   return;
+    // }
+    const data = {
+      email, password, confirm_password: password, name: nome, birth_date: dataNascimento, phone: telefone, cellphone: celular
     }
-
-    function InserirDados() {
-        if (
-            nome.length == 0 ||
-            telefone.length == 0 ||
-            celular.length == 0 ||
-            dataNascimento == "" ||
-            email.length == 0 ||
-            senha.length == 0 ||
-            novaSenha.length == 0
-        ) {
-            alert("Algum campo do formulário não foi preenchido.");
-            return;
-        }
-
-        if (senha != novaSenha) {
-            alert("As senhas não correspondem.");
-            return;
-        }
-
-        var dataNascimentoC = new Date(dataNascimento);
-        dataNascimentoC = dataNascimentoC.toISOString().slice(0, 19) + "Z";
-
-        let data = JSON.stringify({
-            email: email,
-            password: senha,
-            confirm_password: novaSenha,
-            email_confirmed: false,
-            name: nome,
-            birth_date: dataNascimentoC,
-            phone: celular,
-            phone_fix: telefone,
-        });
-
-        client
-            .post("users/signin", data, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-            .then(() => {
-                alert("Dados cadastrados com sucesso!");
-                // Começa a requisição para enviar o e-mail
-                client
-                    .get(`accounts/resend-email-confirmation/${email}`)
-                    .then((response) => {
-                        if (response.status === 200)
-                            setSuccess(
-                                "Email de confirmação reenviado com sucesso!"
-                            );
-                        else
-                            setError("Erro ao reenviar o email de confirmação");
-                    })
-                    .catch((error) => {
-                        if (
-                            error.response?.data?.message ===
-                            "EmailAlreadyConfirmed"
-                        ) {
-                            setError("Email já confirmado.");
-                        } else if (
-                            error.response?.data?.message === "AccountNotFound"
-                        ) {
-                            setError("Email não encontrado.");
-                        } else {
-                            setError("Erro ao reenviar email de confirmação.");
-                        }
-                    })
-                    .finally(() => {
-                        setLoading(false);
-                    });
-            })
-            .catch(() => {
-                setError("Usuário já cadastrado no sistema.");
-            });
-        setTimeout(() => {
-            setError(false);
-            setSuccess(false);
-        }, 4000);
+    try {
+      setLoadingWithDelay(true);
+      await client.post("/users/signin", data);
+      handleSetMessage("Dados cadastrados com sucesso!\nVerifique no seu e-mail cadastrado uma mensagem deconfirmação.", "success")
+      // setMessageState("success");
+    } catch (error) {
+      const messageError = error?.response?.data?.message
+      switch (messageError) {
+        case 'UserAlreadyExists':
+          handleSetMessage("Email já cadastrado. Faça seu login.", "error"); break;
+        default:
+          handleSetMessage("Erro desconhecido.", "error"); break;
+      }
     }
-    return (
-        <main>
-            <div>
-                <Cabecalho className={styleh.header} />
-                <CabecalhoHomeMenu componente={"Cadastrar"} />
-                <div className={styles.div_cadastrar}>
-                    <form className="div_container_grande">
-                        <div className={styles.cabecalho_cadastro}>
-                            <b>
-                                <h1>Cadastro das informações</h1>
-                            </b>
-                            <label>
-                                Insira os seus dados para se inscrever nos
-                                eventos
-                            </label>
-                        </div>
-                        <div className="mb-3">
-                            <label
-                                htmlFor="exampleInputEmail1"
-                                className="form-label"
-                            >
-                                Nome completo
-                            </label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="InputNomeCompleto"
-                                aria-describedby="emailHelp"
-                                value={nome}
-                                onChange={(e) => setNome(e.target.value)}
-                            />
-                        </div>
-                        <div
-                            className="mb-3"
-                            style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr 1fr",
-                                gap: "20px",
-                            }}
-                        >
-                            <label
-                                htmlFor="exampleInputPassword1"
-                                className="form-label"
-                            >
-                                Telefone
-                            </label>
-                            <label
-                                htmlFor="exampleInputPassword1"
-                                className="form-label"
-                            >
-                                Celular
-                            </label>
-                            <label
-                                htmlFor="exampleInputPassword1"
-                                className="form-label"
-                            >
-                                Data de nascimento
-                            </label>
-                            <input
-                                type="tel"
-                                className="form-control"
-                                id="InputTelefone"
-                                maxLength={14}
-                                onChange={(e) =>
-                                    MascaraContato("Telefone", e.target.value)
-                                }
-                                value={telefone}
-                            />
-                            <input
-                                type="tel"
-                                className="form-control"
-                                id="InputCelular"
-                                maxLength={15}
-                                onChange={(e) =>
-                                    MascaraContato("Celular", e.target.value)
-                                }
-                                value={celular}
-                            />
-                            <input
-                                type="date"
-                                className="form-control"
-                                id="InputDataNascimento"
-                                value={dataNascimento}
-                                onChange={(e) =>
-                                    setDataNascimento(e.target.value)
-                                }
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label
-                                htmlFor="exampleInputPassword1"
-                                className="form-label"
-                            >
-                                E-mail
-                            </label>
-                            <input
-                                type="email"
-                                className="form-control"
-                                id="InputEmail"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <label
-                                htmlFor="exampleInputPassword1"
-                                className="form-label"
-                            >
-                                Senha
-                            </label>
-                            <input
-                                type="password"
-                                className="form-control"
-                                id="InputSenha"
-                                value={senha}
-                                onChange={(e) => setSenha(e.target.value)}
-                            />
-                            <label
-                                htmlFor="exampleInputPassword1"
-                                className="form-label"
-                            >
-                                Repetir senha
-                            </label>
-                            <input
-                                type="password"
-                                className="form-control"
-                                id="InputNovaSenha"
-                                value={novaSenha}
-                                onChange={(e) => setNovaSenha(e.target.value)}
-                            />
-                        </div>
-                        <input
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={() => InserirDados()}
-                            defaultValue="Cadastrar"
-                        />
-                        <hr />
-                        <div className={styles.footer_form}>
-                            <label>
-                                Não recebeu o e-mail de confirmação?{" "}
-                                <Link href="/Contas/RecuperarEmail">
-                                    Clique aqui
-                                </Link>
-                            </label>
-                        </div>
-                    </form>
-                </div>
-                <Menu id="menu-lateral" className={styleh.menu_lateral} />
+    finally {
+      setLoadingWithDelay(false);
+    }
+  };
+
+  return (
+    <main>
+      {loading && <LoadingOverlay />}
+      <div id="div-principal">
+        <Cabecalho className={styleh.header} />
+        <div className={styles.div_cadastrar}>
+          <form className="div_container_grande">
+            <div className={styles.cabecalho_cadastro}>
+              <h1>Cadastro das informações</h1>
+              <label>Insira os seus dados para se inscrever nos eventos</label>
             </div>
-            {error && (
-                <div id="divMensagemErro" className={styles.Mensagem_erro}>
-                    <div className={styles.Mensagem_erro_imagem}>
-                        <Image src={erro} alt="erro" className={styles.erro} />
-                    </div>
-                    <div className={styles.Mensagem_erro_texto}>
-                        <h1>{error}</h1>
-                        <p>
-                            Verifique o seu e-mail está certo ou se já tem
-                            cadastro no sistema.
-                        </p>
-                    </div>
-                </div>
-            )}
-            {success && (
-                <div
-                    id="divMensagemSucesso"
-                    className={styles.Mensagem_sucesso}
-                >
-                    <div className={styles.Mensagem_sucesso_imagem}>
-                        <Image
-                            src={certo}
-                            alt="certo"
-                            className={styles.tick_verde}
-                        />
-                    </div>
-                    <div className={styles.Mensagem_sucesso_texto}>
-                        <h1>{success}</h1>
-                        <p>
-                            Verifique na sua caixa de mensagens o e-mail de
-                            confirmação e clique no botão no final da mensagem.
-                            Se já confirmou o seu cadastro, ignore esta
-                            mensagem.
-                        </p>
-                    </div>
-                </div>
-            )}
-            {loading && (
-                <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-25 z-50">
-                    <div className="loader">Loading...</div>
-                </div>
-            )}
-        </main>
-    );
-}
+            <div className="mb-3">
+              <label htmlFor="InputNomeCompleto" className="form-label">Nome completo</label>
+              <input
+                type="text"
+                className="form-control"
+                id="InputNomeCompleto"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
+            </div>
+            <div className="mb-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px 20px", alignItems: "center" }}>
+              <label htmlFor="InputTelefone" className="form-label m-0">Telefone</label>
+              <label htmlFor="InputCelular" className="form-label m-0">Celular</label>
+              <label htmlFor="InputDataNascimento" className="form-label m-0">Data de nascimento</label>
+              <div>
+                <input type="tel" className="form-control" id="InputTelefone" maxLength={14} onChange={handleTelefoneChange} value={telefone} />
+              </div>
+              <div>
+                <input type="tel" className="form-control" id="InputCelular" maxLength={15} onChange={handleCelularChange} value={celular} />
+              </div>
+              <div>
+                <input
+                  type="date" className="form-control" id="InputDataNascimento"
+                  value={dateFormat(dataNascimento)}
+                  min={dateFormat(minDate)}
+                  max={dateFormat(maxDate)}
+                  onChange={(e) => setDataNascimento(prev => prev = new Date(e.target.value))}
+                />
+                {!birthDatevalid && (<i className="absolute text-red-600 text-sm mt-[0.1rem]">Data inválida.</i>)}
+              </div>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="InputEmail" className="form-label">E-mail</label>
+              <input
+                type="email"
+                className={`form-control mb-4 ${!emailValid ? "is-invalid" : ""}`}
+                id="InputEmail"
+                value={email}
+                onChange={handleEmailChange}
+              />
+              {!emailValid && (<i className="absolute text-red-600 text-sm -mt-6">Por favor, insira um e-mail válido.</i>)}
+              <PasswordAndConfirmForm
+                minStrength={2}
+                onPasswordChange={handlePasswordChange}
+                onValidityChange={handleValidityChange}
+              />
+            </div>
+            <button type="button" className="btn btn-primary" onClick={inserirDados} disabled={!isFormValid}>Cadastrar</button>
+            <hr />
+            <div className={styles.footer_form}>
+              <label>
+                Não recebeu o e-mail de confirmação?{" "}
+                <Link href="/RecuperarEmail">Clique aqui</Link>
+              </label>
+            </div>
+          </form>
+        </div>
+        <Menu id="menu-lateral" className={styleh.menu_lateral} />
+        {!!message.text && <ToastMessage text={message.text} type={message.type} />}
+        {/* {message.type === "error" && <ToastMessage text={message.text} type={message.type} />} */}
+      </div>
+    </main>
+  );
+};
+
+export default TelaCadastroCliente;

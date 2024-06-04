@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    images: {
-        domains: ["plus.unsplash.com"],
-    },
+    images: { remotePatterns: [{ protocol: 'https', hostname: 'plus.unsplash.com', pathname: '**' }] },
     async headers() {
         return [
             {

@@ -45,6 +45,19 @@ class AccountRepository {
         });
 
         if (!user) throw new Error(`User ${whereClause.email ?? whereClause.id} not found`);
+
+        return user;
+    }
+
+    findWhere = async (where: Prisma.UserWhereUniqueInput): Promise<Account> => {
+        // Constrói o objeto 'where' de forma dinâmica baseado no input fornecido
+        const whereClause = buildWhereClause(where)
+
+        const user = await this.userDb.findUnique({
+            where: whereClause
+        });
+
+        if (!user) throw new Error(`User ${whereClause.email ?? whereClause.id} not found`);
         return user;
     }
 
@@ -72,34 +85,14 @@ class AccountRepository {
         }
     };
 
-    // updateEmailState = async (identifier: Identifier, data: AccountUpdate): Promise<AccountResult> => {
-    //     const whereClause = buildWhereClause(identifier);
-    //     const filteredData = filterNullsData(data);
-    //     const whereClause = buildWhereClause(identifier);
-    //     const filteredData = filterNullsData(data);
-
-    //     const accountUpdated = await this.userDb.update(
-    //         {
-    //             where: whereClause,
-    //             data: filteredData,
-    // }
-
-
     update = async (identifier: Identifier, data: AccountUpdate): Promise<AccountResult> => {
-
         const whereClause = buildWhereClause(identifier);
         const filteredData = filterNullsData(data);
 
-        const accountUpdated = await this.userDb.update(
-            {
-                where: whereClause,
-                data: filteredData,
-                select: {
-                    id: true, email: true, name: true, email_confirmed: true, birth_date: true, phone: true,
-                    phone_fix: true, role: true, active: true
-                }
-            }
-        );
+        const accountUpdated = await this.userDb.update({
+            where: whereClause, data: filteredData
+        });
+
         return accountUpdated;
     }
     findAccounts = async (query: string, role?: Role, page: number = 1, pageSize: number = 10, orderBy: AccountSortParams = { name: 'asc' }): Promise<PaginatedAccountResult> => {

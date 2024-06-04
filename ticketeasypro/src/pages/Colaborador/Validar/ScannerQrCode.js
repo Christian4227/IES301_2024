@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "../../../styles/Colaborador.module.css";
+import styles from "@styles/Colaborador.module.css";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import seta from "../../../assets/seta para cima.jpg";

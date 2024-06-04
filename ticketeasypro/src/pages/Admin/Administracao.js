@@ -1,7 +1,7 @@
 import React from "react";
 import CabecalhoAdmin from "./CabecalhoAdmin";
 import MenuAdmin from "./MenuAdmin";
-import styles from "../../styles/Administracao.module.css";
+import styles from "@styles/Administracao.module.css";
 
 export default function Administracao() {
     return (

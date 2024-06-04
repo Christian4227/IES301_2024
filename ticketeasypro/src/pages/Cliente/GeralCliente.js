@@ -1,6 +1,6 @@
 import React from "react";
 import CabecalhoCliente from "./CabecalhoCliente";
-// import styles from "../../styles/Cliente.module.css";
+// import styles from "@styles/Cliente.module.css";
 
 export default function GeralCliente() {
     return (
