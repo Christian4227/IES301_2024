@@ -23,10 +23,14 @@ class AccountService {
     const { email, role: roleAccountCreate, ...rest } = accountCreate;
     if (!(actorRole === roleAccountCreate && (actorRole === Role.ADMIN || actorRole === Role.EVENT_MANAGER)))
       if (!canDoIt(actorRole, roleAccountCreate)) throw new Error('InsufficientPermissions');
+    try {
+      const verifyIfAccountExists = await this.getOne(email);      
+    } catch (error) {
+      if (error instanceof Error)
+        if (error.message !== 'AccountNotFound')
+          throw new Error('AccountAlreadyExists');
+    }
 
-    const verifyIfAccountExists = await this.getOne(email);
-
-    if (verifyIfAccountExists) throw new Error('AccountAlreadyExists');
 
     // cria senha temporária
     const tempPassword = `_-_tEmP_pa$sW&ord._+=${generateRandomPassword(24)}`;

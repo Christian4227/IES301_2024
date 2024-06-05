@@ -6,7 +6,7 @@ import { Role } from "@prisma/client";
 import { UserPayload } from "../types";
 import { Identifier } from "types/common.type";
 import { FastifyInstance } from "fastify/types/instance";
-import AccountService from "./accounts.service";
+import AccountService from "./account.service";
 
 
 class UserService {

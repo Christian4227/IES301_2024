@@ -1,9 +1,9 @@
 import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
-import AccountService from "../../services/accounts.service";
+import AccountService from "../../services/account.service";
 import { AccountRoleUpdate, AccountUpdateResult, PaginatedAccountResult, QueryPaginationFilter } from "../../interfaces/controller/account.interface";
 import { AccountCreate } from "@interfaces/service/account.interface";
 import { Role } from "@prisma/client";
-import { AccountResult } from "@interfaces/repository/account.interface";
+// import { AccountResult } from "@interfaces/repository/account.interface";
 
 
 const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
@@ -14,7 +14,8 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
             const { user: { role: actorRole }, body: updateData } = request;
             try {
                 const account = await accountService.create(actorRole as Role, updateData, api);
-                return reply.code(201).send(account);
+                const { id, email, name, email_confirmed, birth_date, phone, phone_fix, role } = account;
+                return reply.code(201).send({ id, email, name, email_confirmed, birth_date, phone, phone_fix, role });
             } catch (error) {
                 return reply.code(409).send(error);
             }
