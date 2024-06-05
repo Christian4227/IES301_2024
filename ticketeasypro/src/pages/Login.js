@@ -53,7 +53,7 @@ export default function Login() {
         <div className={styles.div_Login_footer}>
           <label className={styles.descricao_cadastrar}>
             <b>Não tem uma conta? </b>
-            <Link href="Contas/CadastroCliente" className={styles.link_cadastrar} >
+            <Link href="CadastroCliente" className={styles.link_cadastrar} >
               Cadastre-se
             </Link>
           </label>
