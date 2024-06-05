@@ -13,9 +13,7 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         async (request: FastifyRequest<{ Body: AccountCreate }>, reply: FastifyReply) => {
             const { user: { role: actorRole }, body: updateData } = request;
             try {
-                const account = await accountService.create(actorRole as Role, updateData);
-                const { email, id } = account;
-                await accountService.reSendConfirmationEmail(email, api)
+                const account = await accountService.create(actorRole as Role, updateData, api);
                 return reply.code(201).send(account);
             } catch (error) {
                 return reply.code(409).send(error);
@@ -103,9 +101,9 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
             try {
                 const user = await accountService.reSendConfirmationEmail(userEmail, api);
             } catch (error: unknown) {
-                if (error instanceof Error) 
+                if (error instanceof Error)
                     return reply.code(200).send(error);//AccountNotFound
-                
+
             }
             return reply.code(200).send({ "Success": true });
 

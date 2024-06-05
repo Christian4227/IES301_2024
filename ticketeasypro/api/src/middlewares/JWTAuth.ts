@@ -40,7 +40,7 @@ const AuthorizeRoles = (roles: Role[]) => {
 
         // Verifica se o usuário autenticado tem pelo menos um dos papéis permitidos
         if (!role || !roles.includes(role as Role)) {
-            throw new Error('Insufficient permissions.');
+            throw new Error('InsufficientPermissions');
         }
     };
 }

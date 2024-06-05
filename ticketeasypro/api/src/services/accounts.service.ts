@@ -1,5 +1,3 @@
-
-import fp from "fastify"
 import { Role } from "@prisma/client";
 import { canDoIt } from "@utils/roles";
 import { PaginatedAccountResult, AccountUpdate, AccountCreate, AccountUpdateResult } from "@interfaces/service/account.interface";
@@ -21,19 +19,16 @@ class AccountService {
   constructor() {
     this.accountRepository = new AccountRepository();
   }
-  create = async (actorRole: Role, accountCreate: AccountCreate): Promise<AccountCreateResult> => {
+  create = async (actorRole: Role, accountCreate: AccountCreate, api: FastifyInstance): Promise<AccountCreateResult> => {
     const { email, role: roleAccountCreate, ...rest } = accountCreate;
     if (!(actorRole === roleAccountCreate && (actorRole === Role.ADMIN || actorRole === Role.EVENT_MANAGER)))
-      if (!canDoIt(actorRole, roleAccountCreate)) throw new Error('Insufficient permissions.');
-
+      if (!canDoIt(actorRole, roleAccountCreate)) throw new Error('InsufficientPermissions');
 
     const verifyIfAccountExists = await this.getOne(email);
 
     if (verifyIfAccountExists) throw new Error('AccountAlreadyExists');
 
     // cria senha temporária
-
-    // const tempPassword = `_-_tEmP_${randomUUID()}RAry_${randomUUID()}pa$sW&ord._+=`;
     const tempPassword = `_-_tEmP_pa$sW&ord._+=${generateRandomPassword(24)}`;
 
     const { hash, salt } = hashPassword(tempPassword);
@@ -41,6 +36,8 @@ class AccountService {
     const accountToCreate = { ...rest, role: roleAccountCreate, email, salt, password: hash };
 
     const account: AccountCreateResult = await this.accountRepository.create(accountToCreate);
+
+    const emailSended = await this.reSendConfirmationEmail(email, api);
 
     return account;
   }
@@ -50,7 +47,7 @@ class AccountService {
     const targetAccount = await this.accountRepository.find({ id: targetId })
 
     if (newRole && !canDoIt(actorRole, targetAccount ? targetAccount.role : ('SPECTATOR' as Role)))
-      throw new Error('Insufficient permissions.');
+      throw new Error('InsufficientPermissions');
     try {
       const account = await this.accountRepository.update({ id: targetId }, dataUpdate);
       return account;

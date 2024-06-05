@@ -7,11 +7,11 @@ import EmailResendForm from '@components/forms/EmailResendForm';
 import LoadingOverlay from '@components/LoadingOverlay';
 import styleh from "@styles/Home.module.css";
 import styles from "@styles/CadastroCliente.module.css";
+import ToastMessage from "@/components/toastMessage/ToastMessage";
 
 const RecuperarEmail = () => {
   const router = useRouter();
   const { token } = router.query;
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
 
@@ -41,11 +41,7 @@ const RecuperarEmail = () => {
         <div className="div_container_grande">
           {loading && <LoadingOverlay />}
           {!loading && token && (
-            <EmailConfirmation
-              token={token}
-              handleSetMessage={handleSetMessage}
-              setLoading={setLoadingWithDelay}
-            />
+            <EmailConfirmation token={token} handleSetMessage={handleSetMessage} setLoading={setLoadingWithDelay} />
           )}
           {!loading && !token && (
             <>
@@ -56,19 +52,11 @@ const RecuperarEmail = () => {
                 </label>
               </div>
               <hr className="mb-4 bg-gray-300" />
-              <EmailResendForm
-                handleSetMessage={handleSetMessage}
-                setLoading={setLoadingWithDelay}
-              />
+              <EmailResendForm handleSetMessage={handleSetMessage} setLoading={setLoadingWithDelay} />
             </>
           )}
-          {!!message.text && (
-            <p
-              className={`mt-4 text-lg text-center ${message.type === 'error' ? 'text-red-500' : 'text-green-500'}`}
-            >
-              {message.text}
-            </p>
-          )}
+
+          {!!message.text && <ToastMessage text={message.text} type={message.type} />}
         </div>
       </div>
     </>

@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
         setCookie(undefined, "ticket-token", JSON.stringify(token));
     };
 
-    const DicrecionarRota = (token) => {
+    const DirecionarRota = (token) => {
         const decoded = jwtDecode(token.accessToken);
         setUser(decoded);
 
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
             .then((response) => {
                 const accessToken = response.data;
                 ConverterToken(accessToken);
-                DicrecionarRota(accessToken);
+                DirecionarRota(accessToken);
                 setAuth(true);
                 setUser(data);
             })

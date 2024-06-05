@@ -59,7 +59,7 @@ interface CommonUserData {
     name: string;
     emailConfirmed?: boolean;
     birth_date: Date;
-    phone: string
+    phone?: string
     phone_fix?: string
 }
 

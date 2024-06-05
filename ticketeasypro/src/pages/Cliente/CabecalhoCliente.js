@@ -17,7 +17,8 @@ export default function CabecalhoCliente() {
             <nav>
                 <ul className={styles.ul}>
                     <li className={styles.li_colaborador_sair}>
-                        <Link href="/" onClick={() => Sair()}>
+                        {/* link pra sair fica preto e não aparece pq o background do cabeçalho é preto */}
+                        <Link href="/" className="text-white  visited:text-white" onClick={() => Sair()}>
                             Sair
                         </Link>
                     </li>

@@ -9,23 +9,23 @@ datasource db {
 }
 
 model User {
-  id                     String    @id @default(uuid())
-  email                  String    @unique
-  password               String
-  email_confirmed        Boolean   @default(false)
-  birth_date             DateTime  @default(now()) @db.Date
-  name                   String    @db.VarChar(256)
-  phone                  String
-  phone_fix              String?
-  role                   Role      @default(SPECTATOR)
-  salt                   String
-  token   String?   @unique
-  token_expires DateTime?
-  created_at             DateTime  @default(now()) @db.Timestamp(0)
-  updated_at             DateTime  @updatedAt @db.Timestamp(0)
-  active                 Boolean   @default(true)
-  Event                  Event[]
-  Order                  Order[]
+  id              String    @id @default(uuid())
+  email           String    @unique
+  password        String
+  email_confirmed Boolean   @default(false)
+  birth_date      DateTime  @default(now()) @db.Date
+  name            String    @db.VarChar(256)
+  phone           String    @default("")
+  phone_fix       String?
+  role            Role      @default(SPECTATOR)
+  salt            String
+  token           String?   @unique
+  token_expires   DateTime?
+  created_at      DateTime  @default(now()) @db.Timestamp(0)
+  updated_at      DateTime  @updatedAt @db.Timestamp(0)
+  active          Boolean   @default(true)
+  Event           Event[]
+  Order           Order[]
 
   @@map("USERS")
 }

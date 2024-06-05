@@ -1,18 +1,15 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import client from '@/utils/client_axios';
-
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// const EmailResendForm = ({ onSuccess, onError, setLoading }) => {
 const EmailResendForm = ({ handleSetMessage, setLoading }) => {
-  const emailRef = useRef('');
+  const [email, setEmail] = useState("");
 
   const setErrorMessage = (message) => handleSetMessage(message, 'error');
   const setSuccessMessage = (message) => handleSetMessage(message, 'success');
 
   const EnviarEmail = async (event) => {
     event.preventDefault();
-    const email = emailRef.current.value ?? '';
     if (!emailRegex.test(email)) {
       setErrorMessage('Por favor, digite um email válido.');
       return;
@@ -35,6 +32,7 @@ const EmailResendForm = ({ handleSetMessage, setLoading }) => {
       }
     } finally {
       setLoading(false);
+      setTimeout(setEmail(""), 1500);
     }
   };
 
@@ -47,7 +45,8 @@ const EmailResendForm = ({ handleSetMessage, setLoading }) => {
           className="form-control w-full p-2 border border-black border-opacity-25"
           name="email"
           id="email"
-          ref={emailRef}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
       </div>

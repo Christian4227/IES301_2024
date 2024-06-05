@@ -3,6 +3,7 @@ import UserService from "../../services/user.service";
 import { UserCredentials, UserSignin, UserSigninResult, UserUpdate } from "@interfaces/controller/user.interface";
 import { Token } from "@interfaces/token.interface";
 import { generateConfirmationToken } from "@utils/auth";
+import { Role } from "@prisma/client";
 
 
 const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
@@ -18,14 +19,12 @@ const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 
             // Check for missing required fields
             for (const field of requiredFields)
-                if (!userToSignin[field])
-                    return reply.code(409).send({ error: `Field ${field} is required` });
+                if (!userToSignin[field]) return reply.code(409).send({ error: `Field ${field} is required` });
 
             // Verifica se birth_date é uma data válida
             const birthDate = new Date(userToSignin.birth_date);
             if (Number.isNaN(birthDate.getTime()))
                 return reply.code(409).send({ error: 'Invalid birth_date' });
-
 
             // Create a valid payload by picking only the fields from the interface
             const validSigninPayload: Partial<UserSignin> = { birth_date: birthDate };
@@ -36,11 +35,8 @@ const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
             }
 
             // Create the user
-            const user = await userService.create(validSigninPayload as UserSignin);
-
-
-            // Generate a confirmation token
-            const tokenConfirmation = await generateConfirmationToken({ ...user }, api);
+            const user = await userService.create(validSigninPayload as UserSignin, Role.SPECTATOR, api);
+            
             const { id, email, name, email_confirmed, birth_date, phone, phone_fix, role } = user
 
             return reply.code(201).send({ id, email, name, email_confirmed, birth_date, phone, phone_fix, role });

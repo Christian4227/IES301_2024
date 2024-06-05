@@ -8,8 +8,10 @@ import LoadingOverlay from '@components/LoadingOverlay';
 import Link from "next/link";
 import PasswordAndConfirmForm from "@/components/forms/PasswordAndConfirmForm";
 import client from "@/utils/client_axios";
+import ToastMessage from "@/components/toastMessage/ToastMessage";
 import { emailRegex, dateFormat, formatFixPhone, formatCellPhone } from "@/utils";
-import ToastMessage from "@/components/ToastMessage/ToastMessage";
+
+
 
 const TelaCadastroCliente = () => {
   const [nome, setNome] = useState("");
@@ -90,12 +92,12 @@ const TelaCadastroCliente = () => {
     }
     try {
       setLoadingWithDelay(true);
-      await client.post("/users/signin", data);
-      handleSetMessage("Dados cadastrados com sucesso!\nVerifique no seu e-mail cadastrado uma mensagem deconfirmação.", "success")
-      // setMessageState("success");
+      const responde = await client.post("/users/signin", data);
+      handleSetMessage("Dados cadastrados com sucesso!\nVerifique no seu e-mail cadastrado uma mensagem de confirmação.", "success")
+
     } catch (error) {
-      const messageError = error?.response?.data?.message
-      switch (messageError) {
+      const messageError = error?.response?.data?.message;
+    switch (messageError) {
         case 'UserAlreadyExists':
           handleSetMessage("Email já cadastrado. Faça seu login.", "error"); break;
         default:
@@ -170,7 +172,7 @@ const TelaCadastroCliente = () => {
             <div className={styles.footer_form}>
               <label>
                 Não recebeu o e-mail de confirmação?{" "}
-                <Link href="/RecuperarEmail">Clique aqui</Link>
+                <Link href="/Contas/RecuperarEmail">Clique aqui</Link>
               </label>
             </div>
           </form>

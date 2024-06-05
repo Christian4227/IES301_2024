@@ -5,17 +5,21 @@ import { AsignJwt, SetCookie, UserCredentials, UserResult, UserSignin, UserUpdat
 import { Role } from "@prisma/client";
 import { UserPayload } from "../types";
 import { Identifier } from "types/common.type";
+import { FastifyInstance } from "fastify/types/instance";
+import AccountService from "./accounts.service";
 
 
 class UserService {
 
 	private userRepo: UserRepository
+	private accountService: AccountService
 
 	constructor() {
 		this.userRepo = new UserRepository();
+		this.accountService = new AccountService();
 	};
 
-	create = async (userSignin: UserSignin, role: Role = Role.SPECTATOR): Promise<UserCreateResult> => {
+	create = async (userSignin: UserSignin, role: Role = Role.SPECTATOR, api: FastifyInstance): Promise<UserCreateResult> => {
 		const { email, password, confirm_password, ...rest } = userSignin;
 
 		// Verifica se as senhas correspondem
@@ -28,13 +32,13 @@ class UserService {
 		const { hash, salt } = hashPassword(password);
 
 		const user = await this.userRepo.create({ ...rest, role, email, salt, password: hash });
+		const emailSended = await this.accountService.reSendConfirmationEmail(user.email, api);
 
 		return user;
 	};
 
 	generateCookie = async (credentials: UserCredentials, asignJwt: AsignJwt, setCookie: SetCookie) => {
 		const { email, password: candidatePassword } = credentials;
-
 		// find a user by email
 		const user = await this.userRepo.find({ email });
 
@@ -67,11 +71,7 @@ class UserService {
 		// const userId = dataUpdate.id;
 		const user = await this.userRepo.update(identifier, userData);
 		return user;
-	}
-	// updateRole = async ({ id: userID, role }: UserUpdateRole): Promise<Role> => {
-	// 	return await this.userRepo.update(userID, { role: role })
-
-	// }
+	};
 	toggleStatus = async (identifier: Identifier): Promise<boolean> => {
 		const user = await this.userRepo.find(identifier);
 		if (!!!user)
@@ -80,11 +80,6 @@ class UserService {
 		const userUpdated = await this.userRepo.update(identifier, { active: !user.active });
 		return !!userUpdated;
 	};
-
-	// getAll = async (query: string, page: number = 1, pageSize: number = 10): Promise<PaginatedUserResult> => {
-	// return await this.userRepo.findUsers(query, page, pageSize);
-	// }
-
 
 }
 

@@ -1,9 +1,8 @@
-
+import { Prisma } from "@prisma/client";
 import prisma from "./prisma";
 import { PaginatedUserResult } from "../types/repository/user.type"
 import { paginate } from "../utils/paginate";
-import { User, UserCreate, UserResult, UserSortParams, UserUpdate } from "../interfaces/repository/user.interface";
-import { Prisma, Role } from "@prisma/client";
+import { UserCreate, UserResult, UserSortParams, UserUpdate } from "../interfaces/repository/user.interface";
 import { Identifier, PaginateParams } from "../types/common.type";
 import { buildWhereClause, filterNullsData } from "../utils/mixes";
 import { PaginationParams } from "@interfaces/common.interface";
@@ -14,26 +13,23 @@ class UserRepository {
 
     constructor() {
         this.userDb = prisma.user;
-    }
-
+    };
     create = async (userCreate: UserCreate): Promise<UserResult> => {
         const result = await this.userDb.create({ data: userCreate });
         return result;
-    }
-
+    };
     find = async (indentifier: Identifier): Promise<UserResult | null> => {
         const whereClause = buildWhereClause(indentifier)
         // try {
         const user = await this.userDb.findUnique({
             where: whereClause, select: {
                 id: true,
-                email: true, password: true, email_confirmed: true, birth_date: true, name: true, phone: true, phone_fix: true,
-                role: true, salt: true, active: true, created_at: true, updated_at: true
+                email: true, password: true, email_confirmed: true, birth_date: true, name: true, phone: true,
+                phone_fix: true, role: true, salt: true, active: true, created_at: true, updated_at: true
             }
         });
         return user;
-    }
-
+    };
 
     deleteOne = async (indentifier: Identifier): Promise<UserResult> => {
         const whereClause = buildWhereClause(indentifier);

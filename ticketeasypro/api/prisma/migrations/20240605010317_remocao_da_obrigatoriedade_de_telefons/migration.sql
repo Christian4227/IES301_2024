@@ -21,10 +21,12 @@ CREATE TABLE "USERS" (
     "email_confirmed" BOOLEAN NOT NULL DEFAULT false,
     "birth_date" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "name" VARCHAR(256) NOT NULL,
-    "phone" TEXT NOT NULL,
+    "phone" TEXT NOT NULL DEFAULT '',
     "phone_fix" TEXT,
     "role" "Role" NOT NULL DEFAULT 'SPECTATOR',
     "salt" TEXT NOT NULL,
+    "token" TEXT,
+    "token_expires" TIMESTAMP(3),
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(0) NOT NULL,
     "active" BOOLEAN NOT NULL DEFAULT true,
@@ -133,6 +135,9 @@ CREATE TABLE "CATEGORIES" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "USERS_email_key" ON "USERS"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "USERS_token_key" ON "USERS"("token");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "VENUES_name_key" ON "VENUES"("name");
