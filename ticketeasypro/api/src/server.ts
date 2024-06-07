@@ -5,7 +5,7 @@ import cors from "@fastify/cors";
 import { initialData } from "./lifespan";
 import Authentication, { AuthorizeRoles } from "./middlewares/JWTAuth";
 import { FastifyInstance } from "./types/fastify";
-import { EventRoute, UserRoute, AccountRoute, TicketTypeRoute } from "./controllers/all_controllers";
+import { EventRoute, UserRoute, AccountRoute, CategoryRoute, TicketTypeRoute } from "./controllers/all_controllers";
 
 
 const api: FastifyInstance = fastify({ logger: true });
@@ -16,7 +16,7 @@ api.register(fastifyJwt, { secret: jwtSecreteKey });
 
 // cookies
 api.register(fCookie, {
-secret: process.env.COOKIE_SECRET_KEY,
+    secret: process.env.COOKIE_SECRET_KEY,
     hook: 'preHandler',
 })
 
@@ -33,6 +33,7 @@ api.register(EventRoute, { prefix: '/v1/events' });
 api.register(UserRoute, { prefix: '/v1/users' });
 api.register(AccountRoute, { prefix: '/v1/accounts' });
 api.register(TicketTypeRoute, { prefix: '/v1/ticket-types' });
+api.register(CategoryRoute, { prefix: '/v1/categories' });
 
 
 const start = async () => {

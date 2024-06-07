@@ -2,7 +2,7 @@
 import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
 import EventService from "@services/event.service";
 import { integerRegex } from "@utils/validators";
-import { PaginatedEventResult, PartialEventUpdate, QueryPaginationFilterOrder } from "types/event.type";
+import { PaginatedEventResult, QueryPaginationFilterOrder } from "types/event.type";
 import { BaseEvent, ControllerEventCreate, EventResult, EventUpdate } from "@interfaces/event.interface";
 import { Prisma, Role, EventStatus } from "@prisma/client";
 import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
@@ -28,7 +28,8 @@ const defaultConfig = {
     status: "planned",
     defaultOrderCriteria: [
         { name: "asc" }, { initial_date: "desc" }, { final_date: "asc" }, { base_price: "desc" }
-    ] as Prisma.EventOrderByWithRelationInput[]
+    ] as Prisma.EventOrderByWithRelationInput[],
+    country: "", uf: ""
 };
 
 
@@ -46,7 +47,7 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
     api.get<{ Querystring: QueryPaginationFilterOrder }>(
         '/', async (request: FastifyRequest<{ Querystring: QueryPaginationFilterOrder }>, reply: FastifyReply): Promise<PaginatedEventResult> => {
             const {
-                filter, page = defaultConfig.page, "page-size": pageSize = defaultConfig.pageSize, "start-date": tsStartDate, "end-date": tsEndDate,
+                filter, country = defaultConfig.country, uf = defaultConfig.uf, page = defaultConfig.page, "page-size": pageSize = defaultConfig.pageSize, "start-date": tsStartDate, "end-date": tsEndDate,
                 "category-id": categoryId, "order-by": orderBy = defaultConfig.orderBy, status = defaultConfig.status
             } = request.query;
 
@@ -57,7 +58,9 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 
             const eventStatus = mappingFilterStatus[status];
 
-            const allFilterOrdenedEvents = await eventService.searchEvents(filter, paginationParams, queryIntervalDate, orderCriteria, eventStatus, categoryId);
+            const allFilterOrdenedEvents = await eventService.searchEvents(
+                filter, paginationParams, queryIntervalDate, orderCriteria, country,uf, eventStatus, categoryId
+            );
 
             return reply.code(200).send(allFilterOrdenedEvents);
         }

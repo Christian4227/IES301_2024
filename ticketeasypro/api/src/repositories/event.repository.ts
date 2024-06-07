@@ -80,13 +80,19 @@ class EventRepository {
         query: string,
         paginationParams: PaginationParams,
         orderBy: Prisma.EventOrderByWithRelationInput[],
+        location: {},
         startDate: Date, endDate: Date,
         status?: EventStatus,
         category_id?: number
 
     ): Promise<PaginatedEventResult> => {
         // Inicializando o whereClause com a condição de data
-        let whereClause: Prisma.EventWhereInput = { AND: { initial_date: { gte: startDate }, final_date: { lte: endDate } } };
+        // let whereClause: Prisma.EventWhereInput = { AND: { location: location, initial_date: { gte: startDate }, final_date: { lte: endDate } } };
+        let whereClause: Prisma.EventWhereInput = {
+            AND: { location: location, initial_date: { gte: startDate }, final_date: { lte: endDate } }
+        };
+
+
 
         console.log({ query, startDate, endDate, category_id, status });
 

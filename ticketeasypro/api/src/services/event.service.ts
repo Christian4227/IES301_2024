@@ -88,6 +88,8 @@ class EventService {
 		paginationParams: PaginationParams,
 		queryIntervalDate: QueryIntervalDate,
 		orderBy: Prisma.EventOrderByWithRelationInput[] = [{ name: "asc" }, { base_price: "desc" }, { initial_date: "desc" }, { final_date: "asc" }],
+		country: string,
+		uf: string,
 		status?: EventStatus,
 		category_id?: number,
 	): Promise<PaginatedEventResult> => {
@@ -118,12 +120,23 @@ class EventService {
 			// caso tenha uma data inicial o sistema irá tornar a data final o último dia do mês seguinte a data informada
 			endDate.setTime((new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth() + 2, 0, 0, 0, 0, 0))).getTime());
 		}
+		if (tsEndDate) endDate.setTime(tsEndDate)
 
 		if (!isValidDateRange(startDate.getTime(), endDate.getTime()))
 			throw new Error("The date range is invalid.");
 
+
+		// let location = country.toUpperCase() !== "BRASIL" ? { country: { not: "BRASIL" } } : { country: 'BRASIL' }
+		let location: any = { country: 'BRASIL' };
+		if (country.toUpperCase() !== "BRASIL") {
+			location = { country: { not: 'BRASIL' } };
+			uf = '';
+		} else if (!!uf) {
+			location = { ...location, uf: uf.toUpperCase() }
+		}
+
 		const paginatedEventResults: PaginatedEventResult = await this.eventRepository.findEvents(
-			query, paginationParams, orderBy, startDate, endDate, status, category_id
+			query, paginationParams, orderBy, location, startDate, endDate, status, category_id
 		);
 		return paginatedEventResults;
 	}
