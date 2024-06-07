@@ -20,17 +20,20 @@ const RecuperarEmail = () => {
   };
 
   useEffect(() => {
-    if (loading) setMessage({ text: '', type: '' });
-    // Só reseta as mensagens antes de renderizar a tela de carregamento,
-    // na volta não apaga e mantem a menssagem na tela
+    if (loading) {
+      setMessage({ text: '', type: '' });
+    }
+    // Remove a mensagem após 5 segundos
+    // const timeout = setTimeout(() => setMessage({ text: '', type: '' }), 5000);
+    // return () => clearTimeout(timeout);
   }, [loading]);
-
 
   const setLoadingWithDelay = (isLoading) => {
     if (isLoading) {
       setLoading(true);
     } else {
-      setTimeout(() => setLoading(false), 1000);
+      setLoading(false)
+      // setTimeout(() => setLoading(false), 1);
     }
   };
 

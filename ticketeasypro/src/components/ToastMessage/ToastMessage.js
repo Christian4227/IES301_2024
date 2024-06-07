@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './ToastMessage.module.css';
-import ErrorIcon from "@/components/Icons/ErrorIcon/ErrorIcon"
+// import ErrorIcon from "@/components/Icons/ErrorIcon/ErrorIcon"
 
 const ToastMessage = ({ type, text }) => {
     useEffect(() => {

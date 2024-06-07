@@ -17,7 +17,7 @@ export function middleware(request) {
     // Supondo que 'token' é o seu JWT
     const token = JSON.parse(meuCookie.value).accessToken;
     const decoded = jwtDecode(token);
-    // // O papel do usuário geralmente é armazenado em uma propriedade do payload do token
+    // O papel do usuário geralmente é armazenado em uma propriedade do payload do token
     const userRole = decoded.role;
 
     if (
