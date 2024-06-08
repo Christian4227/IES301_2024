@@ -72,7 +72,11 @@ h1 {
 }
 
 h2 {
-    font-size: 1.6em;
+    font-size: 1.8em !important;
+}
+
+h3 {
+  font-size: 1.4em !important;
 }
 
 .div_container_pequeno {
@@ -85,6 +89,16 @@ h2 {
     width: 25%;
 }
 
+.div_container_principal {
+  border: 1px solid black;
+  box-shadow: 1px 1px 10px 1px gray;
+  background-color: white;
+  padding: 1em;
+  margin-top: 2em;
+  min-width: 320px;
+  position: relative;
+}
+
 .div_container_grande {
     border: 1px solid black;
     box-shadow: 1px 1px 10px 1px gray;
@@ -93,6 +107,7 @@ h2 {
     margin-top: 2em;
     min-width: 320px;
     width: 40%;
+    position: relative;
 }
 
 .loader-container {

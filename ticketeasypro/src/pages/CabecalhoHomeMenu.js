@@ -10,10 +10,10 @@ export default function CabecalhoHomeMenu({ componente }) {
         router.back();
     };
     return (
-        <div className={styles.header_Home}>
+        <div className={styles.header_home}>
             <h1>{componente}</h1>
-            <nav className={styles.header_Home_nav}>
-                <ul className={styles.header_Home_menu}>
+            <nav className={styles.header_home_nav}>
+                <ul className={styles.header_home_menu}>
                     <li>
                         <Link href="/">Home</Link>
                     </li>

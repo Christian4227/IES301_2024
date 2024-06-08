@@ -67,3 +67,201 @@
 }
 
 /* Outras telas */
+/* Geral */
+.div_principal {
+  padding: 1em;
+}
+
+/* IngressosCliente.js */
+.div_tabela {
+  background-color: white;
+  border: 1px solid black;
+  padding: 1em;
+}
+
+.titulo_secao {
+  border-bottom: 1px solid black;
+}
+
+.titulo_secao h2 {
+  font-weight: bold;
+}
+
+.div_titulo_tabela {
+  border-bottom: 1px solid black;
+  padding-bottom: 0.5em;
+  position: relative;
+  height: 4em;
+  display: flex;
+  align-items: end;
+}
+
+.div_titulo_tabela h3 {
+  font-weight: bold;
+}
+
+.botao_adicionar_eventos {
+  background-color: #0ABF00;
+  color: white;
+  padding: 0.5em;
+  padding-left: 3em;
+  border-radius: 5px;
+  background-image: url("../assets/Adicionar.png");
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: cover;
+  position: absolute;
+  right: 0;
+}
+
+.form_ingressos_campos {
+  display: flex;
+  justify-content: center;
+}
+
+.form_ingressos_campos div {
+  margin: 0 1em 0 0;
+}
+
+.div_botao_filtrar_ingressos {
+  display: flex;
+  justify-content: center;
+}
+
+.div_tabela_dados {
+  border: 1px solid #D1CECE;
+  padding: 1em;
+  margin-top: 1em;
+  border-radius: 15px;
+}
+
+.div_numero_paginacao_tabela {
+  border-bottom: 1px solid black;
+  display: flex;
+  justify-content: end;
+}
+
+.div_paginacao_tabela {
+  margin-top: 1em;
+  display: flex;
+  justify-content: end;
+}
+
+/* Mapa cliente */
+.map_eventos_cliente {
+  background-color: white;
+  width: 100%;
+  height: 100vh;
+}
+
+.map_eventos_cliente_menu {
+  position: fixed;
+  left: 0;
+  padding: 0;
+  top: 10vh;
+}
+
+.map_eventos_cliente_menu {
+  padding: 10px;
+  border: 1px solid #858585;
+  background-color: #FBFBFB;
+  box-shadow: 1px 1px 6px 1px #8F8F8F;
+  border-radius: 0 0 30px 0;
+  min-width: 100px;
+  max-width: 400px;
+  transition: .6s;
+  display: flex;
+}
+
+.map_eventos_cliente_menu_encolhido {
+  animation: encolherSideBar 1.6s;
+}
+
+.map_eventos_cliente_menu_informacoes {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.map_eventos_cliente_menu_direita {
+  width: 200px;
+}
+
+.map_eventos_cliente_menu_esquerda {
+  width: 80px;
+  margin-right: 0.6em;
+}
+
+.map_eventos_cliente_menu_esquerda_img {
+  margin-top: 6vh;
+  padding-right: 1em;
+  border-right: 1px solid #8F8F8F;
+}
+
+/* Componentes */
+.botao_menu_lateral_maps_eventos_cliente {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  right: -40px;
+  top: 0;
+}
+
+.botao_maps_cliente_voltar {
+  background-color: black;
+  color: white;
+  padding: 7px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.img_menu_lateral {
+  border: 1px solid black;
+  border-radius: 0 10px 10px 0;
+  box-shadow: 1px 1px 6px #8F8F8F;
+}
+
+.img_maps_eventos_cliente_menu_lateral_img {
+  width: 60px;
+  height: 60px;
+  background-color: white;
+  border: 2px solid black;
+  padding: 2px;
+  border-radius: 15px;
+  margin-bottom: 1em;
+} 
+
+/* Textos */
+.map_eventos_cliente_menu_voltar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.map_eventos_cliente_menu_titulo {
+  text-align: center;
+  margin-top: 1em;
+}
+
+.map_eventos_cliente_menu_titulo h1 {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.map_eventos_cliente_menu_info {
+  height: 60px;
+  margin: 1em 0;
+}
+
+.map_eventos_cliente_menu_info h2 {
+  font-weight: bold;
+  font-size: 1.1em !important;
+}
+
+@keyframes encolherSideBar {
+  0% {
+    padding: 0;
+  }
+  100% {
+    width: 0;
+  }
+}

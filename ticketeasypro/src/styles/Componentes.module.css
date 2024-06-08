@@ -1,1 +1,20 @@
 /* Botão de suporte técnico */
+.div_suporte_tecnico {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  margin: 1em;
+}
+
+.botao_suporte {
+  background-color: #4B88FF;
+  color: white;
+  width: 200px;
+  padding: 0.5em;
+  border-radius: 5px;
+  background-image: url("../assets/Suporte.png");
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: cover;
+  margin-right: 2em;
+}

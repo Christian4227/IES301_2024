@@ -1,4 +1,4 @@
-.header_Home {
+.header_home {
     border-bottom: 1px solid black;
     width: 98%;
     margin-left: 1%;
@@ -7,25 +7,25 @@
     position: relative;
 }
 
-.header_Home h1 {
+.header_home h1 {
     font-weight: bold;
     font-size: 1.5em;
 }
 
-.header_Home_nav {
+.header_home_nav {
     position: absolute;
     right: calc(100% - 95%);
 }
 
-.header_Home_menu {
+.header_home_menu {
     display: flex;
 }
 
-.header_Home_menu li {
+.header_home_menu li {
     padding: 0 20px;
     font-weight: bold;
 }
 
-.header_Home_menu li:nth-of-type(n + 2){
+.header_home_menu li:nth-of-type(n + 2){
     border-left: 2px solid black;
 }

@@ -4,13 +4,20 @@ import styles from "../styles/CadastroCliente.module.css";
 import styleh from "../styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Menu from "./Menu";
-import LoadingOverlay from '@components/LoadingOverlay';
+import LoadingOverlay from "@components/LoadingOverlay";
 import Link from "next/link";
 import PasswordAndConfirmForm from "@/components/forms/PasswordAndConfirmForm";
 import client from "@/utils/client_axios";
-import ToastMessage from "@/components/toastMessage/ToastMessage";
-import { emailRegex, dateFormat, formatFixPhone, formatCellPhone } from "@/utils";
+
+import {
+  emailRegex,
+  dateFormat,
+  formatFixPhone,
+  formatCellPhone,
+} from "@/utils";
 import { useCallback } from "react";
+import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
+import ToastMessage from "@/components/ToastMessage/ToastMessage";
 
 const TelaCadastroCliente = () => {
   const [nome, setNome] = useState("");
@@ -20,12 +27,11 @@ const TelaCadastroCliente = () => {
   const [birthDateValid, setBirthDateValid] = useState(true);
   const [email, setEmail] = useState("");
   const [emailValid, setEmailValid] = useState(true);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ text: '', type: '' });
-
+  const [message, setMessage] = useState({ text: "", type: "" });
   const setLoadingWithDelay = (isLoading) => {
     if (isLoading) setLoading(true);
     else setTimeout(() => setLoading(false), 100);
@@ -33,9 +39,10 @@ const TelaCadastroCliente = () => {
 
   const minDate = useMemo(() => new Date("1910-01-01"), []);
   const maxDate = useMemo(() => new Date(), []);
-  
+
   const checkBirthdateIsValid = useCallback(() => {
-    const isDataNascimentoValid = (dataNascimento >= minDate) && (dataNascimento <= maxDate);
+    const isDataNascimentoValid =
+      dataNascimento >= minDate && dataNascimento <= maxDate;
     setBirthDateValid(isDataNascimentoValid);
   }, [dataNascimento, minDate, maxDate]);
 
@@ -48,7 +55,12 @@ const TelaCadastroCliente = () => {
     const isTelefoneValid = telefone.length === 0 || telefone.length === 14;
     const isCelularValid = celular.length === 0 || celular.length === 15;
     const isEmailValid = emailRegex.test(email);
-    const allBasicFieldsValid = isNomeValid && isTelefoneValid && isCelularValid && birthDateValid && isEmailValid;
+    const allBasicFieldsValid =
+      isNomeValid &&
+      isTelefoneValid &&
+      isCelularValid &&
+      birthDateValid &&
+      isEmailValid;
     const isFormCurrentlyValid = allBasicFieldsValid && isPasswordValid;
 
     setIsFormValid(isFormCurrentlyValid);
@@ -67,21 +79,32 @@ const TelaCadastroCliente = () => {
     setEmailValid(validateEmail(e.target.value));
   };
 
-  const handleTelefoneChange = (e) => setTelefone(formatFixPhone(e.target.value));
-  const handleCelularChange = (e) => setCelular(formatCellPhone(e.target.value));
+  const handleTelefoneChange = (e) =>
+    setTelefone(formatFixPhone(e.target.value));
+  const handleCelularChange = (e) =>
+    setCelular(formatCellPhone(e.target.value));
 
   const inserirDados = async () => {
     const data = {
-      email, password, confirm_password: password, name: nome, birth_date: dataNascimento, phone: telefone, cellphone: celular
-    }
+      email,
+      password,
+      confirm_password: password,
+      name: nome,
+      birth_date: dataNascimento,
+      phone: telefone,
+      cellphone: celular,
+    };
     try {
       setLoadingWithDelay(true);
       await client.post("/users/signin", data);
-      handleSetMessage("Dados cadastrados com sucesso!\nVerifique no seu e-mail cadastrado uma mensagem de confirmação.", "success");
+      handleSetMessage(
+        "Dados cadastrados com sucesso!\nVerifique no seu e-mail cadastrado uma mensagem de confirmação.",
+        "success"
+      );
     } catch (error) {
       const messageError = error?.response?.data?.message;
       switch (messageError) {
-        case 'UserAlreadyExists':
+        case "UserAlreadyExists":
           handleSetMessage("Email já cadastrado. Faça seu login.", "error");
           break;
         default:
@@ -98,6 +121,7 @@ const TelaCadastroCliente = () => {
       {loading && <LoadingOverlay />}
       <div id="div-principal">
         <Cabecalho className={styleh.header} />
+        <CabecalhoHomeMenu componente="Cadastrar" />
         <div className={styles.div_cadastrar}>
           <form className="div_container_grande">
             <div className={styles.cabecalho_cadastro}>
@@ -105,7 +129,9 @@ const TelaCadastroCliente = () => {
               <label>Insira os seus dados para se inscrever nos eventos</label>
             </div>
             <div className="mb-3">
-              <label htmlFor="InputNomeCompleto" className="form-label">Nome completo</label>
+              <label htmlFor="InputNomeCompleto" className="form-label">
+                Nome completo
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -114,29 +140,65 @@ const TelaCadastroCliente = () => {
                 onChange={(e) => setNome(e.target.value)}
               />
             </div>
-            <div className="mb-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px 20px", alignItems: "center" }}>
-              <label htmlFor="InputTelefone" className="form-label m-0">Telefone</label>
-              <label htmlFor="InputCelular" className="form-label m-0">Celular</label>
-              <label htmlFor="InputDataNascimento" className="form-label m-0">Data de nascimento</label>
+            <div
+              className="mb-3"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                gap: "8px 20px",
+                alignItems: "center",
+              }}
+            >
+              <label htmlFor="InputTelefone" className="form-label m-0">
+                Telefone
+              </label>
+              <label htmlFor="InputCelular" className="form-label m-0">
+                Celular
+              </label>
+              <label htmlFor="InputDataNascimento" className="form-label m-0">
+                Data de nascimento
+              </label>
               <div>
-                <input type="tel" className="form-control" id="InputTelefone" maxLength={14} onChange={handleTelefoneChange} value={telefone} />
-              </div>
-              <div>
-                <input type="tel" className="form-control" id="InputCelular" maxLength={15} onChange={handleCelularChange} value={celular} />
+                <input
+                  type="tel"
+                  className="form-control"
+                  id="InputTelefone"
+                  maxLength={14}
+                  onChange={handleTelefoneChange}
+                  value={telefone}
+                />
               </div>
               <div>
                 <input
-                  type="date" className="form-control" id="InputDataNascimento"
+                  type="tel"
+                  className="form-control"
+                  id="InputCelular"
+                  maxLength={15}
+                  onChange={handleCelularChange}
+                  value={celular}
+                />
+              </div>
+              <div>
+                <input
+                  type="date"
+                  className="form-control"
+                  id="InputDataNascimento"
                   value={dateFormat(dataNascimento)}
                   min={dateFormat(minDate)}
                   max={dateFormat(maxDate)}
                   onChange={(e) => setDataNascimento(new Date(e.target.value))}
                 />
-                {!birthDateValid && (<i className="absolute text-red-600 text-sm mt-[0.1rem]">Data inválida.</i>)}
+                {!birthDateValid && (
+                  <i className="absolute text-red-600 text-sm mt-[0.1rem]">
+                    Data inválida.
+                  </i>
+                )}
               </div>
             </div>
             <div className="mb-3">
-              <label htmlFor="InputEmail" className="form-label">E-mail</label>
+              <label htmlFor="InputEmail" className="form-label">
+                E-mail
+              </label>
               <input
                 type="email"
                 className={`form-control mb-4 ${!emailValid ? "is-invalid" : ""}`}
@@ -144,14 +206,25 @@ const TelaCadastroCliente = () => {
                 value={email}
                 onChange={handleEmailChange}
               />
-              {!emailValid && (<i className="absolute text-red-600 text-sm -mt-6">Por favor, insira um e-mail válido.</i>)}
+              {!emailValid && (
+                <i className="absolute text-red-600 text-sm -mt-6">
+                  Por favor, insira um e-mail válido.
+                </i>
+              )}
               <PasswordAndConfirmForm
                 minStrength={2}
                 onPasswordChange={handlePasswordChange}
                 onValidityChange={handleValidityChange}
               />
             </div>
-            <button type="button" className="btn btn-primary" onClick={inserirDados} disabled={!isFormValid}>Cadastrar</button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={inserirDados}
+              disabled={!isFormValid}
+            >
+              Cadastrar
+            </button>
             <hr />
             <div className={styles.footer_form}>
               <label>
@@ -162,7 +235,9 @@ const TelaCadastroCliente = () => {
           </form>
         </div>
         <Menu id="menu-lateral" className={styleh.menu_lateral} />
-        {!!message.text && <ToastMessage text={message.text} type={message.type} />}
+        {!!message.text && (
+          <ToastMessage text={message.text} type={message.type} />
+        )}
         {/* {message.type === "error" && <ToastMessage text={message.text} type={message.type} />} */}
       </div>
     </main>
