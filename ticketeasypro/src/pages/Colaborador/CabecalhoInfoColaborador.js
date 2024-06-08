@@ -14,7 +14,7 @@ export default function CabecalhoInfoColaborador() {
             <nav className={styles.header_colaborador_nav}>
                 <ul className={styles.header_colaborador_menu}>
                     <li>
-                        <Link href="/Colaborador/indexColaborador">Home</Link>
+                        <Link href="/Colaborador/IndexColaborador">Home</Link>
                     </li>
                     <li>
                         <Link href="/Colaborador/Dados/DadosColaborador">

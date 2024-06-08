@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import client from '@/utils/client_axios';
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import PropTypes from "prop-types";
 
 const EmailResendForm = ({ handleSetMessage, setLoading }) => {
   const [email, setEmail] = useState("");
@@ -55,5 +56,8 @@ const EmailResendForm = ({ handleSetMessage, setLoading }) => {
     </form>
   );
 };
-
+EmailResendForm.propTypes = {
+  handleSetMessage: PropTypes.func.isRequired,
+  setLoading: PropTypes.func.isRequired,
+}
 export default EmailResendForm;

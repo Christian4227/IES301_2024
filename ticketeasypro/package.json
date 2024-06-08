@@ -23,6 +23,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-toastify": "^10.0.5",
+    "sharp": "^0.33.4",
     "uuid4": "^2.0.3",
     "zxcvbn": "^4.4.2"
   },

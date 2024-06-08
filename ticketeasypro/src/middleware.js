@@ -40,7 +40,7 @@ export function middleware(request) {
             request.nextUrl.pathname.startsWith("/Login"))
     ) {
         return Response.redirect(
-            new URL("/Colaborador/indexColaborador", request.url)
+            new URL("/Colaborador/IndexColaborador", request.url)
         );
     }
     if (

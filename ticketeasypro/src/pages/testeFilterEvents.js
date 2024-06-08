@@ -44,7 +44,7 @@ const getCategories = async () => {
   return arrayCategories;
 };
 
-const getEvents = async (filter, setEventData) => {
+const getEvents = async (filter) => {
   const url = convertToQueryString(filter);
 
   const response = await client.get(`/events/${url}`);
@@ -52,7 +52,7 @@ const getEvents = async (filter, setEventData) => {
   if (response.status === 200)
     eventData = [...response.data.data]
 
-  console.log(response)
+  console.log(eventData)
   return response;
 }
 const TestEventFilter = () => {
@@ -76,6 +76,7 @@ const TestEventFilter = () => {
     try {
       const response = await getEvents(filter);
       setEvents(response.data.data);
+      console.log(`Eventos recuperado: ${events}`)
       console.log('Filter data:', filter);
     } catch (error) {
       console.error("Error fetching events:", error);

@@ -8,7 +8,7 @@ import CabecalhoColaborador from "./CabecalhoColaborador";
 import CabecalhoInfoColaborador from "./CabecalhoInfoColaborador";
 import { useRouter } from "next/router";
 
-export default function indexColaborador() {
+const IndexColaborador = () => {
     const router = useRouter();
     const VenderIngressos = () => {
         router.push("/Colaborador/Vender/VenderIngressos");
@@ -58,3 +58,4 @@ export default function indexColaborador() {
         </div>
     );
 }
+export default IndexColaborador;

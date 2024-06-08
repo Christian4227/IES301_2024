@@ -1,9 +1,8 @@
-import React from 'react';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { string } from "prop-types";
 import { ToastContainer, toast } from 'react-toastify';
-
 import 'react-toastify/dist/ReactToastify.css';
-import styles from './ToastMessage.module.css';
+// import styles from './ToastMessage.module.css';
 // import ErrorIcon from "@/components/Icons/ErrorIcon/ErrorIcon"
 
 const ToastMessage = ({ type, text }) => {
@@ -16,12 +15,11 @@ const ToastMessage = ({ type, text }) => {
     }, [type, text]);
 
     return (
-        <>
-            <ToastContainer  />
-            {/* <button onClick={showToast} style={{ backgroundImage: `url(${type === 'success' ? certo : ErrorIcon})` }}></button> */}
-            {/* <button onClick={showToast} className={styles.ToastButton} style={{ backgroundImage: `url(${type === 'success' ? certo : ErrorIcon})` }}></button> */}
-        </>
+        <ToastContainer />
     );
 };
-
+ToastMessage.propTypes = {
+    type: string.isRequired,
+    text: string.isRequired
+}
 export default ToastMessage;

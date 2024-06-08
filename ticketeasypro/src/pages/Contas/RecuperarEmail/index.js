@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Cabecalho from './../../Cabecalho';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -15,27 +15,19 @@ const RecuperarEmail = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
 
-  const handleSetMessage = (message, type) => {
+  const handleSetMessage = useCallback((message, type) => {
     setMessage({ text: message, type });
-  };
+  }, []);
 
   useEffect(() => {
     if (loading) {
       setMessage({ text: '', type: '' });
     }
-    // Remove a mensagem após 5 segundos
-    // const timeout = setTimeout(() => setMessage({ text: '', type: '' }), 5000);
-    // return () => clearTimeout(timeout);
   }, [loading]);
 
-  const setLoadingWithDelay = (isLoading) => {
-    if (isLoading) {
-      setLoading(true);
-    } else {
-      setLoading(false)
-      // setTimeout(() => setLoading(false), 1);
-    }
-  };
+  const setLoadingWithDelay = useCallback((isLoading) => {
+    setLoading(isLoading);
+  }, []);
 
   return (
     <>
@@ -58,7 +50,6 @@ const RecuperarEmail = () => {
               <EmailResendForm handleSetMessage={handleSetMessage} setLoading={setLoadingWithDelay} />
             </>
           )}
-
           {!!message.text && <ToastMessage text={message.text} type={message.type} />}
         </div>
       </div>
@@ -66,4 +57,4 @@ const RecuperarEmail = () => {
   );
 };
 
-export default RecuperarEmail;
+export default React.memo(RecuperarEmail);

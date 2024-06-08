@@ -1,12 +1,34 @@
-import { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import client from '@/utils/client_axios';
+import PropTypes from 'prop-types';
 
 const EmailConfirmation = ({ token, handleSetMessage, setLoading }) => {
   const router = useRouter();
-  const setErrorMessage = (message) => handleSetMessage(message, 'error');
-  const setSuccessMessage = (message) => handleSetMessage(message, 'success');
 
+  const setErrorMessage = useCallback((message) => handleSetMessage(message, 'error'), [handleSetMessage]);
+  const setSuccessMessage = useCallback((message) => handleSetMessage(message, 'success'), [handleSetMessage]);
+
+  const handleError = useCallback((response) => {
+    if (response?.data?.message) {
+      const messageError = response.data.message;
+      switch (messageError) {
+        case 'EmailAlreadyConfirmed':
+          setSuccessMessage('Email já confirmado. Faça seu login.');
+          setTimeout(() => router.push('/Login'), 3000);
+          break;
+        case 'InvalidOrExpiredToken':
+          setErrorMessage('Seu email de confirmação expirou.');
+          setTimeout(() => router.push('/Contas/RecuperarEmail'), 3000);
+          break;
+        default:
+          console.log(response);
+          setErrorMessage('Erro desconhecido');
+      }
+    } else {
+      setErrorMessage('Falha ao validar email. Por favor tente novamente.');
+    }
+  }, [router, setErrorMessage, setSuccessMessage]);
 
   useEffect(() => {
     const validateToken = async () => {
@@ -14,11 +36,11 @@ const EmailConfirmation = ({ token, handleSetMessage, setLoading }) => {
       try {
         const response = await client.get(`accounts/confirm-email?token=${encodeURIComponent(token)}`);
         if (response.status === 200) {
-          setErrorMessage('Email confirmado!');
+          setSuccessMessage('Email confirmado!');
           setTimeout(() => router.push('/Login'), 1750);
-        } else
+        } else {
           handleError(response);
-
+        }
       } catch (error) {
         console.error('Erro na requisição para confirmar token:', error);
         handleError(error.response);
@@ -27,32 +49,20 @@ const EmailConfirmation = ({ token, handleSetMessage, setLoading }) => {
       }
     };
 
-    const handleError = (response) => {
-      if (response?.data?.message) {
-        const messageError = response.data.message;
-        switch (messageError) {
-          case 'EmailAlreadyConfirmed':
-            setSuccessMessage('Email já confirmado. Faça seu login.');
-            setTimeout(() => router.push('/Login'), 3000);
-            break;
-          case 'InvalidOrExpiredToken':
-            setErrorMessage('Seu email de confirmação expirou.');
-            setTimeout(() => router.push('/Contas/RecuperarEmail'), 3000);
-            break;
-          default:
-            console.log(response);
-            setErrorMessage('Erro desconhecido');
-        }
-      } else {
-        setErrorMessage('Falha ao validar email. Por favor tente novamente.');
-      }
-    };
+    if (token) {
+      validateToken();
+    } else {
+      router.push('/Contas/RecuperarEmail');
+    }
+  }, [token, router, setLoading, setSuccessMessage, handleError]);
 
-    if (token) validateToken();
-    else router.push('/Contas/RecuperarEmail');
-  }, [token]);
-
-  return null;  // Remova qualquer renderização condicional aqui
+  return null;
 };
 
-export default EmailConfirmation;
+EmailConfirmation.propTypes = {
+  token: PropTypes.string.isRequired,
+  handleSetMessage: PropTypes.func.isRequired,
+  setLoading: PropTypes.func.isRequired,
+};
+
+export default React.memo(EmailConfirmation);

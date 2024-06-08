@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 // Função para obter o último dia do mês seguinte no fuso horário local
 const getLastDayOfNextMonth = () => {
@@ -19,6 +20,7 @@ const formatDate = (date) => {
   return date.toLocaleDateString('en-CA'); // 'en-CA' garante o formato YYYY-MM-DD
 };
 
+
 const EventFilter = ({ arrayCategories = [], onSubmit, eventStatus = "PLANNED" }) => {
   const [period, setPeriod] = useState({
     start: formatDate(getCurrentDate()),
@@ -34,7 +36,7 @@ const EventFilter = ({ arrayCategories = [], onSubmit, eventStatus = "PLANNED" }
   useEffect(() => setStatus(eventStatus), [eventStatus]);
   useEffect(() => {
     setCategories(arrayCategories)
-  },[arrayCategories]);
+  }, [arrayCategories]);
   // Verificar se a data final é maior ou igual à data inicial
   useEffect(() => { setIsValidDate((new Date(period.end)) >= (new Date(period.start))); }, [period])
 
@@ -178,4 +180,12 @@ const EventFilter = ({ arrayCategories = [], onSubmit, eventStatus = "PLANNED" }
   );
 };
 
+EventFilter.propTypes = {
+  arrayCategories: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired
+  })),
+  onSubmit: PropTypes.func.isRequired,
+  eventStatus: PropTypes.string
+};
 export default EventFilter;

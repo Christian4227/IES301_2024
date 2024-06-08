@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import zxcvbn from "zxcvbn";
+import PropTypes from "prop-types";
 
 const PasswordAndConfirmForm = ({ minStrength, onPasswordChange, onValidityChange }) => {
     const [password, setPassword] = useState("");
@@ -58,7 +59,7 @@ const PasswordAndConfirmForm = ({ minStrength, onPasswordChange, onValidityChang
     useEffect(() => {
         const valid = score >= minStrength && password === confirmPassword;
         onValidityChange(valid);
-    }, [password, confirmPassword, score, minStrength]);
+    }, [password, confirmPassword, score, minStrength, onValidityChange]);
 
     return (
         <>
@@ -107,5 +108,9 @@ const PasswordAndConfirmForm = ({ minStrength, onPasswordChange, onValidityChang
         </>
     );
 };
-
+PasswordAndConfirmForm.propTypes = {
+    minStrength: PropTypes.number.isRequired,
+    onPasswordChange: PropTypes.func.isRequired,
+    onValidityChange: PropTypes.func.isRequired
+}
 export default PasswordAndConfirmForm;

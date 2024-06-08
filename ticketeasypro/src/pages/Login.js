@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "@styles/Login.module.css";
 import Link from "next/link";
 import { AuthContext } from "@/context/Auth";
@@ -10,8 +10,7 @@ export default function Login() {
   const [senha, setSenha] = useState("");
   const login = () => {
     try {
-      const result = authLogin({ email: email, password: senha });
-
+      authLogin({ email: email, password: senha });
     } catch (error) {
       console.log(error);
     }

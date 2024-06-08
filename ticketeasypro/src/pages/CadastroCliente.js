@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Cabecalho from "./Cabecalho";
 import styles from "../styles/CadastroCliente.module.css";
 import styleh from "../styles/Home.module.css";
@@ -10,60 +10,49 @@ import PasswordAndConfirmForm from "@/components/forms/PasswordAndConfirmForm";
 import client from "@/utils/client_axios";
 import ToastMessage from "@/components/toastMessage/ToastMessage";
 import { emailRegex, dateFormat, formatFixPhone, formatCellPhone } from "@/utils";
-
-
+import { useCallback } from "react";
 
 const TelaCadastroCliente = () => {
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [celular, setCelular] = useState("");
   const [dataNascimento, setDataNascimento] = useState(new Date());
-  const [birthDatevalid, setBirthDatevalid] = useState(true);
+  const [birthDateValid, setBirthDateValid] = useState(true);
   const [email, setEmail] = useState("");
   const [emailValid, setEmailValid] = useState(true);
+  const [password, setPassword] = useState('');
   const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [password, setPassword] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [messages, setMessages] = useState({ showSuccess: false, showError: false });
   const [message, setMessage] = useState({ text: '', type: '' });
-
-  useEffect(() => {
-    if (loading) setMessage({ text: '', type: '' });
-    // Só reseta as mensagens antes de renderizar a tela de carregamento
-
-  }, [loading]);
-
 
   const setLoadingWithDelay = (isLoading) => {
     if (isLoading) setLoading(true);
     else setTimeout(() => setLoading(false), 100);
   };
 
-  const minDate = new Date("1910-01-01");
-  const maxDate = new Date();
+  const minDate = useMemo(() => new Date("1910-01-01"), []);
+  const maxDate = useMemo(() => new Date(), []);
+  
+  const checkBirthdateIsValid = useCallback(() => {
+    const isDataNascimentoValid = (dataNascimento >= minDate) && (dataNascimento <= maxDate);
+    setBirthDateValid(isDataNascimentoValid);
+  }, [dataNascimento, minDate, maxDate]);
 
   useEffect(() => {
-    const isDataNascimentoValid = (dataNascimento >= minDate) && dataNascimento <= maxDate;
-    setBirthDatevalid(isDataNascimentoValid);
-
-  }, [dataNascimento]);
+    checkBirthdateIsValid();
+  }, [checkBirthdateIsValid]);
 
   useEffect(() => {
     const isNomeValid = nome.length > 0;
     const isTelefoneValid = telefone.length === 0 || telefone.length === 14;
     const isCelularValid = celular.length === 0 || celular.length === 15;
     const isEmailValid = emailRegex.test(email);
-    const allBasicFieldsValid = isNomeValid && isTelefoneValid && isCelularValid && birthDatevalid && isEmailValid;
+    const allBasicFieldsValid = isNomeValid && isTelefoneValid && isCelularValid && birthDateValid && isEmailValid;
     const isFormCurrentlyValid = allBasicFieldsValid && isPasswordValid;
 
-    { console.log(`allBasicFieldsValid: ${allBasicFieldsValid}`) }
-    { console.log(`isFormCurrentlyValid: ${isFormCurrentlyValid}`) }
-
-
     setIsFormValid(isFormCurrentlyValid);
-  }, [nome, telefone, celular, email, isPasswordValid]);
-
+  }, [nome, telefone, celular, email, isPasswordValid, birthDateValid]);
 
   const handleSetMessage = (message, type) => {
     setMessage({ text: message, type });
@@ -81,30 +70,25 @@ const TelaCadastroCliente = () => {
   const handleTelefoneChange = (e) => setTelefone(formatFixPhone(e.target.value));
   const handleCelularChange = (e) => setCelular(formatCellPhone(e.target.value));
 
-
   const inserirDados = async () => {
-    // if (!isFormValid) {
-    //   alert("Por favor, preencha todos os campos corretamente.");
-    //   return;
-    // }
     const data = {
       email, password, confirm_password: password, name: nome, birth_date: dataNascimento, phone: telefone, cellphone: celular
     }
     try {
       setLoadingWithDelay(true);
-      const responde = await client.post("/users/signin", data);
-      handleSetMessage("Dados cadastrados com sucesso!\nVerifique no seu e-mail cadastrado uma mensagem de confirmação.", "success")
-
+      await client.post("/users/signin", data);
+      handleSetMessage("Dados cadastrados com sucesso!\nVerifique no seu e-mail cadastrado uma mensagem de confirmação.", "success");
     } catch (error) {
       const messageError = error?.response?.data?.message;
-    switch (messageError) {
+      switch (messageError) {
         case 'UserAlreadyExists':
-          handleSetMessage("Email já cadastrado. Faça seu login.", "error"); break;
+          handleSetMessage("Email já cadastrado. Faça seu login.", "error");
+          break;
         default:
-          handleSetMessage("Erro desconhecido.", "error"); break;
+          handleSetMessage("Erro desconhecido.", "error");
+          break;
       }
-    }
-    finally {
+    } finally {
       setLoadingWithDelay(false);
     }
   };
@@ -146,9 +130,9 @@ const TelaCadastroCliente = () => {
                   value={dateFormat(dataNascimento)}
                   min={dateFormat(minDate)}
                   max={dateFormat(maxDate)}
-                  onChange={(e) => setDataNascimento(prev => prev = new Date(e.target.value))}
+                  onChange={(e) => setDataNascimento(new Date(e.target.value))}
                 />
-                {!birthDatevalid && (<i className="absolute text-red-600 text-sm mt-[0.1rem]">Data inválida.</i>)}
+                {!birthDateValid && (<i className="absolute text-red-600 text-sm mt-[0.1rem]">Data inválida.</i>)}
               </div>
             </div>
             <div className="mb-3">

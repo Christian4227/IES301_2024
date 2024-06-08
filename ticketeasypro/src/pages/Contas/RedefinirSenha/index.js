@@ -1,5 +1,5 @@
 "c"
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import PasswordAndConfirmForm from "@/components/forms/PasswordAndConfirmForm";
 
 const RedefinirSenha = () => {
@@ -7,16 +7,17 @@ const RedefinirSenha = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleValidityChange = (isValid) => {
+  const handleValidityChange = useCallback((isValid) => {
     setIsPasswordValid(isValid);
-  };
+  }, [setIsPasswordValid])
 
-  const handlePasswordChange = (newPassword, newConfirmPassword) => {
+
+  const handlePasswordChange = useCallback((newPassword, newConfirmPassword) => {
     setPassword(newPassword);
     setConfirmPassword(newConfirmPassword);
-  };
+  }, [setPassword, setConfirmPassword])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
     if (isPasswordValid) {
       // Lógica para enviar o formulário
@@ -24,7 +25,7 @@ const RedefinirSenha = () => {
     } else {
       console.log("Formulário inválido, corrija os erros.");
     }
-  };
+  }, [isPasswordValid, confirmPassword, password])
 
   return (
     <form onSubmit={handleSubmit}>

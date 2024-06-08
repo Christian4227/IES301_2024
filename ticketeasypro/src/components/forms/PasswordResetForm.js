@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import PropTypes from 'prop-types';
 import zxcvbn from "zxcvbn";
+import client from "@/utils/client_axios";
 
 const PasswordResetForm = ({ token }) => {
     const [password, setPassword] = useState('');
@@ -90,5 +92,9 @@ const getColor = (score) => {
             return 'bg-gray-200';
     }
 };
+
+PasswordResetForm.propTypes = {
+    token: PropTypes.string.isRequired
+}
 
 export default PasswordResetForm;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'; // Import Prop Types
 
 const ErrorIcon = ({ width = "24", height = "24", fill = "#000000" }) => {
     return (
@@ -7,5 +8,11 @@ const ErrorIcon = ({ width = "24", height = "24", fill = "#000000" }) => {
         </svg>
     );
 };
+
+ErrorIcon.propTypes = {
+    width: PropTypes.string.isRequired,
+    height: PropTypes.string.isRequired,
+    fill: PropTypes.string.isRequired,
+}
 
 export default ErrorIcon;
