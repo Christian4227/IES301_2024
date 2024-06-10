@@ -1,8 +1,7 @@
 import client from "@/utils/client_axios";
 import React, { useState } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import zxcvbn from "zxcvbn";
-import client from "@/utils/client_axios";
 
 // eslint-disable-next-line react/prop-types
 const PasswordResetForm = ({ token }) => {
@@ -105,7 +104,7 @@ const getColor = (score) => {
 };
 
 PasswordResetForm.propTypes = {
-    token: PropTypes.string.isRequired
-}
+  token: PropTypes.string.isRequired,
+};
 
 export default PasswordResetForm;
