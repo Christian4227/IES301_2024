@@ -46,6 +46,8 @@ CREATE TABLE "VENUES" (
     "uf" VARCHAR(2) NOT NULL,
     "country" VARCHAR(512) NOT NULL DEFAULT 'BRASIL',
     "complements" VARCHAR(512) NOT NULL,
+    "latitude" DOUBLE PRECISION NOT NULL,
+    "longitude" DOUBLE PRECISION NOT NULL,
     "created_at" TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(0) NOT NULL,
 
@@ -56,6 +58,7 @@ CREATE TABLE "VENUES" (
 CREATE TABLE "ORDERS" (
     "id" TEXT NOT NULL,
     "customer_id" TEXT NOT NULL,
+    "event_id" INTEGER NOT NULL,
     "total_amount" BIGINT NOT NULL,
     "status" "OrderStatus" NOT NULL DEFAULT 'PROCESSING',
     "payment_method" "PaymenMethod" NOT NULL DEFAULT 'PIX',
@@ -147,6 +150,9 @@ CREATE UNIQUE INDEX "TICKETTYPES_name_key" ON "TICKETTYPES"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "CATEGORIES_name_key" ON "CATEGORIES"("name");
+
+-- AddForeignKey
+ALTER TABLE "ORDERS" ADD CONSTRAINT "ORDERS_event_id_fkey" FOREIGN KEY ("event_id") REFERENCES "EVENTS"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ORDERS" ADD CONSTRAINT "ORDERS_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "USERS"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

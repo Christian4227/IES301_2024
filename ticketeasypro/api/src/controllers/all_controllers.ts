@@ -5,4 +5,5 @@ import AccountRoute from "./v1/account.controller";
 import EventRoute from "./v1/event.controller";
 import TicketTypeRoute from "./v1/ticketType.controller";
 import CategoryRoute from "./v1/category.controller";
-export { EventRoute, UserRoute, AccountRoute, TicketTypeRoute ,CategoryRoute};
+import OrderRoute from "./v1/order.controller";
+export { EventRoute, UserRoute, OrderRoute, AccountRoute, TicketTypeRoute, CategoryRoute };
