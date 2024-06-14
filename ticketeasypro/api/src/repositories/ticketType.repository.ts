@@ -65,7 +65,7 @@ class TicketTypeRepository {
 
             // Contar o número de OrderTicket que referenciam o TypeTicket
             const orderTicketCount = await prisma.orderTicket.count({
-                where: { type_id: ticketTypeId }
+                where: { id: ticketTypeId }
             });
 
             // Se houver OrderTickets relacionados, lançar um erro

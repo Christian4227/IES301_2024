@@ -19,6 +19,7 @@
     "@fastify/cors": "^8.5.0",
     "@fastify/jwt": "^8.0.0",
     "@prisma/client": "^5.11.0",
+    "@sinclair/typebox": "^0.32.32",
     "fastify": "^4.26.2",
     "nodemailer": "^6.9.13"
   },

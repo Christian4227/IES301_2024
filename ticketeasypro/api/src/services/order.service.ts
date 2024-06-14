@@ -1,9 +1,9 @@
-import { PaymenMethod, PrismaClient, Role } from "@prisma/client";
-// import { OrderCreate } from "@interfaces/order.interface";
-import { FastifyInstance } from "./../types/fastify";
-import { OrderCreate } from "@interfaces/order.interface";
+import { PaginationParams } from "@interfaces/common.interface";
+import { Order } from "@interfaces/order.interface";
+import { OrderStatus, Prisma } from "@prisma/client";
 import OrderRepository from "src/repositories/order.repository";
-import { prisma } from "./prisma";
+import { OrderCreate, PaymentMethod } from "src/schema/order.schema";
+import { OrderTicketSchema } from "src/schema/orderTicket.schema";
 
 
 export class OrderService {
@@ -12,44 +12,32 @@ export class OrderService {
     this.orderRepository = new OrderRepository();
   }
 
-  async create(role: Role, orderData: OrderCreate, api: FastifyInstance) {
-    // Lógica para criar uma nova ordem
-    const newOrder = await prisma.order.create({
-      data: {
-        ...orderData,
-        // Adicione qualquer lógica adicional necessária
-      },
-    });
-    return newOrder;
-  }
-
-
-  async searchOrders(filter: string, page: number, pageSize: number) {
-    // Lógica para buscar e paginar as ordens
-    const orders = await prisma.order.findMany({
-      where: { /* Adicione filtros conforme necessário */ },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
-    const totalOrders = await prisma.order.count({
-      where: { /* Adicione filtros conforme necessário */ },
-    });
-    return { orders, totalOrders };
-  };
-
-  async getOrderById(orderId: string) {
-    // Lógica para buscar uma ordem por ID
-    const order = await prisma.order.findUnique({
-      where: { id: orderId },
-    });
+  async createOrderWithOrderTicketsAndTickets(customerId: string, orderCreate: OrderCreate) {
+    const { eventId, paymentMethod, orderTickets } = orderCreate;
+    const order = await this.orderRepository.createOrder(customerId, eventId, paymentMethod, orderTickets);
     return order;
   };
 
 
-  async createOrderWithOrderTicketsAndTickets(
-    customerId: string, eventId: number,
-    payment_method: PaymenMethod = "PIX", orderTicketsData: { unit_price: number, type_id: number, quantity: number }[]
-  ) {
-    this.createOrderWithOrderTicketsAndTickets
-  }
+  async searchOrders(
+    customerId?: string,
+    eventId?: number,
+    orderBy: Prisma.OrderOrderByWithRelationInput[] = [{ created_at: "asc" },],
+    paginationParams: PaginationParams = { page: 1, pageSize: 10 },
+    status: OrderStatus = OrderStatus.PROCESSING,
+    payment_method: PaymentMethod = PaymentMethod.PIX) {
+
+    // Lógica para buscar e paginar as ordens
+    const orders = await this.orderRepository.getOrders(
+      customerId, eventId, orderBy, paginationParams, status, payment_method
+    );
+    return orders;
+  };
+  getOrderById = async (orderId: string): Promise<Order> => {
+    const order = await this.orderRepository.findDetails(orderId)
+    if (!order) 
+      throw new Error('OrderNotFound');
+    return order
+
+  };
 }

@@ -25,7 +25,7 @@ model User {
   updated_at      DateTime  @updatedAt @db.Timestamp(0)
   active          Boolean   @default(true)
   Events          Event[]
-  Orders           Order[]
+  Orders          Order[]
 
   @@map("USERS")
 }
@@ -55,14 +55,13 @@ model Order {
   id             String        @id @default(uuid())
   customer_id    String
   event_id       Int           @db.Integer()
-  total_amount   BigInt        @db.BigInt()
+  total_amount   Int           @db.Integer()
   status         OrderStatus   @default(PROCESSING)
-  payment_method PaymenMethod  @default(PIX)
+  payment_method PaymentMethod @default(PIX)
   created_at     DateTime      @default(now()) @db.Timestamp(0)
   updated_at     DateTime      @updatedAt @db.Timestamp(0)
   event          Event         @relation(fields: [event_id], references: [id])
   customer       User          @relation(fields: [customer_id], references: [id])
-  // tickets        Ticket[]      @relation("OrderTicket", references: [id])
   OrderTicket    OrderTicket[]
 
   @@map("ORDERS")
@@ -75,8 +74,6 @@ model Ticket {
   created_at DateTime     @default(now()) @db.Timestamp(0)
   updated_at DateTime     @updatedAt @db.Timestamp(0)
   event      Event        @relation(fields: [event_id], references: [id])
-  // orders      Order[]       @relation("OrderTicket", references: [id])
-  // OrderTicket OrderTicket[]
 
   @@map("TICKETS")
 }
@@ -89,59 +86,19 @@ model OrderTicket {
   created_at   DateTime    @default(now()) @db.Timestamp(0)
   updated_at   DateTime    @updatedAt @db.Timestamp(0)
   order        Order       @relation(fields: [order_id], references: [id])
-  // ticket       Ticket      @relation(fields: [ticket_id], references: [id])
   TicketType   TicketType? @relation(fields: [ticketTypeId], references: [id])
   ticketTypeId Int?
 
   @@map("ORDERTICKETS")
 }
 
-// model Order {
-//   id             String       @id @default(uuid())
-//   customer_id    String
-//   event_id       Int          @db.Integer()
-//   total_amount   BigInt       @db.BigInt()
-//   status         OrderStatus  @default(PROCESSING)
-//   payment_method PaymenMethod @default(PIX)
-//   created_at     DateTime     @default(now()) @db.Timestamp(0)
-//   updated_at     DateTime     @updatedAt @db.Timestamp(0)
-//   event          Event        @relation(fields: [event_id], references: [id])
-//   customer       User         @relation(fields: [customer_id], references: [id])
-
-//   @@map("ORDERS")
-// }
-
-// model OrderTicket {
-//   id         Int        @id @default(autoincrement())
-//   order_id   String
-//   unit_price Int        @db.Integer()
-//   created_at DateTime   @default(now()) @db.Timestamp(0)
-//   updated_at DateTime   @updatedAt @db.Timestamp(0)
-//   type_id    Int        @db.Integer()
-//   type       TicketType @relation(fields: [type_id], references: [id])
-
-//   @@map("ORDERTICKETS")
-// }
-
-// model Ticket {
-//   id         String       @id @default(uuid())
-//   event_id   Int          @db.Integer()
-//   status     TicketStatus @default(AVAILABLE)
-//   created_at DateTime     @default(now()) @db.Timestamp(0)
-//   updated_at DateTime     @updatedAt @db.Timestamp(0)
-
-//   event Event @relation(fields: [event_id], references: [id])
-
-//   @@map("TICKETS")
-// }
-
 model TicketType {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique @db.VarChar(256)
-  discount    Int           @default(0) @db.SmallInt
-  description String        @db.VarChar(1024)
-  created_at  DateTime      @default(now()) @db.Timestamp(0)
-  updated_at  DateTime      @updatedAt @db.Timestamp(0)
+  id           Int           @id @default(autoincrement())
+  name         String        @unique @db.VarChar(256)
+  discount     Int           @default(0) @db.SmallInt
+  description  String        @db.VarChar(1024)
+  created_at   DateTime      @default(now()) @db.Timestamp(0)
+  updated_at   DateTime      @updatedAt @db.Timestamp(0)
   OrderTickets OrderTicket[]
 
   @@map("TICKETTYPES")
@@ -164,10 +121,9 @@ model Event {
   color         String      @db.VarChar()
   created_at    DateTime    @default(now()) @db.Timestamp(0)
   updated_at    DateTime    @updatedAt @db.Timestamp(0)
-
-  category      Category @relation(fields: [category_id], references: [id])
-  event_manager User     @relation(fields: [manager_id], references: [id])
-  location      Venue    @relation(fields: [location_id], references: [id])
+  category      Category    @relation(fields: [category_id], references: [id])
+  event_manager User        @relation(fields: [manager_id], references: [id])
+  location      Venue       @relation(fields: [location_id], references: [id])
   Tickets       Ticket[]
   Orders        Order[]
 
@@ -191,7 +147,7 @@ enum OrderStatus {
   CANCELLED
 }
 
-enum PaymenMethod {
+enum PaymentMethod {
   CREDIT_CARD
   DEBIT_CARD
   BANK_SLIP
