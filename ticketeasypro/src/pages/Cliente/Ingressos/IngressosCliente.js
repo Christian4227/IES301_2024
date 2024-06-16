@@ -22,7 +22,7 @@ export default function IngressosCliente() {
   return (
     <div>
       <CabecalhoCliente />
-      <CabecalhoInfoCliente />
+      <CabecalhoInfoCliente secao="Compras Cliente" />
       <div className={styles.div_principal}>
         <SuporteTecnico />
         <div>
@@ -31,7 +31,9 @@ export default function IngressosCliente() {
           </div>
           <div className="div_container_principal">
             <div className={styles.div_titulo_tabela}>
-              <h3>Informações dos ingressos que já reservou ou comprou</h3>
+              <h3>
+                Informações das compras dos ingressos que já reservou ou comprou
+              </h3>
               <input
                 type="button"
                 className={styles.botao_adicionar_eventos}
@@ -43,7 +45,7 @@ export default function IngressosCliente() {
               <div>
                 <div className={styles.form_ingressos_campos}>
                   <div className="mb-3">
-                    <label>Situação do ingresso</label>
+                    <label>Situação da compra</label>
                     <select className="form-select"></select>
                   </div>
                   <div className="mb-3">
@@ -59,7 +61,7 @@ export default function IngressosCliente() {
                     <select className="form-select"></select>
                   </div>
                   <div className="mb-3">
-                    <label>Situação do ingresso</label>
+                    <label>Situação do evento</label>
                     <select className="form-select"></select>
                   </div>
                 </div>
@@ -89,7 +91,7 @@ export default function IngressosCliente() {
                       <th>Local do evento</th>
                       <th>Data do evento</th>
                       <th>Data término</th>
-                      <th>Sit. do ingresso</th>
+                      <th>Sit. da compra</th>
                       <th>Status evento</th>
                       <th colSpan={3}></th>
                     </tr>
@@ -130,12 +132,14 @@ export default function IngressosCliente() {
                       <td>Usado</td>
                       <td>Em progresso</td>
                       <td>
-                        <Image
-                          src={carteira}
-                          alt="carteira"
-                          width={40}
-                          height={40}
-                        />
+                        <Link href="./ComprarIngressoCliente">
+                          <Image
+                            src={carteira}
+                            alt="carteira"
+                            width={40}
+                            height={40}
+                          />
+                        </Link>
                       </td>
                       <td>
                         <Image

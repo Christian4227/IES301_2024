@@ -5,8 +5,8 @@
   align-items: center;
   position: relative;
   padding: 10px;
-  height: 80px;
   width: 100%;
+  min-height: 120px;
   top: 0;
 }
 
@@ -16,41 +16,85 @@
   cursor: pointer;
 }
 
-.li_Login, .li_admin_sair {
-  text-align: center;
-  color: white;
-  border: 1px solid white;
-  width: 120px;
-  border-radius: 50px;
-  padding: 10px;
-}
-
-.li_Adm {
-  text-align: center;
-  color: white;
-  width: 160px;
-  padding: 10px;
-}
-
-.li_Login,
-.li_Adm {
-  margin: 0 5px 0 5px;
-}
-
-.ul {
+.Header_direita {
+  width: 90%;
   display: flex;
+  justify-content: end;
+}
+
+.Header_menu_usuario {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  border: 1px solid white;
+  padding: 1em;
+  border-radius: 10px;
+  width: 250px;
+  height: 70px;
+}
+
+.Header_menu_usuario_logo {
+  display: flex;
+  justify-content: center;
+  background-color: #2E2AF9;
+  color: white;
+  padding: .4em;
+  border-radius: 100%;
+  width: 18%;
+  margin-right: 10px;
+}
+
+.Header_menu_usuario_descricao {
+  width: 80%;
+}
+
+.Header_menu_usuario_opcoes {
+  background-color: #F0F0F0;
+  border-radius: 0 0 10px 10px;
+  padding: 5px;
+  width: 250px;
   position: absolute;
-  top: 20%;
-  right: 60px;
+  z-index: 1;
+  display: none;
+}
+
+.Header_menu_usuario_opcoes a {
+  padding: 5px;
+  display: block;
+}
+
+.Header_menu_usuario_opcoes_sair {
+  border-top: 1px solid black;
+}
+
+.Header_menu_usuario_opcoes a:hover {
+  background-color: #C9C9C9;
+}
+
+.Header_menu_usuario_submenu {
+  display: block;
+}
+
+.Header_menu_usuario_li_menu:hover .Header_menu_usuario_opcoes {
+  display: block;
+}
+
+.Header_menu_usuario_opcoes_titulo_submenu {
+  border-bottom: 1px solid black;
+  text-align: center;
+}
+
+.Header_menu_usuario_opcoes_titulo_submenu label {
+  color: black;
+  font-weight: bold;
+  font-size: 1.5em;
 }
 
 .ul li a {
     color: white !important;
-}
-
-.menulateral {
-    width: 120px;
-    height: 50px;
+    border: 1px solid white;
+    padding: 1em;
+    border-radius: 10px;
 }
 
 @media screen and (max-width: 700px) {

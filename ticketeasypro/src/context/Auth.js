@@ -18,6 +18,8 @@ export const AuthProvider = ({ children }) => {
 
     if (valorCookie != undefined) {
       setAuth(true);
+      const decoded = jwtDecode(valorCookie);
+      setUser(decoded);
     } else {
       setAuth(false);
     }
@@ -63,6 +65,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     destroyCookie(undefined, "ticket-token");
+    setAuth(false);
     router.push("/");
     return;
   };

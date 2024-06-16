@@ -41,6 +41,7 @@
     display: flex;
     padding: 10px 0 0 0;
     position: relative;
+    align-items: center;
 }
 
 .header_cliente h1 {
@@ -53,7 +54,7 @@
     right: calc(100% - 95%);
 }
 
-.header_cliente_menu {
+.header_cliente_menu, .header_cliente_titulo {
     display: flex;
 }
 
@@ -62,14 +63,45 @@
     font-weight: bold;
 }
 
-.header_cliente_menu li:nth-of-type(n + 2){
+.header_cliente_menu li:nth-of-type(n + 2), .header_cliente_subtitulo label {
     border-left: 2px solid black;
+}
+
+.header_cliente_subtitulo {
+  display: flex;
+  align-items: center;
+}
+
+.header_cliente_subtitulo h1, .header_cliente_subtitulo label {
+  padding: 0 20px;
 }
 
 /* Outras telas */
 /* Geral */
 .div_principal {
   padding: 1em;
+}
+
+/* InfoEventos */
+.div_principal_cliente {
+  display: flex;
+  padding: 1em;
+}
+
+.div_opcao_cliente {
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1em;
+  margin: 1em;
+}
+
+.img_div_opcao {
+  width: 50px;
+  height: 50px;
 }
 
 /* IngressosCliente.js */
@@ -116,7 +148,6 @@
 
 .form_ingressos_campos {
   display: flex;
-  justify-content: center;
 }
 
 .form_ingressos_campos div {

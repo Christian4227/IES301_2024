@@ -198,7 +198,7 @@
 }
 
 .secao_tabela_eventos_titulo h2 {
-    font-size: 1.4em;
+    font-size: 1.4em !important;
     font-weight: bold;
 }
 
@@ -241,9 +241,10 @@
 .botao_filtrar {
     background-color: #020AFB;
     color: white;
-    padding: 0.5em;
+    padding: 5px;
     border-radius: 10px;
-    width: 80%;
+    width: 100%;
+    font-size: 1.1em;
 }
 
 .div_botao_filtrar {
