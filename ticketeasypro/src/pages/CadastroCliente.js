@@ -6,18 +6,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Menu from "./Menu";
 import LoadingOverlay from "@components/LoadingOverlay";
 import Link from "next/link";
-import PasswordAndConfirmForm from "@/components/forms/PasswordAndConfirmForm";
 import client from "@/utils/client_axios";
-
-import {
-  emailRegex,
-  dateFormat,
-  formatFixPhone,
-  formatCellPhone,
-} from "@/utils";
+import PasswordAndConfirmForm from "@/components/forms/PasswordAndConfirmForm";
+import { emailRegex, dateFormat, formatFixPhone, formatCellPhone } from "@/utils";
 import { useCallback } from "react";
 import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
+
+const minDate = (() => new Date("1910-01-01"))();
+const maxDate = (() => new Date())();
 
 const TelaCadastroCliente = () => {
   const [nome, setNome] = useState("");
@@ -36,10 +33,6 @@ const TelaCadastroCliente = () => {
     if (isLoading) setLoading(true);
     else setTimeout(() => setLoading(false), 100);
   };
-
-  const minDate = useMemo(() => new Date("1910-01-01"), []);
-  const maxDate = useMemo(() => new Date(), []);
-
   const checkBirthdateIsValid = useCallback(() => {
     const isDataNascimentoValid =
       dataNascimento >= minDate && dataNascimento <= maxDate;

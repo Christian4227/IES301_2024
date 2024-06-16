@@ -79,7 +79,7 @@ class EventRepository {
     findEvents = async (
         query: string,
         paginationParams: PaginationParams,
-        orderBy: Prisma.EventOrderByWithRelationInput[],
+        orderBy: Prisma.EventOrderByWithRelationInput[] = [{ name: "asc" }, { base_price: "desc" }, { initial_date: "desc" }, { final_date: "asc" }],
         location: {},
         startDate: Date, endDate: Date,
         status?: EventStatus,
@@ -91,9 +91,6 @@ class EventRepository {
         let whereClause: Prisma.EventWhereInput = {
             AND: { location: location, initial_date: { gte: startDate }, final_date: { lte: endDate } }
         };
-
-
-
         console.log({ query, startDate, endDate, category_id, status });
 
         if (query) {

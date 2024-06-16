@@ -162,19 +162,22 @@ const createVenues = async (prismaCliente: PrismaClient) => {
             "city": "Rio de Janeiro",
             "uf": "RJ",
             "country": "BRASIL",
-            "complements": "Maracanã"
+            "complements": "Maracanã",
+            "latitude": -22.9121,
+            "longitude": -43.2302
         },
-
         {
             "name": "Allianz Parque",
             "address_type": "Rua",
             "address": "Rua Palestra Itália",
             "number": "200",
             "zip_code": "05005-030",
-            "city": "BUENOS AIRES",
-            "uf": "",
-            "country": "ARGENTINA",
-            "complements": "Perdizes"
+            "city": "São Paulo",
+            "uf": "SP",
+            "country": "BRASIL",
+            "complements": "Perdizes",
+            "latitude": -23.5275,
+            "longitude": -46.6781
         },
         {
             "name": "Mineirão",
@@ -185,7 +188,9 @@ const createVenues = async (prismaCliente: PrismaClient) => {
             "city": "Belo Horizonte",
             "uf": "MG",
             "country": "BRASIL",
-            "complements": "Pampulha"
+            "complements": "Pampulha",
+            "latitude": -19.8659,
+            "longitude": -43.9704
         },
         {
             "name": "Arena Fonte Nova",
@@ -196,7 +201,9 @@ const createVenues = async (prismaCliente: PrismaClient) => {
             "city": "Salvador",
             "uf": "BA",
             "country": "BRASIL",
-            "complements": "Nazaré"
+            "complements": "Nazaré",
+            "latitude": -12.9786,
+            "longitude": -38.5043
         },
         {
             "name": "Arena da Baixada",
@@ -207,7 +214,9 @@ const createVenues = async (prismaCliente: PrismaClient) => {
             "city": "Curitiba",
             "uf": "PR",
             "country": "BRASIL",
-            "complements": "Água Verde"
+            "complements": "Água Verde",
+            "latitude": -25.4484,
+            "longitude": -49.2769
         },
         {
             "name": "Arena Pernambuco",
@@ -218,7 +227,9 @@ const createVenues = async (prismaCliente: PrismaClient) => {
             "city": "São Lourenço da Mata",
             "uf": "PE",
             "country": "BRASIL",
-            "complements": "Cidade da Copa"
+            "complements": "Cidade da Copa",
+            "latitude": -8.0358,
+            "longitude": -35.0081
         },
         {
             "name": "Beira-Rio",
@@ -229,7 +240,9 @@ const createVenues = async (prismaCliente: PrismaClient) => {
             "city": "Porto Alegre",
             "uf": "RS",
             "country": "BRASIL",
-            "complements": "Praia de Belas"
+            "complements": "Praia de Belas",
+            "latitude": -30.0652,
+            "longitude": -51.2350
         },
         {
             "name": "Estádio Olímpico Nilton Santos",
@@ -240,7 +253,9 @@ const createVenues = async (prismaCliente: PrismaClient) => {
             "city": "Rio de Janeiro",
             "uf": "RJ",
             "country": "BRASIL",
-            "complements": "Engenho de Dentro"
+            "complements": "Engenho de Dentro",
+            "latitude": -22.8908,
+            "longitude": -43.2937
         },
         {
             "name": "Morumbi",
@@ -251,7 +266,9 @@ const createVenues = async (prismaCliente: PrismaClient) => {
             "city": "São Paulo",
             "uf": "SP",
             "country": "BRASIL",
-            "complements": "Morumbi"
+            "complements": "Morumbi",
+            "latitude": -23.6000,
+            "longitude": -46.7225
         },
         {
             "name": "Arena Castelão",
@@ -262,9 +279,12 @@ const createVenues = async (prismaCliente: PrismaClient) => {
             "city": "Fortaleza",
             "uf": "CE",
             "country": "BRASIL",
-            "complements": "Castelão"
+            "complements": "Castelão",
+            "latitude": -3.7934,
+            "longitude": -38.5222
         }
-    ]
+    ];
+
     const storedVenuesCount = await prismaCliente.venue.count();
     if (storedVenuesCount !== venues.length) {
         await prismaCliente.venue.createMany({
@@ -375,7 +395,7 @@ const usersToCreate = [
         phone: "2345-6789",
         role: Role.STAFF
     },
-        {
+    {
         email: "staff3@ticketeasypro.com.br",
         password: "paSs789*",
         email_confirmed: true,
