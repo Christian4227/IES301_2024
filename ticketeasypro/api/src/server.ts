@@ -28,7 +28,7 @@ api.addHook('preHandler', (request: FastifyRequest, reply: FastifyReply, next) =
 api.decorate('authenticate', Authentication)
 api.decorate('authorizeRoles', AuthorizeRoles)
 
-api.register(cors, { origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE'] });
+api.register(cors, { origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE'], credentials: true, allowedHeaders: ['Content-Type', 'Authorization'], });
 api.register(EventRoute, { prefix: '/v1/events' });
 api.register(UserRoute, { prefix: '/v1/users' });
 api.register(AccountRoute, { prefix: '/v1/accounts' });

@@ -4,9 +4,12 @@ import styles from "@styles/Cabecalho.module.css";
 import { AuthContext } from "@/context/Auth";
 
 export default function Cabecalho() {
-  const { auth, logout, user } = useContext(AuthContext);
+  const { auth, logout, user, DirecionarRota } = useContext(AuthContext);
   const Sair = () => {
     logout();
+  };
+  const DirecionarRotaUsuario = () => {
+    DirecionarRota(user.role);
   };
   return (
     <div className={styles.Header}>
@@ -39,7 +42,9 @@ export default function Cabecalho() {
                     <label>{user.role == "SPECTATOR" ? "Cliente" : ""}</label>
                   </div>
                   <Link href="/">Meus dados</Link>{" "}
-                  <Link href="/">Minha área</Link>{" "}
+                  <a href="#" onClick={() => DirecionarRotaUsuario()}>
+                    Minha área
+                  </a>{" "}
                   <a
                     href="#"
                     className={styles.Header_menu_usuario_opcoes_sair}
@@ -50,7 +55,7 @@ export default function Cabecalho() {
                 </div>
               </li>
             ) : (
-              <li>
+              <li className={styles.Header_menu_usuario_opcoes_entrar}>
                 <Link href="/Login">Entrar</Link>
               </li>
             )}

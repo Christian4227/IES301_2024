@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CabecalhoCliente from "./CabecalhoCliente";
 import CabecalhoInfoCliente from "./CabecalhoInfoCliente";
 import Image from "next/image";
@@ -9,8 +9,20 @@ import Link from "next/link";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import client from "@/utils/client_axios";
 
 export default function GeralCliente() {
+  const [pedidos, setPedidos] = useState([]);
+  useEffect(() => {
+    client
+      .get("/orders/")
+      .then((response) => {
+        setPedidos(response.data.data);
+      })
+      .catch((error) => {
+        console.log("Erro na requisição " + error);
+      });
+  }, []);
   return (
     <div>
       <CabecalhoCliente />
@@ -19,7 +31,8 @@ export default function GeralCliente() {
       <div className={styles.div_principal_cliente}>
         <div className={styles.div_esquerda_cliente}>
           <div className={styles.div_opcao_cliente}>
-            <Link href="./EventosCliente/EventosGeraisCliente">
+            {/* <Link href="./EventosCliente/EventosGeraisCliente"> */}
+            <Link href="./EventosCliente/EventoEscolhido">
               <Image
                 src={eventos}
                 alt="img_eventos"
@@ -41,17 +54,14 @@ export default function GeralCliente() {
         </div>
         <div className="div_container_principal">
           <div>
-            <label>Quadro de avisos</label>
-          </div>
-          <div>
             <label>Calendário</label>
             <FullCalendar
               events={[
                 {
                   id: 1,
                   title: "Evento de teste",
-                  start: "2024-06-13",
-                  end: "2024-06-14",
+                  start: "2024-06-15",
+                  end: "2024-06-18",
                 },
               ]}
               plugins={[dayGridPlugin]}

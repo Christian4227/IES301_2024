@@ -30,6 +30,10 @@ const nextConfig = {
             key: "Access-Control-Allow-Headers",
             value: "*",
           },
+          // {
+          //   key: "Access-Control-Allow-Credentials",
+          //   value: "true",
+          // },
         ],
       },
     ];

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CabecalhoCliente from "../CabecalhoCliente";
 import CabecalhoInfoCliente from "../CabecalhoInfoCliente";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
@@ -10,15 +10,31 @@ import carteira from "../../../assets/Carteira.png";
 import pdf from "../../../assets/PDF.png";
 import maps from "../../../assets/google_maps.png";
 import Link from "next/link";
+import axios from "axios";
 
 export default function IngressosCliente() {
   const router = useRouter();
-  // const [ingressos, setIngressos] = useState([]);
+  const [compras, setCompras] = useState([]);
   const AdicionarEventos = () => {
     router.push("../EventosCliente/EventosGeraisCliente");
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMDJiZDc5Zi01YWZhLTQ3OTItYmI2Zi0xNDZiYmMzNTBhZjEiLCJsb2dpbiI6ImNocmlzdGlhbi5jdWJvQGZhdGVjLnNwLmdvdi5iciIsInJvbGUiOiJTUEVDVEFUT1IiLCJuYW1lIjoiQ2hyaXN0aWFuIFNhdGlvIEN1Ym8iLCJpYXQiOjE3MTg2NTUyMTEsImV4cCI6MTcxODY3NjgxMX0.5pdtUH-eU69yohvaD8B8FASxaUdLqyIE89oRiXvpkno";
+    axios
+      .get("http://127.0.0.1:3210/v1/orders/", {
+        headers: {
+          Cookie: `access_token=${token}`,
+        },
+      })
+      .then((response) => {
+        setCompras(response.data.data);
+      })
+      .catch((error) => {
+        console.log("Erro na requisição " + error);
+      });
+  }, []);
   return (
     <div>
       <CabecalhoCliente />
@@ -97,80 +113,22 @@ export default function IngressosCliente() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Nome do evento</td>
-                      <td>Local do evento</td>
-                      <td>20/06/2024</td>
-                      <td>24/06/2024</td>
-                      <td>Usado</td>
-                      <td>Em progresso</td>
-                      <td>
-                        <Image
-                          src={carteira}
-                          alt="carteira"
-                          width={40}
-                          height={40}
-                        />
-                      </td>
-                      <td>
-                        <Image
-                          src={pdf}
-                          alt="documento"
-                          width={40}
-                          height={40}
-                        />
-                      </td>
-                      <td>
-                        <Image src={maps} alt="mapa" width={40} height={40} />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Nome do evento</td>
-                      <td>Local do evento</td>
-                      <td>20/06/2024</td>
-                      <td>24/06/2024</td>
-                      <td>Usado</td>
-                      <td>Em progresso</td>
-                      <td>
-                        <Link href="./ComprarIngressoCliente">
-                          <Image
-                            src={carteira}
-                            alt="carteira"
-                            width={40}
-                            height={40}
-                          />
-                        </Link>
-                      </td>
-                      <td>
-                        <Image
-                          src={pdf}
-                          alt="documento"
-                          width={40}
-                          height={40}
-                        />
-                      </td>
-                      <td>
-                        <Link href="./MapsEventos">
-                          <Image src={maps} alt="mapa" width={40} height={40} />
-                        </Link>
-                      </td>
-                    </tr>
-                  </tbody>
-                  {/* <tbody>
-                    {ingressos.map((ingresso) => (
-                      <tr key={ingresso.index}>
-                        <td>{ingresso.nomeEvento}</td>
-                        <td>{ingresso.localEvento}</td>
-                        <td>{ingresso.dataevento}</td>
-                        <td>{ingresso.situacaoIngresso}</td>
-                        <td>{ingresso.statusevento}</td>
+                    {compras.map((compra) => (
+                      <tr key={compra.index}>
+                        <td>{compra.nomeEvento}</td>
+                        <td>{compra.localEvento}</td>
+                        <td>{compra.dataevento}</td>
+                        <td>{compra.situacaoIngresso}</td>
+                        <td>{compra.statusevento}</td>
                         <td>
-                          <Image
-                            src={carteira}
-                            alt="carteira"
-                            width={40}
-                            height={40}
-                          />
+                          <Link href="./ComprarIngressoCliente">
+                            <Image
+                              src={carteira}
+                              alt="carteira"
+                              width={40}
+                              height={40}
+                            />
+                          </Link>
                         </td>
                         <td>
                           <Image
@@ -181,11 +139,18 @@ export default function IngressosCliente() {
                           />
                         </td>
                         <td>
-                          <Image src={maps} alt="mapa" width={40} height={40} />
+                          <Link href="./MapsEventos">
+                            <Image
+                              src={maps}
+                              alt="mapa"
+                              width={40}
+                              height={40}
+                            />
+                          </Link>
                         </td>
                       </tr>
                     ))}
-                  </tbody> */}
+                  </tbody>
                 </table>
                 <div className={styles.div_numero_paginacao_tabela}>
                   <label>6 de 18 registros encontrados.</label>

@@ -228,6 +228,59 @@
   border-right: 1px solid #8F8F8F;
 }
 
+/* Evento Escolhido Cliente */
+.div_corpo_evento_escolhido {
+  margin-top: 1em;
+  display: flex;
+}
+
+.div_img_evento_escolhido {
+  border-right: 2px solid black;
+  width: 25%;
+}
+
+.img_evento_escolhido {
+  width: 95%;
+}
+
+.div_evento_escolhido_info {
+  width: 74%;
+  margin-left: 1em;
+}
+
+.div_evento_escolhido_descricao {
+  border: 4px solid black;
+  width: 100%;
+  height: 100px;
+  padding: 1em;
+  /* background-color: #088F1D; */
+}
+
+.div_evento_escolhido_descricao_titulo {
+  border-bottom: 2px solid black;
+}
+
+.div_evento_escolhido_descricao_titulo label {
+  font-weight: bold;
+}
+
+.div_descricao_info_eventos {
+  margin: 10px 0;
+}
+
+.div_descricao_info_eventos label {
+  font-weight: bold;
+  width: 120px;
+}
+
+.botao_reservar_evento_escolhido {
+  background-color: #2E302D;
+  color: white;
+  font-size: 1.1em;
+  padding: 10px;
+  border-radius: 10px;
+}
+
 /* Componentes */
 .botao_menu_lateral_maps_eventos_cliente {
   position: absolute;

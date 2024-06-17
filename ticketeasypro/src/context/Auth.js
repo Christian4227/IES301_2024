@@ -16,6 +16,8 @@ export const AuthProvider = ({ children }) => {
     const token = parseCookies();
     const valorCookie = token["ticket-token"];
 
+    // console.log(token);
+
     if (valorCookie != undefined) {
       setAuth(true);
       const decoded = jwtDecode(valorCookie);
@@ -29,13 +31,7 @@ export const AuthProvider = ({ children }) => {
     setCookie(undefined, "ticket-token", JSON.stringify(token));
   };
 
-  const DirecionarRota = (token) => {
-    const decoded = jwtDecode(token.accessToken);
-    setUser(decoded);
-
-    // // O papel do usuário geralmente é armazenado em uma propriedade do payload do token
-    const userRole = decoded.role;
-
+  const DirecionarRota = (userRole) => {
     if (userRole === "ADMIN") {
       router.push("/Admin/Administracao");
     } else if (userRole === "SPECTATOR") {
@@ -51,11 +47,19 @@ export const AuthProvider = ({ children }) => {
     client
       .post("users/login", data)
       .then((response) => {
+        setAuth(true);
         const accessToken = response.data;
         ConverterToken(accessToken);
-        setAuth(true);
         setUser(data);
-        DirecionarRota(accessToken);
+
+        const decoded = jwtDecode(accessToken.accessToken);
+        setUser(decoded);
+
+        console.log(accessToken.accessToken);
+
+        // // O papel do usuário geralmente é armazenado em uma propriedade do payload do token
+        const userRole = decoded.role;
+        DirecionarRota(userRole);
       })
       .catch((error) => {
         console.log("Erro na requisição. " + error);
@@ -67,11 +71,10 @@ export const AuthProvider = ({ children }) => {
     destroyCookie(undefined, "ticket-token");
     setAuth(false);
     router.push("/");
-    return;
   };
 
   return (
-    <AuthContext.Provider value={{ auth, user, login, logout }}>
+    <AuthContext.Provider value={{ auth, user, login, logout, DirecionarRota }}>
       {children}
     </AuthContext.Provider>
   );

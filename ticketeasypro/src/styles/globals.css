@@ -35,7 +35,7 @@ input[type=button], input[type=submit] {
 }
 
 input[type=button]:hover, input[type=submit]:hover {
-    filter: brightness(97%);
+    opacity: 0.9;
 }
 
 input[type=button]:disabled{
@@ -97,7 +97,7 @@ h3 {
   margin-top: 2em;
   min-width: 320px;
   position: relative;
-  width: 100%;
+  width: 97%;
 }
 
 .div_container_grande {

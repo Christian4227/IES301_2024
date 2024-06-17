@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import Cabecalho from "./Cabecalho";
 import styles from "../styles/CadastroCliente.module.css";
 import styleh from "../styles/Home.module.css";
@@ -8,7 +8,12 @@ import LoadingOverlay from "@components/LoadingOverlay";
 import Link from "next/link";
 import client from "@/utils/client_axios";
 import PasswordAndConfirmForm from "@/components/forms/PasswordAndConfirmForm";
-import { emailRegex, dateFormat, formatFixPhone, formatCellPhone } from "@/utils";
+import {
+  emailRegex,
+  dateFormat,
+  formatFixPhone,
+  formatCellPhone,
+} from "@/utils";
 import { useCallback } from "react";
 import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
