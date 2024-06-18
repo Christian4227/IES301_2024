@@ -323,6 +323,17 @@ const createCategories = async (prismaCliente: PrismaClient) => {
 const userRepo = new UserRepository();
 const usersToCreate = [
     {
+        "email": "client_espectador@ticketeasypro.com.br",
+        "password": "fatec123#1sem.2024",
+        "email_confirmed": true,
+        "birth_date": new Date("1992-07-08"),
+        "name": "fulano de tal",
+        "salt": "54easdaq56das6d4sdaas5d4",
+        "phone": "9999-2021",
+        "phone_fix": "95620-5687",
+        "role": Role.SPECTATOR
+    },
+    {
         "email": "root@ticketeasypro.com.br",
         "password": "fatec123#1sem.2024",
         "email_confirmed": true,

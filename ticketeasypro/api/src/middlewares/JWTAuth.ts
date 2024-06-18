@@ -1,6 +1,6 @@
-// import { FastifyJWT } from '@fastify/jwt';
+
 import { FastifyReply, FastifyRequest } from 'fastify';
-// import UserPayload from "../@types/userPayload";
+
 import { FastifyJWT } from "../types/fastify-jwt";
 import { Role } from '@prisma/client';
 
@@ -15,11 +15,13 @@ const verifyJwt = async (request: FastifyRequest, reply: FastifyReply) => {
 
 const Authentication = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-        const token = request.cookies.access_token;
-        if (!token) {
+        // const token = request.cookies.access_token;
+        const authorization = request.headers.authorization;
+        if (!authorization?.split('Bearer ')[1]) {
+            // if (!token) {
             return reply.status(401).send({ message: 'Authentication required' });
         }
-
+        const token = `${authorization.split('Bearer ')[1]}`;
         // Verificar se o token é válido e decodificá-lo
         const decoded = request.jwt.verify<FastifyJWT['user']>(token);
 
