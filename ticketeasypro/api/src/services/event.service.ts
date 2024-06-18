@@ -88,7 +88,6 @@ class EventService {
 		paginationParams: PaginationParams,
 		queryIntervalDate: QueryIntervalDate,
 		orderBy: Prisma.EventOrderByWithRelationInput[] = [{ name: "asc" }, { base_price: "desc" }, { initial_date: "desc" }, { final_date: "asc" }],
-		country: string,
 		uf: string,
 		status?: EventStatus,
 		category_id?: number,
@@ -128,12 +127,17 @@ class EventService {
 
 		// let location = country.toUpperCase() !== "BRASIL" ? { country: { not: "BRASIL" } } : { country: 'BRASIL' }
 		let location: any = { country: 'BRASIL' };
-		if (country.toUpperCase() !== "BRASIL") {
-			location = { country: { not: 'BRASIL' } };
-			uf = '';
-		} else if (!!uf) {
+		if (uf)
 			location = { ...location, uf: uf.toUpperCase() }
+		else {
+			location = { country: { not: 'BRASIL' } };
 		}
+		// if (country.toUpperCase() !== "BRASIL") {
+		// 	location = { country: { not: 'BRASIL' } };
+		// 	uf = '';
+		// } else if (!!uf) {
+		// 	location = { ...location, uf: uf.toUpperCase() }
+		// }
 
 		const paginatedEventResults: PaginatedEventResult = await this.eventRepository.findEvents(
 			query, paginationParams, orderBy, location, startDate, endDate, status, category_id

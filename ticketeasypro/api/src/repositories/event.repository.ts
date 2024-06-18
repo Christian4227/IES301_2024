@@ -89,7 +89,7 @@ class EventRepository {
         // Inicializando o whereClause com a condição de data
         // let whereClause: Prisma.EventWhereInput = { AND: { location: location, initial_date: { gte: startDate }, final_date: { lte: endDate } } };
         let whereClause: Prisma.EventWhereInput = {
-            AND: { location: location, initial_date: { gte: startDate }, final_date: { lte: endDate } }
+            AND: { location: location, initial_date: { gte: startDate, lte: endDate } }
         };
         console.log({ query, startDate, endDate, category_id, status });
 
@@ -113,9 +113,16 @@ class EventRepository {
         // if (endDate) whereClause.final_date = { lte: endDate }
         const select = {
             id: true, name: true, description: true, initial_date: true, final_date: true, status: true,
-            base_price: true, capacity: true, img_banner: true, img_thumbnail: true, color: true, category: true,
-            manager_id: true, location: true
+            base_price: true, capacity: true, img_banner: true, img_thumbnail: true, color: true,
+            category: { select: { id: true, name: true, description: true } },
+            manager_id: true, location: {
+                select: {
+                    id: true, name: true, address_type: true, address: true, number: true, zip_code: true,
+                    city: true, uf: true, country: true, complements: true, latitude: true, longitude: true
+                }
+            }
         };
+
         // Parâmetros de paginação incluindo orderBy
         const paginateParams: PaginateParams<Prisma.EventDelegate, Prisma.EventWhereInput, Prisma.EventOrderByWithRelationInput[]> = {
             model: this.eventDb,
@@ -124,6 +131,13 @@ class EventRepository {
             select,
             orderBy
         };
+        const allEvents = await prisma.event.findMany({
+            where: {
+
+                initial_date: { gte: startDate, lte: endDate }
+
+            }
+        });
 
         const paginated = await paginate<EventResult, Prisma.EventWhereInput, Prisma.EventOrderByWithRelationInput[], typeof this.eventDb>(paginateParams);
         return paginated;
