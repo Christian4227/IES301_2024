@@ -3,17 +3,10 @@ import CabecalhoCliente from "../CabecalhoCliente";
 import CabecalhoInfoCliente from "../CabecalhoInfoCliente";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import styles from "@styles/Cliente.module.css";
-import { useRouter } from "next/router";
 import QRCode from "qrcode";
-import PDFViewer from "@/components/PDFViewer";
-import download from "../../../assets/Download - escuro sem fundo.png";
 
 export default function ComprarIngressoCliente() {
-  const router = useRouter();
   const canvasRef = useRef(null);
-  const ComprarOnline = () => {
-    router.push("/");
-  };
   const GerarQRCode = () => {
     QRCode.toCanvas(
       canvasRef.current,
@@ -25,8 +18,7 @@ export default function ComprarIngressoCliente() {
         } else {
           // Capture the image as a Data URL
           const dataUrl = canvasRef.current.toDataURL();
-          // setImage(dataUrl);
-          // console.log(image);
+          console.log(dataUrl);
         }
       }
     );

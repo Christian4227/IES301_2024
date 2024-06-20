@@ -20,7 +20,6 @@ const mappingOrderCriteria: Record<string, string> = {
     "name": "name"
 };
 
-
 const defaultConfig = {
     page: 1,
     pageSize: 10,
@@ -29,9 +28,8 @@ const defaultConfig = {
     defaultOrderCriteria: [
         { name: "asc" }, { initial_date: "desc" }, { final_date: "asc" }, { base_price: "desc" }
     ] as Prisma.EventOrderByWithRelationInput[],
-    country: "", uf: ""
+    uf: ""
 };
-
 
 const parseOrderBy = (orderBy: string): Prisma.EventOrderByWithRelationInput[] => {
     return orderBy.split(',').map(criterion => {
@@ -44,10 +42,10 @@ const parseOrderBy = (orderBy: string): Prisma.EventOrderByWithRelationInput[] =
 const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
     const eventService: EventService = new EventService();
 
-    api.get<{ Querystring: QueryPaginationFilterOrder }>(
+    api.get(
         '/', async (request: FastifyRequest<{ Querystring: QueryPaginationFilterOrder }>, reply: FastifyReply): Promise<PaginatedEventResult> => {
             const {
-                filter, country = defaultConfig.country, uf = defaultConfig.uf, page = defaultConfig.page, "page-size": pageSize = defaultConfig.pageSize, "start-date": tsStartDate, "end-date": tsEndDate,
+                filter, uf = defaultConfig.uf, page = defaultConfig.page, "page-size": pageSize = defaultConfig.pageSize, "start-date": tsStartDate, "end-date": tsEndDate,
                 "category-id": categoryId, "order-by": orderBy = defaultConfig.orderBy, status = defaultConfig.status
             } = request.query;
 
@@ -59,7 +57,7 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
             const eventStatus = mappingFilterStatus[status];
 
             const allFilterOrdenedEvents = await eventService.searchEvents(
-                filter, paginationParams, queryIntervalDate, orderCriteria, country,uf, eventStatus, categoryId
+                filter, paginationParams, queryIntervalDate, orderCriteria, uf, eventStatus, categoryId
             );
 
             return reply.code(200).send(allFilterOrdenedEvents);
@@ -69,7 +67,7 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         async (request: FastifyRequest<{ Params: { eventId: number } }>, reply: FastifyReply): Promise<EventResult> => {
             const { body: eventUpdate, params: { eventId } } = request;
             if (!integerRegex.test(eventId.toString()))
-                return reply.code(400).send({ message: 'eventId must be valid value.' });
+                return reply.code(400).send({ message: 'EventIdMustBeValidValue' });
             const eventFinded = await eventService.getEvent(Number(eventId));
 
             return reply.code(200).send(eventFinded);
@@ -99,7 +97,7 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         }>, reply: FastifyReply): Promise<BaseEvent> => {
             const { body: eventUpdate, params: { eventId } } = request;
             if (!integerRegex.test(eventId.toString()))
-                return reply.code(400).send({ message: 'eventId must be valid value.' });
+                return reply.code(400).send({ message: 'EventIdMustBeValidValue' });
 
             const validAttributes: (keyof EventUpdate)[] = [
                 "name", "description", "ts_initial_date", "ts_final_date", "base_price", "capacity", "img_banner", "color",

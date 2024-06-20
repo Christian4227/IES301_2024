@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import CabecalhoCliente from "../CabecalhoCliente";
 import CabecalhoInfoCliente from "../CabecalhoInfoCliente";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
@@ -52,23 +54,26 @@ export default function IngressosCliente() {
   }
 
   useEffect(() => {
-    const token = parseCookies();
-    var valorToken = token["ticket-token"];
-    valorToken = JSON.parse(valorToken).accessToken;
-
-    client
-      .get("/orders/", {
-        headers: {
-          Authorization: `Bearer ${valorToken}`,
-        },
-      })
-      .then((response) => {
+    const fetchData = async () => {
+      try {
+        const cookies = parseCookies();
+        let token;
+        let valorToken;
+        if (cookies && cookies["ticket-token"]) {
+          token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
+          valorToken = JSON.parse(token);
+        }
+        const response = await client.get("orders/", {
+          headers: { Authorization: `Bearer ${valorToken?.accessToken}` },
+        });
         setCompras(response.data.data);
-      })
-      .catch((error) => {
-        handleSetMessage("Erro ao carregar os dados.", "error");
+        // console.log(response.headers);
+      } catch (error) {
+        handleSetMessage("Erro ao carregar os dados", "error");
         console.log("Erro na requisição " + error);
-      });
+      }
+    };
+    fetchData();
 
     // Data dos formulários de filtro
     const now = new Date();
@@ -190,7 +195,7 @@ export default function IngressosCliente() {
                   </thead>
                   <tbody>
                     {compras.map((compra) => (
-                      <tr key={compra.index}>
+                      <tr key={`order-${compra.index}`}>
                         <td>{compra.nomeEvento}</td>
                         <td>{compra.localEvento}</td>
                         <td>{compra.dataevento}</td>
@@ -258,14 +263,7 @@ export default function IngressosCliente() {
                           </Link>
                         </td>
                         <td>
-                          <Link href="./MapsEventos">
-                            <Image
-                              src={maps}
-                              alt="mapa"
-                              width={40}
-                              height={40}
-                            />
-                          </Link>
+                          <Image src={maps} alt="mapa" width={40} height={40} />
                         </td>
                       </tr>
                     ))}

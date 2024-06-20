@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import download from "../assets/Download - escuro sem fundo.png";
 import styles from "@styles/Componentes.module.css";
 const { jsPDF } = require("jspdf");
 
-export default function PDFViewer({ file }) {
-  const elementPDF = useRef(null);
+export default function PDFViewer() {
+  // const elementPDF = useRef(null);
   const [documento, setDocumento] = useState("");
   const handlePDF = async () => {
     var doc = new jsPDF();
