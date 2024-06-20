@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 
 export default function Login() {
-  const { login, auth } = useContext(AuthContext);
+  const { login, retorno } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" });
@@ -16,7 +16,7 @@ export default function Login() {
   const handleLogin = () => {
     try {
       login({ email: email, password: senha });
-      if (!auth) {
+      if (retorno == 401) {
         handleSetMessage("Combinação de usuário ou senha incorretos.", "error");
       }
     } catch (error) {

@@ -41,17 +41,19 @@ export default function Cabecalho() {
                   >
                     <label>{user.role == "SPECTATOR" ? "Cliente" : ""}</label>
                   </div>
-                  <Link href="/">Meus dados</Link>{" "}
-                  <a href="#" onClick={() => DirecionarRotaUsuario()}>
-                    Minha área
-                  </a>{" "}
-                  <a
-                    href="#"
-                    className={styles.Header_menu_usuario_opcoes_sair}
-                    onClick={() => Sair()}
-                  >
-                    Sair
-                  </a>
+                  <div className={styles.Header_menu_usuario_opcoes_submenus}>
+                    <a href="#" onClick={() => DirecionarRotaUsuario()}>
+                      Minha área
+                    </a>{" "}
+                    <Link href="/">Meus dados</Link>{" "}
+                    <a
+                      href="#"
+                      className={styles.Header_menu_usuario_opcoes_sair}
+                      onClick={() => Sair()}
+                    >
+                      Sair
+                    </a>
+                  </div>
                 </div>
               </li>
             ) : (

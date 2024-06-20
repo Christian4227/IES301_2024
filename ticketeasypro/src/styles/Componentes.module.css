@@ -18,3 +18,11 @@
   background-size: cover;
   margin-right: 2em;
 }
+
+/* PDF Viewer */
+.div_pdf {
+  width: 95%;
+  height: 70vh;
+  background-color: white;
+  border: 1px solid black;
+}

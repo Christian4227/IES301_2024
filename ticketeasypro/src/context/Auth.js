@@ -10,13 +10,12 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(false);
   const [user, setUser] = useState(null);
+  const [retorno, setRetorno] = useState("");
   const router = useRouter();
 
   useEffect(() => {
     const token = parseCookies();
     const valorCookie = token["ticket-token"];
-
-    // console.log(token);
 
     if (valorCookie != undefined) {
       setAuth(true);
@@ -28,7 +27,13 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const ConverterToken = (token) => {
-    setCookie(undefined, "ticket-token", JSON.stringify(token));
+    const cookieConfig = {
+      sameSite: "Strict",
+      path: "/",
+      maxAge: 3600,
+      secure: true,
+    };
+    setCookie(undefined, "ticket-token", JSON.stringify(token), cookieConfig);
   };
 
   const DirecionarRota = (userRole) => {
@@ -48,6 +53,7 @@ export const AuthProvider = ({ children }) => {
       .post("users/login", data)
       .then((response) => {
         setAuth(true);
+        setRetorno(response.status);
         const accessToken = response.data;
         ConverterToken(accessToken);
         setUser(data);
@@ -55,14 +61,13 @@ export const AuthProvider = ({ children }) => {
         const decoded = jwtDecode(accessToken.accessToken);
         setUser(decoded);
 
-        console.log(accessToken.accessToken);
-
         // // O papel do usuário geralmente é armazenado em uma propriedade do payload do token
         const userRole = decoded.role;
         DirecionarRota(userRole);
       })
       .catch((error) => {
         console.log("Erro na requisição. " + error);
+        setRetorno(error.response.status);
         setAuth(false);
       });
   };
@@ -74,7 +79,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ auth, user, login, logout, DirecionarRota }}>
+    <AuthContext.Provider
+      value={{ auth, user, login, logout, DirecionarRota, retorno }}
+    >
       {children}
     </AuthContext.Provider>
   );

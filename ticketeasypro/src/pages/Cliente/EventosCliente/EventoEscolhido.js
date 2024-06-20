@@ -8,6 +8,7 @@ import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import styles from "@styles/Cliente.module.css";
 import Image from "next/image";
 import disney from "../../../assets/disney_World.jpg";
+import { parseCookies } from "nookies";
 
 export default function EventoEscolhido() {
   const router = useRouter();
@@ -24,8 +25,23 @@ export default function EventoEscolhido() {
   };
 
   useEffect(() => {
+    const token = parseCookies();
+    var valorToken = token["ticket-token"];
+    valorToken = JSON.parse(valorToken).accessToken;
+
+    if (!eventId) {
+      handleSetMessage("Evento escolhido não encontrado.", "error");
+      setTimeout(() => {
+        router.back();
+      }, 6000);
+    }
+
     client
-      .get(`/events/${eventId}`)
+      .get(`/events/${eventId}`, {
+        headers: {
+          Authorization: `Bearer ${valorToken}`,
+        },
+      })
       .then((response) => {
         setEvento(response.data.data);
         console.log(response.data.data);
@@ -34,6 +50,7 @@ export default function EventoEscolhido() {
         }
       })
       .catch((error) => {
+        handleSetMessage("Erro ao carregar os dados.", "error");
         console.log("Erro na requisição " + error);
       });
   }, []);
@@ -92,7 +109,7 @@ export default function EventoEscolhido() {
                 <input
                   type="button"
                   value="Comprar"
-                  className={styles.botao_reservar_evento_escolhido}
+                  className="botao_sistema"
                   onClick={() => DirecionarFormulario()}
                 />
               </div>

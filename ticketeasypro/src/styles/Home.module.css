@@ -322,6 +322,52 @@
     height: 40px;
     margin: 10px;
   }
+
+  /* Div cookies */
+  .div_cookie {
+    position: fixed;
+    bottom: 0;
+    left: 10%;
+    width: 80%;
+    background-color: white;
+    padding: 1em;
+    animation: divCookies 1.6s;
+  }
+
+  .div_cookie_titulo {
+    text-align: center;
+    margin-bottom: 1em;
+  }
+
+  .div_cookie_body {
+    display: flex;
+    justify-content: center;
+  }
+
+  .div_cookie_body a {
+    color: blue !important;
+  }
+
+  .div_cookie_body_texto {
+    margin-right: 1em;
+  }
+
+  .botao_div_cookie {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: 5px;
+    border-radius: 5px;
+  }
+
+  @keyframes divCookies {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
   
   @media screen and (max-width: 700px) {
     .menu_direita {

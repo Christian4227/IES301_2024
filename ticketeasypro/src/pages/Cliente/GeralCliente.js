@@ -10,16 +10,33 @@ import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import client from "@/utils/client_axios";
+import ToastMessage from "@/components/ToastMessage/ToastMessage";
+import { parseCookies } from "nookies";
 
 export default function GeralCliente() {
   const [pedidos, setPedidos] = useState([]);
+  const [message, setMessage] = useState({ text: "", type: "" });
+
+  const handleSetMessage = (message, type) => {
+    setMessage({ text: message, type });
+  };
   useEffect(() => {
+    const token = parseCookies();
+    var valorToken = token["ticket-token"];
+    valorToken = JSON.parse(valorToken).accessToken;
+
     client
-      .get("/orders/")
+      .get("/orders/", {
+        headers: {
+          Authorization: `Bearer ${valorToken}`,
+        },
+      })
       .then((response) => {
         setPedidos(response.data.data);
+        console.log(pedidos);
       })
       .catch((error) => {
+        handleSetMessage("Erro ao carregar os dados.", "error");
         console.log("Erro na requisição " + error);
       });
   }, []);
@@ -70,6 +87,9 @@ export default function GeralCliente() {
           </div>
         </div>
       </div>
+      {!!message.text && (
+        <ToastMessage text={message.text} type={message.type} />
+      )}
     </div>
   );
 }

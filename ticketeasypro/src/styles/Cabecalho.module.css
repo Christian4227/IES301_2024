@@ -50,12 +50,19 @@
 
 .Header_menu_usuario_opcoes {
   background-color: #F0F0F0;
-  border-radius: 0 0 10px 10px;
-  padding: 5px;
+  border: 4px solid #2E302D;
+  border-radius: 0 0 5px 5px;
+  box-shadow: inset 5px 5px 10px #FFFFFF99;
   width: 250px;
   position: absolute;
   z-index: 1;
+  text-align: right;
+  outline: 1px solid white;
   display: none;
+}
+
+.Header_menu_usuario_opcoes_submenus {
+  padding: 10px;
 }
 
 .Header_menu_usuario_opcoes a {
@@ -64,7 +71,7 @@
 }
 
 .Header_menu_usuario_opcoes_sair {
-  border-top: 1px solid black;
+  border-top: 2px solid black;
 }
 
 .Header_menu_usuario_opcoes a:hover {
@@ -80,8 +87,11 @@
 }
 
 .Header_menu_usuario_opcoes_titulo_submenu {
-  border-bottom: 1px solid black;
-  text-align: center;
+  background-color: #2E302D;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
 }
 
 .Header_menu_usuario_opcoes_entrar a {
@@ -92,7 +102,7 @@
 }
 
 .Header_menu_usuario_opcoes_titulo_submenu label {
-  color: black;
+  color: white;
   font-weight: bold;
   font-size: 1.5em;
 }

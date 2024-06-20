@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Cabecalho from "./Cabecalho";
 import styles from "@styles/Home.module.css";
 import stylese from "../styles/InfoEventos.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Menu from "./Menu";
+// import Menu from "./Menu";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import client from "@/utils/client_axios";
 import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
+import { AuthContext } from "@/context/Auth";
 
 export default function InfoEventos() {
   const router = useRouter();
+  const { auth } = useContext(AuthContext);
   const [eventos, setEventos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [dataInicio, setDataInicio] = useState("");
@@ -18,16 +20,24 @@ export default function InfoEventos() {
   const Filtrar = () => {
     alert("Filtrado");
   };
-  const ReservarIngresso = () => {
-    alert("Link reservar ingresso");
+  const ReservarIngresso = (idEvento) => {
+    if (auth) {
+      router.push(
+        `./Cliente/EventosCliente/EventoEscolhido?eventId=${idEvento}`
+      );
+    } else {
+      router.push("./Login");
+    }
   };
   const VisualizarEvento = () => {
-    router.push("/Evento.js");
+    router.push("/InfoTipoEvento");
   };
 
   useEffect(() => {
     client
-      .get("/events/")
+      .get(
+        "/events/?start-date=1722470400000&end-date=1730419200000&status=PLANNED&country=BRASIL"
+      )
       .then((response) => {
         setEventos(response.data.data);
       })
@@ -318,7 +328,10 @@ export default function InfoEventos() {
                             <div>
                               <div
                                 style={{
-                                  backgroundColor: dado.color,
+                                  backgroundColor:
+                                    dado.color == undefined
+                                      ? "#000000"
+                                      : dado.color,
                                   width: "100%",
                                   height: "8px",
                                   marginBottom: "10px",
@@ -379,7 +392,7 @@ export default function InfoEventos() {
                                   type="button"
                                   id="btnReservar"
                                   className={stylese.botao_comprar}
-                                  onClick={() => ReservarIngresso()}
+                                  onClick={() => ReservarIngresso(dado.id)}
                                   value="Reservar"
                                 />
                                 <input
@@ -402,7 +415,7 @@ export default function InfoEventos() {
           )}
         </div>
       </div>
-      <Menu id="menu-lateral" className={styles.menu_lateral} />
+      {/* <Menu id="menu-lateral" className={styles.menu_lateral} /> */}
     </div>
   );
 }

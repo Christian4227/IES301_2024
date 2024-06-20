@@ -10,30 +10,84 @@ import carteira from "../../../assets/Carteira.png";
 import pdf from "../../../assets/PDF.png";
 import maps from "../../../assets/google_maps.png";
 import Link from "next/link";
-import axios from "axios";
+import { parseCookies } from "nookies";
+import client from "@/utils/client_axios";
+import ToastMessage from "@/components/ToastMessage/ToastMessage";
 
 export default function IngressosCliente() {
   const router = useRouter();
   const [compras, setCompras] = useState([]);
+  const [message, setMessage] = useState({ text: "", type: "" });
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
   const AdicionarEventos = () => {
-    router.push("../EventosCliente/EventosGeraisCliente");
+    router.push("../../InfoEventos");
+  };
+  const FormatarStatusCompra = (estado_compra) => {
+    switch (estado_compra) {
+      case "PROCESSING":
+        return "Processando";
+      case "COMPLETED":
+        return "Completado";
+      case "CANCELLED":
+        return "Cancelado";
+      default:
+        return;
+    }
+  };
+  const handleSetMessage = (message, type) => {
+    setMessage({ text: message, type });
   };
 
+  // Componente da paginação
+  const paginationButtons = [];
+  for (let i = 1; i <= Math.ceil(compras.length / 6); i++) {
+    paginationButtons.push(
+      <li className="page-item">
+        <a className="page-link" href="#">
+          {i}
+        </a>
+      </li>
+    );
+  }
+
   useEffect(() => {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMDJiZDc5Zi01YWZhLTQ3OTItYmI2Zi0xNDZiYmMzNTBhZjEiLCJsb2dpbiI6ImNocmlzdGlhbi5jdWJvQGZhdGVjLnNwLmdvdi5iciIsInJvbGUiOiJTUEVDVEFUT1IiLCJuYW1lIjoiQ2hyaXN0aWFuIFNhdGlvIEN1Ym8iLCJpYXQiOjE3MTg2NTUyMTEsImV4cCI6MTcxODY3NjgxMX0.5pdtUH-eU69yohvaD8B8FASxaUdLqyIE89oRiXvpkno";
-    axios
-      .get("http://127.0.0.1:3210/v1/orders/", {
+    const token = parseCookies();
+    var valorToken = token["ticket-token"];
+    valorToken = JSON.parse(valorToken).accessToken;
+
+    client
+      .get("/orders/", {
         headers: {
-          Cookie: `access_token=${token}`,
+          Authorization: `Bearer ${valorToken}`,
         },
       })
       .then((response) => {
         setCompras(response.data.data);
       })
       .catch((error) => {
+        handleSetMessage("Erro ao carregar os dados.", "error");
         console.log("Erro na requisição " + error);
       });
+
+    // Data dos formulários de filtro
+    const now = new Date();
+    var dia = now.getDate();
+    dia = dia < 10 ? "0" + dia : dia;
+    var mes = now.getMonth() + 1;
+    mes = mes < 10 ? "0" + mes : mes;
+    var ano = now.getFullYear();
+
+    setDataInicio(ano + "-" + mes + "-" + dia);
+
+    const nextMonthLastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Último dia do próximo mês
+    var diaFim = nextMonthLastDay.getDate();
+    diaFim = diaFim < 10 ? "0" + diaFim : diaFim;
+    var mesFim = nextMonthLastDay.getMonth() + 1;
+    mesFim = mesFim < 10 ? "0" + mesFim : mesFim;
+    var anoFim = nextMonthLastDay.getFullYear();
+
+    setDataFim(anoFim + "-" + mesFim + "-" + diaFim);
   }, []);
   return (
     <div>
@@ -62,7 +116,12 @@ export default function IngressosCliente() {
                 <div className={styles.form_ingressos_campos}>
                   <div className="mb-3">
                     <label>Situação da compra</label>
-                    <select className="form-select"></select>
+                    <select className="form-select">
+                      <option value="">Selecione o status...</option>
+                      <option value="PROCESSING">Processando</option>
+                      <option value="COMPLETED">Completado</option>
+                      <option value="CANCELLED">Cancelado</option>
+                    </select>
                   </div>
                   <div className="mb-3">
                     <label>Estrangeiro?</label>
@@ -78,17 +137,33 @@ export default function IngressosCliente() {
                   </div>
                   <div className="mb-3">
                     <label>Situação do evento</label>
-                    <select className="form-select"></select>
+                    <select className="form-select">
+                      <option value="">Selecione o status do evento...</option>
+                      <option value="PLANNED">Planejado</option>
+                      <option value="IN_PROGRESS">Em progresso</option>
+                      <option value="COMPLETED">Completado</option>
+                      <option value="CANCELLED">Cancelado</option>
+                    </select>
                   </div>
                 </div>
                 <div className={styles.form_ingressos_campos}>
                   <div className="mb-3">
                     <label>Data de início</label>
-                    <input type="date" className="form-control" />
+                    <input
+                      type="date"
+                      className="form-control"
+                      value={dataInicio}
+                      onChange={(e) => setDataInicio(e.target.value)}
+                    />
                   </div>
                   <div className="mb-3">
                     <label>Data final</label>
-                    <input type="date" className="form-control" />
+                    <input
+                      type="date"
+                      className="form-control"
+                      value={dataFim}
+                      onChange={(e) => setDataFim(e.target.value)}
+                    />
                   </div>
                 </div>
                 <div className={styles.div_botao_filtrar_ingressos}>
@@ -107,8 +182,9 @@ export default function IngressosCliente() {
                       <th>Local do evento</th>
                       <th>Data do evento</th>
                       <th>Data término</th>
-                      <th>Sit. da compra</th>
                       <th>Status evento</th>
+                      <th>Sit. da compra</th>
+                      <th>Data compra</th>
                       <th colSpan={3}></th>
                     </tr>
                   </thead>
@@ -118,25 +194,68 @@ export default function IngressosCliente() {
                         <td>{compra.nomeEvento}</td>
                         <td>{compra.localEvento}</td>
                         <td>{compra.dataevento}</td>
+                        <td>{compra.dataevento}</td>
                         <td>{compra.situacaoIngresso}</td>
-                        <td>{compra.statusevento}</td>
+                        <td
+                          className={
+                            compra.status == "PROCESSING"
+                              ? styles.td_sit_compra_processando
+                              : compra.status == "COMPLETED"
+                                ? styles.td_sit_compra_completado
+                                : styles.td_sit_compra_cancelado
+                          }
+                        >
+                          {FormatarStatusCompra(compra.status)}
+                        </td>
                         <td>
-                          <Link href="./ComprarIngressoCliente">
+                          {new Date(compra.created_at).toLocaleDateString()}
+                        </td>
+                        <td>
+                          <Link
+                            href={
+                              compra.status == "PROCESSING"
+                                ? "./ComprarIngressoCliente"
+                                : "#"
+                            }
+                          >
                             <Image
                               src={carteira}
                               alt="carteira"
                               width={40}
                               height={40}
+                              className={
+                                compra.status == "PROCESSING"
+                                  ? styles.td_img_pag_sit_compra_processando
+                                  : compra.status == "COMPLETED"
+                                    ? styles.td_img_pag_sit_compra_completado
+                                    : styles.td_img_pag_sit_compra_cancelado
+                              }
                             />
                           </Link>
                         </td>
                         <td>
-                          <Image
-                            src={pdf}
-                            alt="documento"
-                            width={40}
-                            height={40}
-                          />
+                          <Link
+                            href={
+                              compra.status == "PROCESSING" ||
+                              compra.status == "CANCELLED"
+                                ? "#"
+                                : "./CompraPDF"
+                            }
+                          >
+                            <Image
+                              src={pdf}
+                              alt="documento"
+                              width={40}
+                              height={40}
+                              className={
+                                compra.status == "PROCESSING"
+                                  ? styles.td_img_pdf_sit_compra_processando
+                                  : compra.status == "COMPLETED"
+                                    ? styles.td_img_pdf_sit_compra_completado
+                                    : styles.td_img_pdf_sit_compra_cancelado
+                              }
+                            />
+                          </Link>
                         </td>
                         <td>
                           <Link href="./MapsEventos">
@@ -153,7 +272,12 @@ export default function IngressosCliente() {
                   </tbody>
                 </table>
                 <div className={styles.div_numero_paginacao_tabela}>
-                  <label>6 de 18 registros encontrados.</label>
+                  <label>
+                    Página{" "}
+                    {compras.length / 6 < 1 ? 1 : Math.ceil(compras.length / 6)}{" "}
+                    - {compras.length <= 6 ? compras.length : 6} de{" "}
+                    {compras.length} registros encontrados.
+                  </label>
                 </div>
                 <div className={styles.div_paginacao_tabela}>
                   <nav aria-label="Navegação de página exemplo">
@@ -163,21 +287,7 @@ export default function IngressosCliente() {
                           Anterior
                         </a>
                       </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">
-                          1
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">
-                          2
-                        </a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">
-                          3
-                        </a>
-                      </li>
+                      {paginationButtons}
                       <li className="page-item">
                         <a className="page-link" href="#">
                           Próximo
@@ -191,6 +301,9 @@ export default function IngressosCliente() {
           </div>
         </div>
       </div>
+      {!!message.text && (
+        <ToastMessage text={message.text} type={message.type} />
+      )}
     </div>
   );
 }

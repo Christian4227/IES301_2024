@@ -23,9 +23,6 @@ export default function CabecalhoInfoCliente({ secao }) {
             <Link href="/Cliente/GeralCliente">Home cliente</Link>
           </li>
           <li>
-            <Link href="/Cliente/Dadoscliente">Meus dados</Link>
-          </li>
-          <li>
             <a href="#" onClick={Voltar}>
               Voltar
             </a>
