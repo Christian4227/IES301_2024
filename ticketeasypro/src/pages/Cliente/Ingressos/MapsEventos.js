@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "@styles/Cliente.module.css";
 import Image from "next/image";
 import seta_esquerda from "../../../assets/seta esquerda.png";
@@ -25,7 +25,7 @@ export default function MapsEventos() {
           <div className={styles.map_eventos_cliente_menu_voltar}>
             <input
               type="button"
-              className={styles.botao_maps_cliente_voltar}
+              className="botao_sistema"
               value="Voltar"
               onClick={() => Voltar()}
             />
@@ -112,7 +112,7 @@ export default function MapsEventos() {
                   <label>-</label>
                 </div>
                 <div className={styles.map_eventos_cliente_menu_info}>
-                  <h2>Status do ingresso</h2>
+                  <h2>Status da compra</h2>
                   <label>-</label>
                 </div>
               </div>

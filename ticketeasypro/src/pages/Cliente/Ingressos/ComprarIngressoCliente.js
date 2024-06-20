@@ -1,16 +1,26 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CabecalhoCliente from "../CabecalhoCliente";
 import CabecalhoInfoCliente from "../CabecalhoInfoCliente";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import styles from "@styles/Cliente.module.css";
 import QRCode from "qrcode";
+import client from "@/utils/client_axios";
+import { useRouter } from "next/router";
+import ToastMessage from "@/components/ToastMessage/ToastMessage";
+import { parseCookies } from "nookies";
+import uuid4 from "uuid4";
 
 export default function ComprarIngressoCliente() {
   const canvasRef = useRef(null);
+  const router = useRouter();
+  const idCompra = router.query.idCompra;
+  const [message, setMessage] = useState({ text: "", type: "" });
+  const [ordemCompra, setOrdemCompra] = useState([]);
   const GerarQRCode = () => {
+    const idNovaCompra = uuid4();
     QRCode.toCanvas(
       canvasRef.current,
-      "Testsdklfjfjksdsdfhkjdshfkjdssdhfkjsdsdhfjkdshfksje",
+      idNovaCompra,
       { width: 250 },
       (error) => {
         if (error) {
@@ -18,12 +28,37 @@ export default function ComprarIngressoCliente() {
         } else {
           // Capture the image as a Data URL
           const dataUrl = canvasRef.current.toDataURL();
-          console.log(dataUrl);
         }
       }
     );
   };
-  useEffect(() => {}, []);
+
+  const handleSetMessage = (message, type) => {
+    setMessage({ text: message, type });
+  };
+
+  useEffect(() => {
+    const cookies = parseCookies();
+    let token;
+    let valorToken;
+    if (cookies && cookies["ticket-token"]) {
+      token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
+      valorToken = JSON.parse(token).accessToken;
+    }
+    client
+      .get(`/orders/${idCompra}`, {
+        headers: {
+          Authorization: `Bearer ${valorToken}`,
+        },
+      })
+      .then((response) => {
+        setOrdemCompra(response.data);
+      })
+      .catch((error) => {
+        handleSetMessage("Erro ao carregar os dados", "error");
+        console.log("Erro na requisição " + error);
+      });
+  }, []);
   return (
     <div>
       <CabecalhoCliente />
@@ -143,6 +178,9 @@ export default function ComprarIngressoCliente() {
           </div>
         </div>
       </div>
+      {!!message.text && (
+        <ToastMessage text={message.text} type={message.type} />
+      )}
     </div>
   );
 }

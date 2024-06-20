@@ -252,15 +252,6 @@
     border: 1px solid black;
     opacity: 0.5;
   }
-
-  .botao_corpo {
-    background-color: black;
-    box-shadow: 1px 1px 8px 1px gray;
-    border-radius: 12px;
-    color: white;
-    padding: 5px;
-    width: 130px;
-  }  
   
   /* Rodapé */
   .home_footer {
@@ -350,14 +341,6 @@
 
   .div_cookie_body_texto {
     margin-right: 1em;
-  }
-
-  .botao_div_cookie {
-    background-color: black;
-    color: white;
-    padding: 10px 20px;
-    border: 5px;
-    border-radius: 5px;
   }
 
   @keyframes divCookies {

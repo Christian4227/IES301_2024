@@ -39,7 +39,17 @@ export default function Cabecalho() {
                   <div
                     className={styles.Header_menu_usuario_opcoes_titulo_submenu}
                   >
-                    <label>{user.role == "SPECTATOR" ? "Cliente" : ""}</label>
+                    <label>
+                      {user.role == "SPECTATOR"
+                        ? "Cliente"
+                        : user.role == "STAFF"
+                          ? "Colaborador"
+                          : user.role == "MANAGER"
+                            ? "Gerente"
+                            : user.role == "ADMINISTRATOR"
+                              ? "Administrador"
+                              : ""}
+                    </label>
                   </div>
                   <div className={styles.Header_menu_usuario_opcoes_submenus}>
                     <a href="#" onClick={() => DirecionarRotaUsuario()}>

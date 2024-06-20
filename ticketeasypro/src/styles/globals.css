@@ -52,10 +52,16 @@ input[type=checkbox], input[type=radio] {
 }
 
 .botao_sistema {
-  background-color: #2E302D;
+  background-color: black;
   color: white;
-  padding: 7px;
+  padding: 10px 20px;
+  border: 5px;
   border-radius: 5px;
+}
+
+.botao_sistema:hover {
+  background-color: #444242;
+  transition: .4s;
 }
 
 /* Separadores */
@@ -113,6 +119,7 @@ h3 {
     background-color: white;
     padding: 1em;
     margin-top: 2em;
+    margin-bottom: 1em;
     min-width: 320px;
     width: 40%;
     position: relative;

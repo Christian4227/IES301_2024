@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     } else if (userRole === "EVENT_MANAGER") {
       router.push("/Organizador/DadosOrganizador");
     } else if (userRole === "STAFF") {
-      router.push("/Colaborador/IndexColaborador");
+      router.push("/Colaborador/indexColaborador");
     }
   };
 

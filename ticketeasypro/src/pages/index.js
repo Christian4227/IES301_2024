@@ -217,7 +217,7 @@ export default function Home() {
                 type="button"
                 value="Conferir"
                 id="botaoHomeConferir"
-                className={styles.botao_corpo}
+                className="botao_sistema"
                 onClick={() => VisualizarEvento()}
               />
             </div>
@@ -239,7 +239,7 @@ export default function Home() {
                     type="button"
                     value="Veja mais"
                     id="botaoEventosCulturais"
-                    className={styles.botao_corpo}
+                    className="botao_sistema"
                     onClick={() => VisualizarTipoEvento()}
                   />
                 </div>
@@ -256,7 +256,7 @@ export default function Home() {
                     type="button"
                     value="Veja mais"
                     id="botaoEventosEsportivos"
-                    className={styles.botao_corpo}
+                    className="botao_sistema"
                     onClick={() => VisualizarTipoEvento()}
                   />
                 </div>
@@ -273,7 +273,7 @@ export default function Home() {
                     type="button"
                     value="Veja mais"
                     id="botaoEventosFestas"
-                    className={styles.botao_corpo}
+                    className="botao_sistema"
                     onClick={() => VisualizarTipoEvento()}
                   />
                 </div>
@@ -290,7 +290,7 @@ export default function Home() {
                     type="button"
                     value="Veja mais"
                     id="botaoEventosMusicais"
-                    className={styles.botao_corpo}
+                    className="botao_sistema"
                     onClick={() => VisualizarTipoEvento()}
                   />
                 </div>
@@ -462,7 +462,7 @@ export default function Home() {
               <div>
                 <input
                   type="button"
-                  className={styles.botao_div_cookie}
+                  className="botao_sistema"
                   value="Aceitar"
                   onClick={() => FecharPolitica()}
                 />

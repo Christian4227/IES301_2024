@@ -476,10 +476,32 @@
 
 .div_info_financeiras_titulo {
   border-bottom: 2px solid black;
+  margin-bottom: 1em;
 }
 
 .div_info_financeiras_titulo h3 {
   font-weight: bold;
+}
+
+/* CompraPDF */
+.div_principal_pdf {
+  padding: 1em;
+  display: flex;
+}
+
+.div_pdf_info_ingresso {
+  margin-left: 1em;
+  padding-left: 1em;
+  border-left: 2px solid black;
+  width: 70%;
+}
+
+.corpo_secao_info_ingresso_PDF {
+  display: flex;
+}
+
+.corpo_secao_info_ingresso_PDF_cliente {
+  width: 60%;
 }
 
 /* Componentes */
@@ -489,14 +511,6 @@
   height: 40px;
   right: -40px;
   top: 0;
-}
-
-.botao_maps_cliente_voltar {
-  background-color: black;
-  color: white;
-  padding: 7px;
-  border-radius: 10px;
-  width: 100%;
 }
 
 .img_menu_lateral {

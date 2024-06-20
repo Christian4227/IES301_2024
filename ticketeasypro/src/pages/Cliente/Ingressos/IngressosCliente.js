@@ -67,7 +67,6 @@ export default function IngressosCliente() {
           headers: { Authorization: `Bearer ${valorToken?.accessToken}` },
         });
         setCompras(response.data.data);
-        // console.log(response.headers);
       } catch (error) {
         handleSetMessage("Erro ao carregar os dados", "error");
         console.log("Erro na requisição " + error);
@@ -219,7 +218,7 @@ export default function IngressosCliente() {
                           <Link
                             href={
                               compra.status == "PROCESSING"
-                                ? "./ComprarIngressoCliente"
+                                ? `./ComprarIngressoCliente?idCompra=${compra.id}`
                                 : "#"
                             }
                           >
@@ -240,30 +239,43 @@ export default function IngressosCliente() {
                         </td>
                         <td>
                           <Link
-                            href={
-                              compra.status == "PROCESSING" ||
-                              compra.status == "CANCELLED"
-                                ? "#"
-                                : "./CompraPDF"
-                            }
+                            // href={
+                            //   compra.status == "PROCESSING" ||
+                            //   compra.status == "CANCELLED"
+                            //     ? "#"
+                            //     : `./CompraPDF?idCompra=${compra.id}`
+                            // }
+                            href={`./IngressoClientePDF?idCompra=${compra.id}`}
                           >
                             <Image
                               src={pdf}
                               alt="documento"
                               width={40}
                               height={40}
+                              // className={
+                              //   compra.status == "PROCESSING"
+                              //     ? styles.td_img_pdf_sit_compra_processando
+                              //     : compra.status == "COMPLETED"
+                              //       ? styles.td_img_pdf_sit_compra_completado
+                              //       : styles.td_img_pdf_sit_compra_cancelado
+                              // }
                               className={
-                                compra.status == "PROCESSING"
-                                  ? styles.td_img_pdf_sit_compra_processando
-                                  : compra.status == "COMPLETED"
-                                    ? styles.td_img_pdf_sit_compra_completado
-                                    : styles.td_img_pdf_sit_compra_cancelado
+                                styles.td_img_pdf_sit_compra_completado
                               }
                             />
                           </Link>
                         </td>
                         <td>
-                          <Image src={maps} alt="mapa" width={40} height={40} />
+                          <Link
+                            href={`./MapsEventos?idEvento=${compra.event_id}`}
+                          >
+                            <Image
+                              src={maps}
+                              alt="mapa"
+                              width={40}
+                              height={40}
+                            />
+                          </Link>
                         </td>
                       </tr>
                     ))}
