@@ -95,3 +95,17 @@ export const getLocalbaseURL = (api: FastifyInstance) => {
     const baseURL = `${protocol}://${serverAddress}:${port}`
     return baseURL
 }
+
+// Função para obter o timestamp UNIX correspondente ao primeiro segundo do dia atual
+export const getStartOfDayTimestamp = (): number => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Define a hora para 00:00:00
+    return Math.floor(today.getTime()); // Retorna o timestamp UNIX
+};
+// Função para obter o timestamp UNIX correspondente ao último segundo do último dia do mês seguinte
+export const getLastdayOfNextMonthTimestamp = (): number => {
+    const today = new Date();
+    const nextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+    nextMonth.setHours(23, 59, 59, 999); // Define a hora para 23:59:59.999
+    return Math.floor(nextMonth.getTime()); // Retorna o timestamp UNIX
+};

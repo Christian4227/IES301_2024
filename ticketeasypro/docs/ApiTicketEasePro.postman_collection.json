@@ -1,0 +1,881 @@
+{
+	"info": {
+		"_postman_id": "93500b30-2d24-4d89-a046-5567e56ad245",
+		"name": "ApiTicketEasePro",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9918621"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Get Accounts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZTM1ZjVjZS00Nzc4LTQxMTMtOWE4YS1jOGNhYTg5ODU4ODciLCJsb2dpbiI6InJvb3QyQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IkFETUlOIiwibmFtZSI6InJvb3QgMiIsImlhdCI6MTcxNTYzMjg1NywiZXhwIjoxNzE1NjU0NDU3fQ.5dZzHan6zaXHXkVeVs5HwktX3DMNrRlcFPohGiEjAH8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/accounts/",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"accounts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Email Confirmation",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/accounts/confirm-email?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXpfbG9vbkB5YWhvby5jb20uYnIiLCJzdWIiOiJiYmE3MmI0Zi03N2VkLTQ3ZjktYjMwYi0wMjI0ZGViNDkxOWIiLCJpYXQiOjE3MTY4NTEzNjgsImV4cCI6MTcxNjg1MjI2OH0.glSwQa1q6w7df_zD-xyH-262o5LWrLKPZ3hvhbwS-Ow",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"accounts",
+								"confirm-email"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1aXpfbG9vbkB5YWhvby5jb20uYnIiLCJzdWIiOiJiYmE3MmI0Zi03N2VkLTQ3ZjktYjMwYi0wMjI0ZGViNDkxOWIiLCJpYXQiOjE3MTY4NTEzNjgsImV4cCI6MTcxNjg1MjI2OH0.glSwQa1q6w7df_zD-xyH-262o5LWrLKPZ3hvhbwS-Ow"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Request Email for Reset Password Confirmation Copy",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/accounts/password-reset/luiz_loon@yahoo.com.br",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"accounts",
+								"password-reset",
+								"luiz_loon@yahoo.com.br"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ReSend Email Confirmation",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://0.0.0.0:3210/v1/accounts/resend-email-confirmation/luiz0oon@gmail.com",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "3210",
+							"path": [
+								"v1",
+								"accounts",
+								"resend-email-confirmation",
+								"luiz0oon@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Accounts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMDE0MWQ0Ni0wMTI5LTRiN2ItYTk0NC05MGYxM2FkZTRmOGEiLCJsb2dpbiI6InN0YWZmM0B0aWNrZXRlYXN5cHJvLmNvbS5iciIsInJvbGUiOiJTVEFGRiIsIm5hbWUiOiJTdGFmZiBUaHJlZSIsImlhdCI6MTcxNDcwMjI5NCwiZXhwIjoxNzE0NzIzODk0fQ.uxD1fFUoHqmxuDQFhxMg1iwZkBpUk59UEiCuD-Yq77w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"luiz0loon@gmail.com\",\r\n    \"name\": \"Luiz Otavio de Oliveira Nogueira\",\r\n    \"email_confirmed\": false,\r\n    \"birth_date\":\"1992-07-08T00:00:00.000Z\",\r\n    \"phone\": \"930122314\",\r\n    \"phone_fix\": null,\r\n    \"role\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/accounts",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxYWQwNDdjOC02OGUxLTRkMTQtODg3ZS0xZjc3NjFiZTJhODUiLCJsb2dpbiI6InJvb3RAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiQURNSU4iLCJuYW1lIjoicm9vdCIsImlhdCI6MTcxNjgzOTQ0MywiZXhwIjoxNzE2ODYxMDQzfQ.XqYJJN4F08y35joDBxZU9tPXwDOtHXcPQFDjB0Vz1r0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZWE3OGI2YS1jOGU3LTQwMzItYmRhYS1iMjcxNzc0YTMzNjAiLCJsb2dpbiI6InJvb3RAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiQURNSU4iLCJuYW1lIjoicm9vdCIsImlhdCI6MTcxNDU3Mzc0NywiZXhwIjoxNzE0NTk1MzQ3fQ.7ZptQElh_lrAcHg4PJPy_GIl5gWxLcWYO_bXVRwLs6U",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{base_v1}}/accounts/whoami",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"accounts",
+								"whoami"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Account Role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4N2M1YjFjNy0zNWNhLTRkNWMtOTFmYi01ODNhOTUyNjA5MjYiLCJsb2dpbiI6Im1hbmFnZXIxQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IkVWRU5UX01BTkFHRVIiLCJuYW1lIjoiTWFuYWdlciBPbmUiLCJpYXQiOjE3MTQ3NDkxNjMsImV4cCI6MTcxNDc3MDc2M30.nQgdiAaw6vqcdK_rkV-WEradnjPtd6t-HccGx0hED4I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role\": \"EVENT_MANAGER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/accounts/f22abf7a-0b52-4310-8923-91422b2ab1c5/role",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"accounts",
+								"f22abf7a-0b52-4310-8923-91422b2ab1c5",
+								"role"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Event",
+			"item": [
+				{
+					"name": "Get Event by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZGYzOGRhZS05N2I5LTRhYmQtYTNhNS0yYmZhYjAwNjFjNDEiLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE4ODk0MTEyLCJleHAiOjE3MTg5MTU3MTJ9.C5rzGGXaAQdLjwLXH-iFMMsHy0Mlvfz15nM395DrymI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/events/50",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"events",
+								"50"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Paginate Events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/events?uf=Sp",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"events"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "planned",
+									"disabled": true
+								},
+								{
+									"key": "order-by",
+									"value": "price:asc,date:asc,name:desc",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "PLANNED",
+									"disabled": true
+								},
+								{
+									"key": "uf",
+									"value": "Sp"
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMmZlZjIyNS0wZjNiLTQwY2YtODUzOC1lY2U5NDA3NmI3N2IiLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE4NzE0MzI1LCJleHAiOjE3MTg3MzU5MjV9.7iDWF3XkpDnz8EW4zwoYBxqZgaQvTSThoHOqSm8rzFw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Show do Supla\",\r\n    \"description\": \"Show da Véio do Rock\",\r\n    \"ts_initial_date\": 1715506200000,\r\n    \"ts_final_date\": 1715644999000,\r\n    \"base_price\": 1450,\r\n    \"capacity\": 125,\r\n    \"img_banner\": \"https://plus.unsplash.com/premium_photo-1682855222843-0cd0827ed6e3\",\r\n    \"img_thumbnail\": \"https://plus.unsplash.com/premium_photo-1682855222930-210943bfdd6c\",\r\n    \"color\": \"#FF5733\",\r\n    \"category_id\": 4,\r\n    \"location_id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/events",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNjJlYjc2Yy1hMWQwLTQyMzQtODQ1YS1jZDM1MmQwMDRlYTEiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE2MDQ5MTAyLCJleHAiOjE3MTYwNzA3MDJ9.XbQXRTm9WwA7DZmHXBXQ0AqQgpSniHalAH9dPwfBjf0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Corinthians x Santos\",\r\n    \"extra_key\": \"sdasdasd\",\r\n    \"description\": \"Jogo de volta.\",\r\n    \"location_id\": 1,\r\n    \"ts_final_date\": 1716082602020,\r\n    \"ts_initial_date\": 1716082442020,\r\n    \"status\": \"AVAILABLE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/events/1",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"events",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Get Paginate Orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NWNkNTM0YS04MTEwLTQ5OGEtYTg1Yy0wYjg2MzlkNWEwMWUiLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE4OTU2ODc5LCJleHAiOjE3MTg5Nzg0Nzl9.6oQzbKfwEF4SUCsf-wa2fYedOSKIg_tkDtArwIQ0r1o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/orders",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order By ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMmZlZjIyNS0wZjNiLTQwY2YtODUzOC1lY2U5NDA3NmI3N2IiLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE4ODg3NzQ1LCJleHAiOjE3MTg5MDkzNDV9.Qj6sSK2VQNGWKY_m5J9vrae5vjaCDLHxPEdijp8YXDI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/orders/4ed439c8-78d3-4c3c-ad27-ca2d24321750",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"orders",
+								"4ed439c8-78d3-4c3c-ad27-ca2d24321750"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZGYzOGRhZS05N2I5LTRhYmQtYTNhNS0yYmZhYjAwNjFjNDEiLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE4ODk0MTEyLCJleHAiOjE3MTg5MTU3MTJ9.C5rzGGXaAQdLjwLXH-iFMMsHy0Mlvfz15nM395DrymI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"eventId\": 105,\r\n    \"paymentMethod\": \"PIX\",\r\n    \"orderTickets\": [\r\n        {\"typeId\": 1, \"quantity\": 1},\r\n        {\"typeId\": 2, \"quantity\": 1},\r\n        {\"typeId\": 3, \"quantity\": 1},\r\n        {\"typeId\": 4, \"quantity\": 1}\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/orders",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNjJlYjc2Yy1hMWQwLTQyMzQtODQ1YS1jZDM1MmQwMDRlYTEiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE2MDQ5MTAyLCJleHAiOjE3MTYwNzA3MDJ9.XbQXRTm9WwA7DZmHXBXQ0AqQgpSniHalAH9dPwfBjf0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Corinthians x Santos\",\r\n    \"extra_key\": \"sdasdasd\",\r\n    \"description\": \"Jogo de volta.\",\r\n    \"location_id\": 1,\r\n    \"ts_final_date\": 1716082602020,\r\n    \"ts_initial_date\": 1716082442020,\r\n    \"status\": \"AVAILABLE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/events/1",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"events",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "Get Event by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/events/2",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"events",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Paginate Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/categories",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"categories"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "planned",
+									"disabled": true
+								},
+								{
+									"key": "category-id",
+									"value": "4",
+									"disabled": true
+								},
+								{
+									"key": "filter",
+									"value": "rock",
+									"disabled": true
+								},
+								{
+									"key": "order-by",
+									"value": "price:asc,date:asc,name:desc",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MTMxNWQ0Zi01ZTUwLTRlODctYTJjYy1hODE5YzAzYTlhYzQiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE1NzQzOTI1LCJleHAiOjE3MTU3NjU1MjV9.GDD6ZPdm75WFLcey8R373iKvV8gykJVSj1MzXm12sm8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Show do Supla\",\r\n    \"description\": \"Show da Véio do Rock\",\r\n    \"ts_initial_date\": 1715506200000,\r\n    \"ts_final_date\": 1715644999000,\r\n    \"base_price\": 1450,\r\n    \"capacity\": 125,\r\n    \"img_banner\": \"https://plus.unsplash.com/premium_photo-1682855222843-0cd0827ed6e3\",\r\n    \"img_thumbnail\": \"https://plus.unsplash.com/premium_photo-1682855222930-210943bfdd6c\",\r\n    \"color\": \"#FF5733\",\r\n    \"category_id\": 82,\r\n    \"location_id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/events",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNjJlYjc2Yy1hMWQwLTQyMzQtODQ1YS1jZDM1MmQwMDRlYTEiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE2MDQ5MTAyLCJleHAiOjE3MTYwNzA3MDJ9.XbQXRTm9WwA7DZmHXBXQ0AqQgpSniHalAH9dPwfBjf0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Corinthians x Santos\",\r\n    \"extra_key\": \"sdasdasd\",\r\n    \"description\": \"Jogo de volta.\",\r\n    \"location_id\": 1,\r\n    \"ts_final_date\": 1716082602020,\r\n    \"ts_initial_date\": 1716082442020,\r\n    \"status\": \"AVAILABLE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/events/1",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"events",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "create new user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ga.b@fatec.gov.sp.br\",\r\n    \"password\": \"123\",\r\n    \"confirm_password\": \"123\",\r\n    \"name\": \"Gabriel Fatecano\",\r\n    \"birth_date\": \"2020-07-14T00:00:00Z\",\r\n    \"phone\": \"1234567890\",\r\n    \r\n    \"email_confirmed\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/users/signin",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"users",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"client_espectador@ticketeasypro.com.br\",\r\n    \"password\": \"fatec123#1sem.2024\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/users/login",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/users/2671c006-86e5-43d1-b811-9b6c2c2d2fd9",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"users",
+								"2671c006-86e5-43d1-b811-9b6c2c2d2fd9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TicketTypes",
+			"item": [
+				{
+					"name": "create new TicketType",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"INGRESSO MEIA-Idoso\",\r\n  \"discount\": 50,\r\n  \"description\": \"Em cumprimento a lei de benficios sociais.\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/ticket-types",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"ticket-types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update TicketType",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"name\": \"INGRESSO COMUM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/ticket-types/6",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"ticket-types",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/users/2671c006-86e5-43d1-b811-9b6c2c2d2fd9",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"users",
+								"2671c006-86e5-43d1-b811-9b6c2c2d2fd9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get TicketType by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MTMxNWQ0Zi01ZTUwLTRlODctYTJjYy1hODE5YzAzYTlhYzQiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE1ODg3OTYwLCJleHAiOjE3MTU5MDk1NjB9.Ieh3OljFJ9pMABdyZui-O7ro8Y5_kXm0wJjDthEJKdg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZWE3OGI2YS1jOGU3LTQwMzItYmRhYS1iMjcxNzc0YTMzNjAiLCJsb2dpbiI6InJvb3RAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiQURNSU4iLCJuYW1lIjoicm9vdCIsImlhdCI6MTcxNDU3Mzc0NywiZXhwIjoxNzE0NTk1MzQ3fQ.7ZptQElh_lrAcHg4PJPy_GIl5gWxLcWYO_bXVRwLs6U",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{base_v1}}/ticket-types/1",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"ticket-types",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Paginate TicketTypes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/ticket-types?filter=est&order-by=discount:asc",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"ticket-types"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "est"
+								},
+								{
+									"key": "order-by",
+									"value": "discount:asc"
+								},
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "page-size",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

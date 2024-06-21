@@ -24,9 +24,10 @@ model User {
   created_at      DateTime  @default(now()) @db.Timestamp(0)
   updated_at      DateTime  @updatedAt @db.Timestamp(0)
   active          Boolean   @default(true)
-  Events          Event[]
+  Events          Event[]   @relation("UserEvents")
   Orders          Order[]
 
+  @@index([email])
   @@map("USERS")
 }
 
@@ -45,8 +46,7 @@ model Venue {
   longitude    Float    @db.DoublePrecision
   created_at   DateTime @default(now()) @db.Timestamp(0)
   updated_at   DateTime @updatedAt @db.Timestamp(0)
-
-  Events Event[]
+  Events       Event[]
 
   @@map("VENUES")
 }
@@ -54,8 +54,8 @@ model Venue {
 model Order {
   id             String        @id @default(uuid())
   customer_id    String
-  event_id       Int           @db.Integer()
-  total_amount   Int           @db.Integer()
+  event_id       Int
+  total_amount   Int
   status         OrderStatus   @default(PROCESSING)
   payment_method PaymentMethod @default(PIX)
   created_at     DateTime      @default(now()) @db.Timestamp(0)
@@ -64,17 +64,19 @@ model Order {
   customer       User          @relation(fields: [customer_id], references: [id])
   OrderTicket    OrderTicket[]
 
+  @@index([customer_id, event_id])
   @@map("ORDERS")
 }
 
 model Ticket {
   id         String       @id @default(uuid())
-  event_id   Int          @db.Integer()
+  event_id   Int
   status     TicketStatus @default(AVAILABLE)
   created_at DateTime     @default(now()) @db.Timestamp(0)
   updated_at DateTime     @updatedAt @db.Timestamp(0)
   event      Event        @relation(fields: [event_id], references: [id])
 
+  @@index([event_id])
   @@map("TICKETS")
 }
 
@@ -82,13 +84,14 @@ model OrderTicket {
   id           Int         @id @default(autoincrement())
   order_id     String
   ticket_id    String
-  unit_price   Int         @db.Integer()
+  unit_price   Int
   created_at   DateTime    @default(now()) @db.Timestamp(0)
   updated_at   DateTime    @updatedAt @db.Timestamp(0)
   order        Order       @relation(fields: [order_id], references: [id])
   TicketType   TicketType? @relation(fields: [ticketTypeId], references: [id])
   ticketTypeId Int?
 
+  @@index([order_id, ticket_id])
   @@map("ORDERTICKETS")
 }
 
@@ -111,22 +114,23 @@ model Event {
   description   String      @db.VarChar(1024)
   initial_date  DateTime    @db.Timestamp(0)
   final_date    DateTime    @db.Timestamp(0)
-  category_id   Int         @db.Integer
+  category_id   Int
   status        EventStatus @default(PLANNED)
-  base_price    Int         @db.Integer
-  capacity      Int         @db.Integer
+  base_price    Int
+  capacity      Int
   img_banner    String      @db.VarChar
   img_thumbnail String?     @db.VarChar
   location_id   Int
-  color         String      @db.VarChar()
+  color         String      @db.VarChar
   created_at    DateTime    @default(now()) @db.Timestamp(0)
   updated_at    DateTime    @updatedAt @db.Timestamp(0)
   category      Category    @relation(fields: [category_id], references: [id])
-  event_manager User        @relation(fields: [manager_id], references: [id])
+  event_manager User        @relation(fields: [manager_id], references: [id], name: "UserEvents")
   location      Venue       @relation(fields: [location_id], references: [id])
   Tickets       Ticket[]
   Orders        Order[]
 
+  @@index([category_id, manager_id, location_id])
   @@map("EVENTS")
 }
 

@@ -1,5 +1,5 @@
 // import { OrderCreate, OrderCreateInput, OrderTicketCreate, OrderUpdateInput } from "@interfaces/order.interface";
-import { Order, OrderStatus, Prisma } from "@prisma/client";
+import { EventStatus, Order, OrderStatus, Prisma } from "@prisma/client";
 import { PaymentMethod } from "./../schema/order.schema"
 import prisma from "./prisma";
 import { OrderTicket } from "src/schema/orderTicket.schema";
@@ -8,6 +8,7 @@ import { PaginateParams } from "types/common.type";
 import { PaginatedOrderResult } from "types/order.type";
 import { PaginationParams } from "@interfaces/common.interface";
 import { paginate } from "@utils/paginate";
+import { Console } from "console";
 
 class OrderRepository {
   private orderDb: Prisma.OrderDelegate;
@@ -32,48 +33,47 @@ class OrderRepository {
       where: { id: orderId }
     });
   }
-
-  // async updateOrder(orderId: string, data: OrderUpdateInput): Promise<Order> {
-  //   return this.orderDb.update({
-  //     where: { id: orderId },
-  //     data,
-  //   });
-  // }
-
-  // async deleteOrder(orderId: string): Promise<Order> {
-  //   return this.orderDb.delete({
-  //     where: { id: orderId },
-  //   });
-  // }
-
-  // async getOrdersByCustomerId(customerId: string): Promise<Order[]> {
-  //   return this.orderDb.findMany({
-  //     where: { customer_id: customerId },
-  //   });
-  // }
-
   async getOrders(
-    customerId?: string,
-    eventId?: number,
-    orderBy: Prisma.OrderOrderByWithRelationInput[] = [{ created_at: "asc" },],
+    customerId: string,
+    location: {},
+    categoryId: number | undefined,
+    startDate: Date,
+    endDate: Date,
+    orderBy: Prisma.OrderOrderByWithRelationInput[] = [{ created_at: "asc" }],
     paginationParams: PaginationParams = { page: 1, pageSize: 10 },
-    status: OrderStatus = OrderStatus.PROCESSING,
-    payment_method: PaymentMethod = PaymentMethod.PIX
+    eventStatus: EventStatus,
+    orderStatus: OrderStatus
   ): Promise<PaginatedOrderResult> {
 
-    const whereClause: Prisma.OrderWhereInput = { AND: { payment_method: payment_method, status: status } }
+    const whereClause: Prisma.OrderWhereInput = {
+      customer_id: customerId,
+      status: orderStatus,
+      event: {
+        initial_date: { gte: startDate, lte: endDate }, // deve vir pelo parametro
+        location: location,
+        category_id: categoryId, // deve vir pelo parametro
+        status: { equals: eventStatus }, // deve vir pelo parametro
+      }
+    }
+    const select: Prisma.OrderSelect = {
+      customer: { select: { name: true, email: true, phone: true, phone_fix: true } },
+      event: {
+        select: {
+          id: true, location: {
+            select: {
+              id: true, name: true, address_type: true, address: true, number: true, zip_code: true, city: true,
+              uf: true, country: true, complements: true, latitude: true, longitude: true
+            },
+          },
+          category: { select: { id: true, name: true, description: true } },
+          capacity: true, status: true, name: true, description: true, initial_date: true, final_date: true, base_price: true,
+          img_banner: true, img_thumbnail: true, color: true
+        },
+      },
+      OrderTicket: { select: { TicketType: { select: { id: true, name: true, discount: true } } } },
+      status: true, payment_method: true, total_amount: true
+    }
 
-    if (customerId)
-      whereClause.AND = { ...whereClause.AND, customer_id: customerId }
-
-    if (eventId)
-      whereClause.AND = { ...whereClause.AND, event_id: eventId }
-
-    const select = {
-      id: true,
-      customer_id: true, event_id: true, total_amount: true, status: true, payment_method: true,
-      created_at: true, updated_at: true
-    };
 
     // Parâmetros de paginação incluindo orderBy
     const paginateParams: PaginateParams<Prisma.OrderDelegate, Prisma.OrderWhereInput, Prisma.OrderOrderByWithRelationInput[]> = {
@@ -90,6 +90,7 @@ class OrderRepository {
     return paginated;
 
   };
+
 
   async createOrder(customerId: string, eventId: number, payment_method: PaymentMethod, orderTickets: OrderTicket[]) {
     // 1. Buscar informações do evento

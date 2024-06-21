@@ -1,10 +1,16 @@
 import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
 import { OrderService } from "../../services/order.service";
-import { OrderStatus, Prisma, Role } from "@prisma/client";
-import { OrderCreate, OrderCreateSchema, PaymentMethod } from "../../schema/order.schema";
-import { PaginationParams, QueryPaginationFilter, } from "@interfaces/common.interface";
-import { PaginatedOrderResult } from "types/order.type";
-import { QueryPaginationFilterOrder } from "@interfaces/order.interface";
+import { EventStatus, OrderStatus, Prisma, Role } from "@prisma/client";
+import {
+  OrderCreateSchema,
+  OrderDetailParamsSchema, QueryPaginationFilterOrderSchema
+} from "../../schema/order.schema";
+import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
+import {
+  PaginatedOrderResult, QueryPaginationFilterOrder, OrderCreate, OrderDetailParams
+} from "types/order.type";
+import { AnyRole } from "@utils/auth";
+import { getLastdayOfNextMonthTimestamp, getStartOfDayTimestamp } from "@utils/mixes";
 
 
 const mappingFilterStatus: Record<string, OrderStatus> = {
@@ -17,16 +23,6 @@ const mappingOrderCriteria: Record<string, string> = {
   "created-at": "created_at"
 };
 
-const defaultConfig = {
-  page: 1,
-  pageSize: 10,
-  orderBy: "created-at:asc",
-  status: "processing",
-  defaultOrderCriteria: [{ created_at: "asc" }] as Prisma.OrderOrderByWithRelationInput[],
-  payment_method: PaymentMethod.PIX as PaymentMethod,
-
-};
-
 const parseOrderBy = (orderBy: string): Prisma.OrderOrderByWithRelationInput[] => {
   return orderBy.split(',').map(criterion => {
     const [field, direction] = criterion.split(':');
@@ -34,6 +30,7 @@ const parseOrderBy = (orderBy: string): Prisma.OrderOrderByWithRelationInput[] =
     return { [mappedField]: direction } as Prisma.OrderOrderByWithRelationInput;
   });
 };
+
 
 
 const OrderRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
@@ -56,33 +53,41 @@ const OrderRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
   });
 
   // Endpoint para listar todas as ordens de compra
-  api.get<{ Querystring: QueryPaginationFilterOrder }>(
-    '/', { preHandler: [api.authenticate, api.authorizeRoles([Role.ADMIN, Role.EVENT_MANAGER, Role.SPECTATOR, Role.STAFF])] },
+  api.get('/', {
+    schema: { querystring: QueryPaginationFilterOrderSchema },
+    preHandler: [api.authenticate, api.authorizeRoles(AnyRole)]
+  },
     async (request: FastifyRequest<{ Querystring: QueryPaginationFilterOrder }>, reply: FastifyReply): Promise<PaginatedOrderResult> => {
 
       const {
-        page = defaultConfig.page,
-        "page-size": pageSize = defaultConfig.pageSize,
-        "order-by": orderBy = defaultConfig.orderBy, status = defaultConfig.status,
-        customerId, eventId, payment_method
-      } = request.query;
-
-      const orderCriteria = orderBy ? parseOrderBy(orderBy) : defaultConfig.defaultOrderCriteria;
+        user: { sub: customerId },
+        query: {
+          page = 1,
+          'page-size': pageSize = 10,
+          'start-date': tsStartDate = getStartOfDayTimestamp(),
+          'end-date': tsEndDate = getLastdayOfNextMonthTimestamp(),
+          national = true, 'order-by': orderBy = 'created-at:asc', 'category-id': categoryId,
+          'order-status': orderStatusParam = OrderStatus.PROCESSING, 'event-status': eventStatusParam = EventStatus.PLANNED,
+        } } = request;
+      const orderCriteria: Prisma.OrderOrderByWithRelationInput[] = parseOrderBy(orderBy ?? 'created-at:asc')
 
       const paginationParams: PaginationParams = { page, pageSize };
-      const orderStatus = mappingFilterStatus[status];
+      const orderStatus = mappingFilterStatus[orderStatusParam.toLowerCase()]; // deve vir pelo parametro
+      const queryIntervalDate: QueryIntervalDate = { tsStartDate, tsEndDate };
 
       const response = await orderService.searchOrders(
-        customerId, eventId, orderCriteria, paginationParams,
-        orderStatus, payment_method as PaymentMethod
-      );
+        customerId, paginationParams, orderCriteria, queryIntervalDate, national,
+        eventStatusParam as EventStatus, orderStatus,
+        categoryId)
+
       return reply.code(200).send(response);
     }
+
   );
 
   // Endpoint para obter detalhes de uma ordem de compra específica
-  api.get<{ Params: { orderId: string } }>('/:orderId', { preHandler: [api.authenticate] },
-    async (request: FastifyRequest<{ Params: { orderId: string } }>, reply: FastifyReply) => {
+  api.get('/:orderId', { schema: { params: OrderDetailParamsSchema }, preHandler: [api.authenticate] },
+    async (request: FastifyRequest<{ Params: OrderDetailParams }>, reply: FastifyReply) => {
       const { orderId } = request.params;
       try {
         const order = await orderService.getOrderById(orderId);
