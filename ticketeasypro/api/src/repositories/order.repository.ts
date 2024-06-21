@@ -71,7 +71,8 @@ class OrderRepository {
         },
       },
       OrderTicket: { select: { TicketType: { select: { id: true, name: true, discount: true } } } },
-      status: true, payment_method: true, total_amount: true
+      status: true, payment_method: true, total_amount: true,
+      created_at: true
     }
 
 
