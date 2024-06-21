@@ -44,7 +44,6 @@ export default function EventoEscolhido() {
       })
       .then((response) => {
         setEvento(response.data.data);
-        console.log(response.data.data);
         if (evento.length == 0) {
           handleSetMessage("Não foi encontrado o evento procurado", "error");
         }

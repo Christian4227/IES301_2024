@@ -20,28 +20,27 @@ export default function IngressoClientePDF() {
     setMessage({ text: message, type });
   };
   useEffect(() => {
-    const cookies = parseCookies();
-    let token;
-    let valorToken;
-    if (cookies && cookies["ticket-token"]) {
-      token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
-      valorToken = JSON.parse(token).accessToken;
-    }
-    client
-      .get(`/orders/${idCompra}`, {
-        headers: {
-          Authorization: `Bearer ${valorToken}`,
-        },
-      })
-      .then((response) => {
-        console.log(response.data);
-        // setIngressos(response.data);
-      })
-      .catch((error) => {
+    const fetchData = async () => {
+      try {
+        const cookies = parseCookies();
+        let token;
+        let valorToken;
+        if (cookies && cookies["ticket-token"]) {
+          token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
+          valorToken = JSON.parse(token);
+        }
+        const response = await client.get(`orders/${idCompra}`, {
+          headers: { Authorization: `Bearer ${valorToken?.accessToken}` },
+        });
+      } catch (error) {
         handleSetMessage("Erro ao carregar os dados", "error");
         console.log("Erro na requisição " + error);
-      });
-  }, []);
+      }
+    };
+    if (idCompra) {
+      fetchData();
+    }
+  }, [idCompra]);
   return (
     <div>
       <CabecalhoCliente />

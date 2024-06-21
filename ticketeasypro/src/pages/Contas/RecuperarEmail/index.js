@@ -34,7 +34,6 @@ const RecuperarEmail = () => {
           setTimeout(() => router.push("/Contas/RecuperarEmail"), 3000);
           break;
         default:
-          console.log(response);
           handleSetMessage("Erro desconhecido", "error");
       }
     } else {
@@ -71,7 +70,6 @@ const RecuperarEmail = () => {
     if (loading) {
       setMessage({ text: "", type: "" });
     }
-    console.log("loading");
   }, [loading]);
 
   // Função para validar o token quando existir

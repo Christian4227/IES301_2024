@@ -33,7 +33,6 @@ export default function GeralCliente() {
       })
       .then((response) => {
         setPedidos(response.data.data);
-        console.log(pedidos);
       })
       .catch((error) => {
         handleSetMessage("Erro ao carregar os dados.", "error");

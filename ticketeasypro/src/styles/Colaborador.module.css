@@ -5,7 +5,7 @@
     align-items: center;
     position: relative;
     padding: 10px;
-    height: 80px;
+    min-height: 120px;
     width: 100%;
     top: 0;
 }
@@ -25,13 +25,6 @@
 .header_colaborador a {
     color: black;
 }
-
-.ul {
-    display: flex;
-    position: absolute;
-    top: 20%;
-    right: 60px;
-  }
 
 .li_colaborador_sair {
     color: white;
@@ -205,8 +198,17 @@
     font-weight: bold;
 }
 
-.header_colaborador_menu li:nth-of-type(n + 2){
+.header_colaborador_menu li:nth-of-type(n + 2), .header_colaborador_subtitulo label{
     border-left: 2px solid black;
+}
+
+.header_colaborador_subtitulo {
+  display: flex;
+  align-items: center;
+}
+
+.header_colaborador_subtitulo h1, .header_colaborador_subtitulo label {
+  padding: 0 20px;
 }
 
 /* Página do Qr Code */
@@ -290,44 +292,23 @@
     background-color: white;
 }
 
-.div_ingresso_status {
-    width: 30%;
+/* Página do vender Ingressos */
+.div_principal {
+  padding: 1em;
 }
 
-.div_opcoes {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+.div_tabela_dados_colaborador {
+  border: 1px solid #D1CECE;
+  padding: 1em;
+  margin-top: 1em;
+  border-radius: 15px;
 }
 
-.div_opcoes label {
-    font-weight: bold;
+.div_filtros_verificar_compra {
+  width: 30%;
 }
 
-.div_items {
-    display: flex;
-    border: 1px solid black;
-    background-color: white;
-}
-
-.div_img {
-    margin: 0 20px;
-}
-
-.img_qr_code_ingresso_email, .img_qr_code_ingresso_pdf {
-    width: 100px;
-    height: 100px;
-    border: 1px solid black;
-    margin: 1em;
-    border-radius: 10px;
-    box-shadow: 1px 1px 5px 3px gray;
-}
-
-.img_qr_code_ingresso_email {
-    background-color: #004aad;
-}
-
-.img_qr_code_ingresso_pdf {
-    background-color: #00bf63;
+.div_titulo_tabela_colaborador {
+  border-bottom: 1px solid black;
+  margin-bottom: 1em;
 }

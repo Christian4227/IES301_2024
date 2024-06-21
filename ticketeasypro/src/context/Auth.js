@@ -28,12 +28,12 @@ export const AuthProvider = ({ children }) => {
 
   const ConverterToken = (token) => {
     const cookieConfig = {
-      sameSite: "Strict",
+      sameSite: "strict",
       path: "/",
       maxAge: 3600,
       secure: true,
     };
-    setCookie(undefined, "ticket-token", JSON.stringify(token), cookieConfig);
+    setCookie(null, "ticket-token", JSON.stringify(token), cookieConfig);
   };
 
   const DirecionarRota = (userRole) => {
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     } else if (userRole === "EVENT_MANAGER") {
       router.push("/Organizador/DadosOrganizador");
     } else if (userRole === "STAFF") {
-      router.push("/Colaborador/indexColaborador");
+      router.push("/Colaborador/IndexColaborador");
     }
   };
 
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    destroyCookie(undefined, "ticket-token");
+    destroyCookie(null, "ticket-token", { path: "/" });
     setAuth(false);
     router.push("/");
   };

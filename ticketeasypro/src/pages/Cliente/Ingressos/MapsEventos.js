@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "@styles/Cliente.module.css";
 import Image from "next/image";
 import seta_esquerda from "../../../assets/seta esquerda.png";

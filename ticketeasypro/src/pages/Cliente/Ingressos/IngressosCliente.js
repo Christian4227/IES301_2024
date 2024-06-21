@@ -66,6 +66,7 @@ export default function IngressosCliente() {
         const response = await client.get("orders/", {
           headers: { Authorization: `Bearer ${valorToken?.accessToken}` },
         });
+        handleSetMessage("Pesquisa realizada com sucesso.", "success");
         setCompras(response.data.data);
       } catch (error) {
         handleSetMessage("Erro ao carregar os dados", "error");
@@ -193,92 +194,100 @@ export default function IngressosCliente() {
                     </tr>
                   </thead>
                   <tbody>
-                    {compras.map((compra) => (
-                      <tr key={`order-${compra.index}`}>
-                        <td>{compra.nomeEvento}</td>
-                        <td>{compra.localEvento}</td>
-                        <td>{compra.dataevento}</td>
-                        <td>{compra.dataevento}</td>
-                        <td>{compra.situacaoIngresso}</td>
-                        <td
-                          className={
-                            compra.status == "PROCESSING"
-                              ? styles.td_sit_compra_processando
-                              : compra.status == "COMPLETED"
-                                ? styles.td_sit_compra_completado
-                                : styles.td_sit_compra_cancelado
-                          }
-                        >
-                          {FormatarStatusCompra(compra.status)}
-                        </td>
-                        <td>
-                          {new Date(compra.created_at).toLocaleDateString()}
-                        </td>
-                        <td>
-                          <Link
-                            href={
+                    {compras.length > 0 ? (
+                      compras.map((compra) => (
+                        <tr key={`order-${compra.index}`}>
+                          <td>{compra.nomeEvento}</td>
+                          <td>{compra.localEvento}</td>
+                          <td>{compra.dataevento}</td>
+                          <td>{compra.dataevento}</td>
+                          <td>{compra.situacaoIngresso}</td>
+                          <td
+                            className={
                               compra.status == "PROCESSING"
-                                ? `./ComprarIngressoCliente?idCompra=${compra.id}`
-                                : "#"
+                                ? styles.td_sit_compra_processando
+                                : compra.status == "COMPLETED"
+                                  ? styles.td_sit_compra_completado
+                                  : styles.td_sit_compra_cancelado
                             }
                           >
-                            <Image
-                              src={carteira}
-                              alt="carteira"
-                              width={40}
-                              height={40}
-                              className={
+                            {FormatarStatusCompra(compra.status)}
+                          </td>
+                          <td>
+                            {new Date(compra.created_at).toLocaleDateString()}
+                          </td>
+                          <td>
+                            <Link
+                              href={
                                 compra.status == "PROCESSING"
-                                  ? styles.td_img_pag_sit_compra_processando
-                                  : compra.status == "COMPLETED"
-                                    ? styles.td_img_pag_sit_compra_completado
-                                    : styles.td_img_pag_sit_compra_cancelado
+                                  ? `./ComprarIngressoCliente?idCompra=${compra.id}`
+                                  : "#"
                               }
-                            />
-                          </Link>
-                        </td>
-                        <td>
-                          <Link
-                            // href={
-                            //   compra.status == "PROCESSING" ||
-                            //   compra.status == "CANCELLED"
-                            //     ? "#"
-                            //     : `./CompraPDF?idCompra=${compra.id}`
-                            // }
-                            href={`./IngressoClientePDF?idCompra=${compra.id}`}
-                          >
-                            <Image
-                              src={pdf}
-                              alt="documento"
-                              width={40}
-                              height={40}
-                              // className={
-                              //   compra.status == "PROCESSING"
-                              //     ? styles.td_img_pdf_sit_compra_processando
-                              //     : compra.status == "COMPLETED"
-                              //       ? styles.td_img_pdf_sit_compra_completado
-                              //       : styles.td_img_pdf_sit_compra_cancelado
+                            >
+                              <Image
+                                src={carteira}
+                                alt="carteira"
+                                width={40}
+                                height={40}
+                                className={
+                                  compra.status == "PROCESSING"
+                                    ? styles.td_img_pag_sit_compra_processando
+                                    : compra.status == "COMPLETED"
+                                      ? styles.td_img_pag_sit_compra_completado
+                                      : styles.td_img_pag_sit_compra_cancelado
+                                }
+                              />
+                            </Link>
+                          </td>
+                          <td>
+                            <Link
+                              // href={
+                              //   compra.status == "PROCESSING" ||
+                              //   compra.status == "CANCELLED"
+                              //     ? "#"
+                              //     : `./CompraPDF?idCompra=${compra.id}`
                               // }
-                              className={
-                                styles.td_img_pdf_sit_compra_completado
-                              }
-                            />
-                          </Link>
-                        </td>
-                        <td>
-                          <Link
-                            href={`./MapsEventos?idEvento=${compra.event_id}`}
-                          >
-                            <Image
-                              src={maps}
-                              alt="mapa"
-                              width={40}
-                              height={40}
-                            />
-                          </Link>
+                              href={`./IngressoClientePDF?idCompra=${compra.id}`}
+                            >
+                              <Image
+                                src={pdf}
+                                alt="documento"
+                                width={40}
+                                height={40}
+                                // className={
+                                //   compra.status == "PROCESSING"
+                                //     ? styles.td_img_pdf_sit_compra_processando
+                                //     : compra.status == "COMPLETED"
+                                //       ? styles.td_img_pdf_sit_compra_completado
+                                //       : styles.td_img_pdf_sit_compra_cancelado
+                                // }
+                                className={
+                                  styles.td_img_pdf_sit_compra_completado
+                                }
+                              />
+                            </Link>
+                          </td>
+                          <td>
+                            <Link
+                              href={`./MapsEventos?idEvento=${compra.event_id}`}
+                            >
+                              <Image
+                                src={maps}
+                                alt="mapa"
+                                width={40}
+                                height={40}
+                              />
+                            </Link>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={10} style={{ textAlign: "center" }}>
+                          Nenhum dado foi encontrado.
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
                 <div className={styles.div_numero_paginacao_tabela}>

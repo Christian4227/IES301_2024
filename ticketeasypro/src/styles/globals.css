@@ -44,7 +44,7 @@ input[type=button]:disabled{
 }
 
 input[type=button]:active, button:active {
-    filter: brightness(90%);
+    filter: brightness(95%);
 }
 
 input[type=checkbox], input[type=radio] {
@@ -77,7 +77,7 @@ p {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
+    font-weight: bold !important;
 }
 
 h1 {
@@ -92,6 +92,7 @@ h3 {
   font-size: 1.4em !important;
 }
 
+/* Divisões */
 .div_container_pequeno {
     border: 1px solid black;
     box-shadow: 1px 1px 10px 1px gray;
@@ -125,6 +126,11 @@ h3 {
     position: relative;
 }
 
+.div_principal {
+  padding: 1em;
+}
+
+/* Loading */
 .loader-container {
     width: 30%; 
     height: 25%; 
@@ -142,3 +148,4 @@ h3 {
     font-size: 2em; 
     font-weight: bold;
 }
+

@@ -1,18 +1,19 @@
-import React, { useContext, useEffect, useState } from "react";
+// import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import download from "../assets/Download - escuro sem fundo.png";
 import email from "../assets/e-mail sb.png";
 import styles from "@styles/Componentes.module.css";
 import client from "@/utils/client_axios";
 import ToastMessage from "./ToastMessage/ToastMessage";
-import { AuthContext } from "@/context/Auth";
-import { useRouter } from "next/router";
+// import { AuthContext } from "@/context/Auth";
+// import { useRouter } from "next/router";
 const { jsPDF } = require("jspdf");
 
 export default function PDFViewer({ emailCliente }) {
   // const elementPDF = useRef(null);
-  const router = useRouter();
-  const { user } = useContext(AuthContext);
+  // const router = useRouter();
+  // const { user } = useContext(AuthContext);
   const [documento, setDocumento] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" });
   const handlePDF = async () => {
@@ -21,6 +22,7 @@ export default function PDFViewer({ emailCliente }) {
     doc.text("Primeiro arquivo PDF", 10, 10);
     var dataURL = doc.output("bloburl", { filename: "IES301.pdf" });
     console.log(dataURL);
+    console.log(emailCliente);
     setDocumento(dataURL);
   };
   const handleSetMessage = (message, type) => {
@@ -32,10 +34,10 @@ export default function PDFViewer({ emailCliente }) {
     doc.save("IES301.pdf");
   };
   const EnviarPDFEmail = () => {
-    var emailEnviar;
-    if (emailCliente == "") {
-      emailEnviar = user.email;
-    }
+    // var emailEnviar;
+    // if (emailCliente == "") {
+    //   emailEnviar = user.email;
+    // }
     client
       .get()
       .then((response) => {

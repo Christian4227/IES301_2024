@@ -15,7 +15,7 @@ export default function ComprarIngressoCliente() {
   const router = useRouter();
   const idCompra = router.query.idCompra;
   const [message, setMessage] = useState({ text: "", type: "" });
-  const [ordemCompra, setOrdemCompra] = useState([]);
+  // const [ordemCompra, setOrdemCompra] = useState([]);
   const GerarQRCode = () => {
     const idNovaCompra = uuid4();
     QRCode.toCanvas(
@@ -27,7 +27,7 @@ export default function ComprarIngressoCliente() {
           console.error("Erro ao gerar o QR Code.", error);
         } else {
           // Capture the image as a Data URL
-          const dataUrl = canvasRef.current.toDataURL();
+          // const dataUrl = canvasRef.current.toDataURL();
         }
       }
     );
@@ -38,27 +38,27 @@ export default function ComprarIngressoCliente() {
   };
 
   useEffect(() => {
-    const cookies = parseCookies();
-    let token;
-    let valorToken;
-    if (cookies && cookies["ticket-token"]) {
-      token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
-      valorToken = JSON.parse(token).accessToken;
-    }
-    client
-      .get(`/orders/${idCompra}`, {
-        headers: {
-          Authorization: `Bearer ${valorToken}`,
-        },
-      })
-      .then((response) => {
-        setOrdemCompra(response.data);
-      })
-      .catch((error) => {
+    const fetchData = async () => {
+      try {
+        const cookies = parseCookies();
+        let token;
+        let valorToken;
+        if (cookies && cookies["ticket-token"]) {
+          token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
+          valorToken = JSON.parse(token);
+        }
+        const response = await client.get(`orders/${idCompra}`, {
+          headers: { Authorization: `Bearer ${valorToken?.accessToken}` },
+        });
+      } catch (error) {
         handleSetMessage("Erro ao carregar os dados", "error");
         console.log("Erro na requisição " + error);
-      });
-  }, []);
+      }
+    };
+    if (idCompra) {
+      fetchData();
+    }
+  }, [idCompra]);
   return (
     <div>
       <CabecalhoCliente />

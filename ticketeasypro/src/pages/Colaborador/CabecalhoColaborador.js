@@ -1,28 +1,17 @@
-import React, { useContext } from "react";
+import React from "react";
 import Link from "next/link";
-import { AuthContext } from "@/context/Auth";
 import styles from "@styles/Colaborador.module.css";
+import MenuUsuario from "@/components/MenuUsuario";
 
 export default function CabecalhoColaborador() {
-    const { logout } = useContext(AuthContext);
-
-    const Sair = () => {
-        logout();
-    };
-    return (
-        <div className={styles.header_cabecalho_colaborador}>
-            <label>
-                <Link href="/">Ticket Easy Pro </Link>
-            </label>
-            <nav>
-                <ul className={styles.ul}>
-                    <li className={styles.li_colaborador_sair}>
-                        <Link href="/" onClick={() => Sair()}>
-                            Sair
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    );
+  return (
+    <div className={styles.header_cabecalho_colaborador}>
+      <div>
+        <Link href="/">
+          <label>Ticket Easy Pro</label>
+        </Link>
+      </div>
+      <MenuUsuario />
+    </div>
+  );
 }
