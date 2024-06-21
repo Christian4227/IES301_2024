@@ -18,7 +18,7 @@
     "@fastify/cookie": "^9.3.1",
     "@fastify/cors": "^8.5.0",
     "@fastify/jwt": "^8.0.0",
-    "@prisma/client": "^5.11.0",
+    "@prisma/client": "^5.15.1",
     "@sinclair/typebox": "^0.32.32",
     "fastify": "^4.26.2",
     "nodemailer": "^6.9.13",
@@ -27,8 +27,9 @@
   "devDependencies": {
     "@types/node": "^20.12.2",
     "@types/nodemailer": "^6.4.15",
+    "@types/uuid4": "^2.0.3",
     "nodemon": "^3.1.0",
-    "prisma": "^5.14.0",
+    "prisma": "^5.15.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.3"

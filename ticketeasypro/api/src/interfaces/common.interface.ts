@@ -16,6 +16,6 @@ export interface QueryPaginationFilter {
     filter: string;
 }
 export interface QueryIntervalDate {
-    tsStartDate: number,
+    tsStartDate?: number,
     tsEndDate?: number
 }
