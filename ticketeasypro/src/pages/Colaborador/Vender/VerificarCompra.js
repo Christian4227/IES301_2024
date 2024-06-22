@@ -12,15 +12,29 @@ import Image from "next/image";
 import { parseCookies } from "nookies";
 import carteira from "../../../assets/Carteira.png";
 import excluir from "../../../assets/excluir.png";
+import {
+  getFullAddress,
+  formatDate,
+  getStatusClass,
+  getStatusClassEvent,
+} from "@/utils";
 
+function getToken() {
+  const cookies = parseCookies();
+  let token;
+  let valorToken;
+  if (cookies && cookies["ticket-token"]) {
+    token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
+    valorToken = JSON.parse(token);
+  }
+  return valorToken;
+}
 export default function VerificarCompra() {
   const [email, setEmail] = useState("");
   const [emailValid, setEmailValid] = useState(true);
   const [isFormValid, setIsFormValid] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
   const [compras, setCompras] = useState([]);
-  const [dataInicio, setDataInicio] = useState("");
-  const [dataFim, setDataFim] = useState("");
 
   useEffect(() => {
     const isEmailValid = emailRegex.test(email);
@@ -29,27 +43,6 @@ export default function VerificarCompra() {
       setIsFormValid(true);
     }
   }, [email]);
-
-  useEffect(() => {
-    // Data dos formulários de filtro
-    const now = new Date();
-    var dia = now.getDate();
-    dia = dia < 10 ? "0" + dia : dia;
-    var mes = now.getMonth() + 1;
-    mes = mes < 10 ? "0" + mes : mes;
-    var ano = now.getFullYear();
-
-    setDataInicio(ano + "-" + mes + "-" + dia);
-
-    const nextMonthLastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Último dia do próximo mês
-    var diaFim = nextMonthLastDay.getDate();
-    diaFim = diaFim < 10 ? "0" + diaFim : diaFim;
-    var mesFim = nextMonthLastDay.getMonth() + 1;
-    mesFim = mesFim < 10 ? "0" + mesFim : mesFim;
-    var anoFim = nextMonthLastDay.getFullYear();
-
-    setDataFim(anoFim + "-" + mesFim + "-" + diaFim);
-  }, []);
 
   const validateEmail = (email) => emailRegex.test(email);
 
@@ -64,21 +57,19 @@ export default function VerificarCompra() {
 
   const FiltrarPedidosCompra = async () => {
     try {
-      const cookies = parseCookies();
-      let token;
-      let valorToken;
-      if (cookies && cookies["ticket-token"]) {
-        token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
-        valorToken = JSON.parse(token);
-      }
-      const response = await client.get("orders/", {
-        headers: { Authorization: `Bearer ${valorToken?.accessToken}` },
-      });
-      handleSetMessage("Pesquisa realizada com sucesso.", "success");
+      const response = await client.get(
+        `orders/email?customer-email=${email}`,
+        {
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+        }
+      );
       setCompras(response.data.data);
+      if (response.status == 200) {
+        handleSetMessage("Dados carregados com sucesso.", "success");
+      }
     } catch (error) {
       handleSetMessage("Erro ao carregar os dados", "error");
-      console.log("Erro na requisição " + error);
+      console.log("Erro na requisição de pedidos:", error);
     }
   };
 
@@ -92,6 +83,34 @@ export default function VerificarCompra() {
         return "Cancelado";
       default:
         return;
+    }
+  };
+
+  const formatarStatusCompra = (estado_compra) => {
+    switch (estado_compra) {
+      case "PROCESSING":
+        return "Processando";
+      case "COMPLETED":
+        return "Completado";
+      case "CANCELLED":
+        return "Cancelado";
+      default:
+        return "";
+    }
+  };
+
+  const formatarStatusEvento = (estado_evento) => {
+    switch (estado_evento) {
+      case "PLANNED":
+        return "Planejado";
+      case "IN_PROGRESS":
+        return "Em curso";
+      case "COMPLETED":
+        return "Realizado";
+      case "CANCELLED":
+        return "Cancelado";
+      default:
+        return "";
     }
   };
   return (
@@ -123,26 +142,6 @@ export default function VerificarCompra() {
                   </i>
                 )}
               </div>
-              <div>
-                <div className="mb-3">
-                  <label>Data de início</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    value={dataInicio}
-                    onChange={(e) => setDataInicio(e.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label>Data final</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    value={dataFim}
-                    onChange={(e) => setDataFim(e.target.value)}
-                  />
-                </div>
-              </div>
             </div>
             <button
               type="button"
@@ -171,11 +170,16 @@ export default function VerificarCompra() {
                 {compras.length > 0 ? (
                   compras.map((compra) => (
                     <tr key={`orderColaborador-${compra.index}`}>
-                      <td>{compra.nomeEvento}</td>
-                      <td>{compra.localEvento}</td>
-                      <td>{compra.dataevento}</td>
-                      <td>{compra.dataevento}</td>
-                      <td>{compra.situacaoIngresso}</td>
+                      <td>{compra.event.name}</td>
+                      <td>{getFullAddress(compra.event.location)}</td>
+                      <td>{formatDate(compra.event.initial_date)}</td>
+                      <td>{formatDate(compra.event.final_date)}</td>
+                      <td className={getStatusClassEvent(compra.event.status)}>
+                        {formatarStatusEvento(compra.event.status)}
+                      </td>
+                      <td className={getStatusClass(compra.status)}>
+                        {formatarStatusCompra(compra.status)}
+                      </td>
                       <td
                         className={
                           compra.status == "PROCESSING"
@@ -212,8 +216,8 @@ export default function VerificarCompra() {
                           <Image
                             src={excluir}
                             alt="excluir"
-                            width={40}
-                            height={40}
+                            width={80}
+                            height={80}
                           />
                         </button>
                       </td>

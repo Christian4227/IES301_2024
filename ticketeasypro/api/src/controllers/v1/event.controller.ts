@@ -64,7 +64,7 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
     return reply.code(200).send(allFilterOrdenedEvents);
   }
   );
-  api.get('/:eventId', { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER,])] },
+  api.get('/:eventId', { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER,Role.SPECTATOR])] },
     async (request: FastifyRequest<{ Params: { eventId: number } }>, reply: FastifyReply): Promise<EventResult> => {
       const { body: eventUpdate, params: { eventId } } = request;
       if (!integerRegex.test(eventId.toString()))

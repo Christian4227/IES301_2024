@@ -266,7 +266,8 @@
   justify-content: end;
 }
 
-.td_sit_compra_processando, .td_sit_compra_completado, .td_sit_compra_cancelado {
+.td_sit_compra_processando, .td_sit_compra_completado, .td_sit_compra_cancelado, 
+.td_sit_evento_planejado, .td_sit_evento_em_curso, .td_sit_evento_completado, .td_sit_evento_completado {
   color: white !important;
   text-align: center;
   vertical-align: middle;
@@ -288,6 +289,22 @@
   background-color: #e02626 !important;
 }
 
+.td_sit_evento_planejado {
+  background-color: #cccf08 !important;
+}
+
+.td_sit_evento_em_curso {
+  background-color: #0915f4 !important;
+}
+
+.td_sit_evento_completado {
+  background-color: #07b015 !important;
+}
+
+.td_sit_evento_cancelado {
+  background-color: #e02626 !important;
+}
+
 /* Mapa cliente */
 .map_eventos_cliente {
   background-color: white;
@@ -299,7 +316,7 @@
   position: fixed;
   left: 0;
   padding: 0;
-  top: 10vh;
+  top: 2vh;
 }
 
 .map_eventos_cliente_menu {
@@ -323,17 +340,13 @@
   white-space: nowrap;
 }
 
-.map_eventos_cliente_menu_direita {
-  width: 200px;
-}
-
 .map_eventos_cliente_menu_esquerda {
   width: 80px;
   margin-right: 0.6em;
 }
 
 .map_eventos_cliente_menu_esquerda_img {
-  margin-top: 6vh;
+  margin-top: 2em;
   padding-right: 1em;
   border-right: 1px solid #8F8F8F;
 }

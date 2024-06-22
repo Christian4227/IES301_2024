@@ -12,7 +12,15 @@ import maps from "../../../assets/google_maps.png";
 import Link from "next/link";
 import { parseCookies } from "nookies";
 import client from "@/utils/client_axios";
-import { getFullAddress, formatDate, dateFormat, getStartOfDayTimestamp, getLastdayOfNextMonthTimestamp, getStatusClass } from "@/utils";
+import {
+  getFullAddress,
+  formatDate,
+  dateFormat,
+  getStartOfDayTimestamp,
+  getLastdayOfNextMonthTimestamp,
+  getStatusClass,
+  getStatusClassEvent,
+} from "@/utils";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 
 function getToken() {
@@ -45,6 +53,21 @@ export default function IngressosCliente() {
         return "Processando";
       case "COMPLETED":
         return "Completado";
+      case "CANCELLED":
+        return "Cancelado";
+      default:
+        return "";
+    }
+  };
+
+  const formatarStatusEvento = (estado_evento) => {
+    switch (estado_evento) {
+      case "PLANNED":
+        return "Planejado";
+      case "IN_PROGRESS":
+        return "Em curso";
+      case "COMPLETED":
+        return "Realizado";
       case "CANCELLED":
         return "Cancelado";
       default:
@@ -85,7 +108,6 @@ export default function IngressosCliente() {
       }
     };
     fetchCategories();
-
   }, []);
 
   useEffect(() => {
@@ -95,6 +117,7 @@ export default function IngressosCliente() {
           headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
         });
         setCompras(response.data.data);
+        console.log(response.data.data);
       } catch (error) {
         handleSetMessage("Erro ao carregar os dados", "error");
         console.log("Erro na requisição de pedidos:", error);
@@ -105,7 +128,6 @@ export default function IngressosCliente() {
     const finalDate = new Date(getLastdayOfNextMonthTimestamp());
     setDataInicio(dateFormat(initialDate));
     setDataFim(dateFormat(finalDate));
-
   }, []);
 
   return (
@@ -144,18 +166,28 @@ export default function IngressosCliente() {
                   </div>
                   <div className="mb-3">
                     <label>Estrangeiro?</label>
-                    <select className="form-select" defaultValue={'n'}>
+                    <select className="form-select" defaultValue={"n"}>
                       <option value="y">Sim</option>
                       <option value="n">Não</option>
                     </select>
                   </div>
                   <div className="mb-3">
                     <label>Tipo de evento</label>
-                    <select className="form-select" value={categorySelected} onChange={handleCategoryChange}>
+                    <select
+                      className="form-select"
+                      value={categorySelected}
+                      onChange={handleCategoryChange}
+                    >
                       <option value="">Tipo...</option>
-                      {cotegories.length !== 0 && cotegories.map((categorie) => (
-                        <option key={`cat-${categorie.id}`} value={`cat-${categorie.id}`}>{categorie.name}</option>
-                      ))}
+                      {cotegories.length !== 0 &&
+                        cotegories.map((categorie) => (
+                          <option
+                            key={`cat-${categorie.id}`}
+                            value={`cat-${categorie.id}`}
+                          >
+                            {categorie.name}
+                          </option>
+                        ))}
                     </select>
                   </div>
                   <div className="mb-3">
@@ -190,7 +222,13 @@ export default function IngressosCliente() {
                   </div>
                 </div>
                 <div className={styles.div_botao_filtrar_ingressos}>
-                  <button type="submit" value="Pesquisar" className="btn btn-primary">Pesquisar</button>
+                  <button
+                    type="submit"
+                    value="Pesquisar"
+                    className="btn btn-primary"
+                  >
+                    Pesquisar
+                  </button>
                 </div>
               </div>
               <div className={styles.div_tabela_dados}>
@@ -214,7 +252,11 @@ export default function IngressosCliente() {
                         <td>{getFullAddress(compra.event.location)}</td>
                         <td>{formatDate(compra.event.initial_date)}</td>
                         <td>{formatDate(compra.event.final_date)}</td>
-                        <td>{compra.event.status}</td>
+                        <td
+                          className={getStatusClassEvent(compra.event.status)}
+                        >
+                          {formatarStatusEvento(compra.event.status)}
+                        </td>
                         <td className={getStatusClass(compra.status)}>
                           {formatarStatusCompra(compra.status)}
                         </td>
@@ -244,20 +286,31 @@ export default function IngressosCliente() {
                         </td>
                         <td>
                           <Link
-                            href={`./IngressoClientePDF?idCompra=${compra.id}`}
+                            href={
+                              compra.status == "PROCESSING" ||
+                              compra.status == "CANCELLED"
+                                ? "#"
+                                : `./CompraPDF?idCompra=${compra.id}`
+                            }
                           >
                             <Image
                               src={pdf}
                               alt="documento"
                               width={40}
                               height={40}
-                              className={styles.td_img_pdf_sit_compra_completado}
+                              className={
+                                compra.status == "PROCESSING"
+                                  ? styles.td_img_pdf_sit_compra_processando
+                                  : compra.status == "COMPLETED"
+                                    ? styles.td_img_pdf_sit_compra_completado
+                                    : styles.td_img_pdf_sit_compra_cancelado
+                              }
                             />
                           </Link>
                         </td>
                         <td>
                           <Link
-                            href={`./MapsEventos?idEvento=${compra.event_id}`}
+                            href={`./MapsEventos?idEvento=${compra.event.id}`}
                           >
                             <Image
                               src={maps}
@@ -274,11 +327,8 @@ export default function IngressosCliente() {
                 <div className={styles.div_numero_paginacao_tabela}>
                   <label>
                     Página{" "}
-                    {compras.length / 6 < 1
-                      ? 1
-                      : Math.ceil(compras.length / 6)}{" "}
-                    -{" "}
-                    {compras.length <= 6 ? compras.length : 6} de{" "}
+                    {compras.length / 6 < 1 ? 1 : Math.ceil(compras.length / 6)}{" "}
+                    - {compras.length <= 6 ? compras.length : 6} de{" "}
                     {compras.length} registros encontrados.
                   </label>
                 </div>
@@ -304,11 +354,9 @@ export default function IngressosCliente() {
           </div>
         </div>
       </div>
-      {
-        !!message.text && (
-          <ToastMessage text={message.text} type={message.type} />
-        )
-      }
-    </div >
+      {!!message.text && (
+        <ToastMessage text={message.text} type={message.type} />
+      )}
+    </div>
   );
 }
