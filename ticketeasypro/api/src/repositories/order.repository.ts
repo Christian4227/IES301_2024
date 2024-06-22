@@ -56,7 +56,8 @@ class OrderRepository {
       }
     }
     const select: Prisma.OrderSelect = {
-      customer: { select: { name: true, email: true, phone: true, phone_fix: true } },
+      id:true,
+      // customer: { select: { name: true, email: true, phone: true, phone_fix: true } },
       event: {
         select: {
           id: true, location: {
@@ -66,8 +67,8 @@ class OrderRepository {
             },
           },
           category: { select: { id: true, name: true, description: true } },
-          capacity: true, status: true, name: true, description: true, initial_date: true, final_date: true, base_price: true,
-          img_banner: true, img_thumbnail: true, color: true
+          capacity: true, status: true, name: true, description: true, initial_date: true, final_date: true, 
+          base_price: true, img_banner: true, img_thumbnail: true, color: true
         },
       },
       OrderTicket: { select: { TicketType: { select: { id: true, name: true, discount: true } } } },
