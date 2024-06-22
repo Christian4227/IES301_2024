@@ -19,9 +19,7 @@ class AccountRepository {
     }
 
     find = async (identifier: Identifier): Promise<AccountResult | null> => {
-
         const whereClause = buildWhereClause(identifier)
-
 
         const account = await this.userDb.findUnique({
             where: whereClause,
@@ -29,10 +27,7 @@ class AccountRepository {
                 id: true, email: true, name: true, email_confirmed: true,
                 birth_date: true, phone: true, phone_fix: true, role: true, active: true
             }
-        })
-
-        // if (!account) throw new Error(`User ${whereClause.email ?? whereClause.id} not found`);
-
+        });
         return account
     }
 

@@ -3,6 +3,7 @@ import AccountService from "../../services/account.service";
 import { AccountRoleUpdate, AccountUpdateResult, PaginatedAccountResult, QueryPaginationFilter } from "../../interfaces/controller/account.interface";
 import { AccountCreate } from "@interfaces/service/account.interface";
 import { Role } from "@prisma/client";
+import { Identifier } from "types/common.type";
 // import { AccountResult } from "@interfaces/repository/account.interface";
 
 
@@ -26,7 +27,7 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         async (request: FastifyRequest<{ Params: { accountId: string }, Body: AccountRoleUpdate }>,
             reply: FastifyReply): Promise<AccountUpdateResult> => {
             const { params: { accountId }, body: { role: actorRole } } = request;
-            console.log('aqui: ', accountId);
+            // console.log('aqui: ', accountId);
             try {
                 const updateData = request.body;
                 const resultUpdate = await accountService.update(actorRole, accountId, updateData);
@@ -38,9 +39,23 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
             }
         });
 
-    api.get('/whoami', { preHandler: [api.authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
-        reply.send({ "Success": request.user });
-    });
+    api.get('/:accountId',
+        { preHandler: [api.authenticate] },
+        async (request: FastifyRequest<{ Params: { accountId: string } }>, reply: FastifyReply) => {
+
+            const accountId = request.params?.accountId;
+            if (!accountId) return reply.code(200).send({ "Error": 'IdentifierMustNotBeEmpty' });
+
+            try {
+                const response = await accountService.getOne({ id: accountId } as Identifier);
+                return reply.code(200).send(response);
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    return reply.code(200).send(error);
+                }
+            };
+
+        });
 
 
     api.get<{ Querystring: { token: string } }>(
@@ -79,7 +94,7 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         });
 
     api.post('/reset-password', async (request: FastifyRequest<{ Body: { token: string, newPassword: string } }>, reply: FastifyReply): Promise<boolean> => {
-        const { token, newPassword } = request.body;;
+        const { token, newPassword } = request.body;
         try {
             await accountService.verifyResetToken(token, newPassword);
             return reply.code(200).send({ "Success": true });

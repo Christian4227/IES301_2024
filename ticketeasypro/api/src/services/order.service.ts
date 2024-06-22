@@ -35,7 +35,7 @@ export class OrderService {
     // const location = { country: national ? { equals: 'BRASIL' } : { not: 'BRASIL' } }
 
     const accountService: AccountService = new AccountService();
-    const accountUser = await accountService.getOne(customerEmail);
+    const accountUser = await accountService.getOne({ email: customerEmail });
 
     const orders = this.searchOrders(accountUser.id, paginationParams, orderBy,
       { tsStartDate: startDate.getTime(), tsEndDate: endDate.getTime() },

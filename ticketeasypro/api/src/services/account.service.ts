@@ -24,7 +24,7 @@ class AccountService {
     if (!(actorRole === roleAccountCreate && (actorRole === Role.ADMIN || actorRole === Role.EVENT_MANAGER)))
       if (!canDoIt(actorRole, roleAccountCreate)) throw new Error('InsufficientPermissions');
     try {
-      const verifyIfAccountExists = await this.getOne(email);      
+      const verifyIfAccountExists = await this.getOne({email});
     } catch (error) {
       if (error instanceof Error)
         if (error.message !== 'AccountNotFound')
@@ -91,7 +91,7 @@ class AccountService {
   };
   passwordReset = async (email: string, api: FastifyInstance) => {
 
-    const account = await this.getOne(email);
+    const account = await this.getOne({email});
     if (!account) throw new Error('AccountNotFound');
 
     const resetPasswordToken = crypto.randomBytes(64).toString('hex');
@@ -109,7 +109,7 @@ class AccountService {
 
   reSendConfirmationEmail = async (email: string, api: FastifyInstance): Promise<AccountResult> => {
     try {
-      const account = await this.getOne(email);
+      const account = await this.getOne({email});
 
       if (account.email_confirmed) throw new Error('EmailAlreadyConfirmed');
 
@@ -158,8 +158,8 @@ class AccountService {
 
   };
 
-  getOne = async (email: string): Promise<AccountResult> => {
-    const account = await this.accountRepository.find({ email: email } as Identifier);
+  getOne = async (identifier: Identifier): Promise<AccountResult> => {
+    const account = await this.accountRepository.find(identifier as Identifier);
     if (!account) throw new Error('AccountNotFound');
     return account;
   }
