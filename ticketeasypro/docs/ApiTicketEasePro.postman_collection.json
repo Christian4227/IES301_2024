@@ -163,14 +163,14 @@
 					"response": []
 				},
 				{
-					"name": "Health Check",
+					"name": "Get Detail By Account",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxYWQwNDdjOC02OGUxLTRkMTQtODg3ZS0xZjc3NjFiZTJhODUiLCJsb2dpbiI6InJvb3RAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiQURNSU4iLCJuYW1lIjoicm9vdCIsImlhdCI6MTcxNjgzOTQ0MywiZXhwIjoxNzE2ODYxMDQzfQ.XqYJJN4F08y35joDBxZU9tPXwDOtHXcPQFDjB0Vz1r0",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYjhkNDIxOC0xNDE4LTQ2NDctOTI5Ny01MDA5Mjg4YTMzYTUiLCJsb2dpbiI6InN0YWZmMkB0aWNrZXRlYXN5cHJvLmNvbS5iciIsInJvbGUiOiJTVEFGRiIsIm5hbWUiOiJTdGFmZiBUd28iLCJpYXQiOjE3MTkwMTQ4NTEsImV4cCI6MTcxOTA1ODA1MX0.WLavG29wNJt3Oi-fCoZT3NkmClAg0fSepmEc2zrhwOQ",
 									"type": "string"
 								}
 							]
@@ -184,13 +184,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_v1}}/accounts/whoami",
+							"raw": "{{base_v1}}/accounts/2ad8f033-12d4-495c-a5ab-4a3334a7485f",
 							"host": [
 								"{{base_v1}}"
 							],
 							"path": [
 								"accounts",
-								"whoami"
+								"2ad8f033-12d4-495c-a5ab-4a3334a7485f"
 							]
 						}
 					},

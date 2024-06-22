@@ -196,7 +196,7 @@ export default function IngressosCliente() {
                       <option value="">Selecione o status do evento...</option>
                       <option value="PLANNED">Planejado</option>
                       <option value="IN_PROGRESS">Em progresso</option>
-                      <option value="COMPLETED">Completado</option>
+                      <option value="COMPLETED">Completo</option>
                       <option value="CANCELLED">Cancelado</option>
                     </select>
                   </div>
