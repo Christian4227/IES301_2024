@@ -416,6 +416,48 @@
 					"response": []
 				},
 				{
+					"name": "Get Paginate Orders By Email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYjhkNDIxOC0xNDE4LTQ2NDctOTI5Ny01MDA5Mjg4YTMzYTUiLCJsb2dpbiI6InN0YWZmMkB0aWNrZXRlYXN5cHJvLmNvbS5iciIsInJvbGUiOiJTVEFGRiIsIm5hbWUiOiJTdGFmZiBUd28iLCJpYXQiOjE3MTkwMTQ4NTEsImV4cCI6MTcxOTA1ODA1MX0.WLavG29wNJt3Oi-fCoZT3NkmClAg0fSepmEc2zrhwOQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/orders/email?customer-email=client_espectador@ticketeasypro.com.br&start-date=1717200000000&end-date=1735603200000",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"orders",
+								"email"
+							],
+							"query": [
+								{
+									"key": "customer-email",
+									"value": "client_espectador@ticketeasypro.com.br"
+								},
+								{
+									"key": "start-date",
+									"value": "1717200000000"
+								},
+								{
+									"key": "end-date",
+									"value": "1735603200000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Order By ID",
 					"request": {
 						"auth": {
@@ -690,7 +732,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"client_espectador@ticketeasypro.com.br\",\r\n    \"password\": \"fatec123#1sem.2024\"\r\n}",
+							"raw": "// {\r\n//     \"email\": \"client_espectador@ticketeasypro.com.br\",\r\n//     \"password\": \"fatec123#1sem.2024\"\r\n// }\r\n{\r\n    \"email\": \"staff2@ticketeasypro.com.br\",\r\n    \"password\": \"sEcure456@\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
