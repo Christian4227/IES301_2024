@@ -69,12 +69,13 @@ model Order {
 }
 
 model Ticket {
-  id         String       @id @default(uuid())
-  event_id   Int
-  status     TicketStatus @default(AVAILABLE)
-  created_at DateTime     @default(now()) @db.Timestamp(0)
-  updated_at DateTime     @updatedAt @db.Timestamp(0)
-  event      Event        @relation(fields: [event_id], references: [id])
+  id          String        @id @default(uuid())
+  event_id    Int
+  status      TicketStatus  @default(AVAILABLE)
+  created_at  DateTime      @default(now()) @db.Timestamp(0)
+  updated_at  DateTime      @updatedAt @db.Timestamp(0)
+  event       Event         @relation(fields: [event_id], references: [id])
+  OrderTicket OrderTicket[]
 
   @@index([event_id])
   @@map("TICKETS")
@@ -88,6 +89,7 @@ model OrderTicket {
   created_at   DateTime    @default(now()) @db.Timestamp(0)
   updated_at   DateTime    @updatedAt @db.Timestamp(0)
   order        Order       @relation(fields: [order_id], references: [id])
+  ticket       Ticket      @relation(fields: [ticket_id], references: [id])
   TicketType   TicketType? @relation(fields: [ticketTypeId], references: [id])
   ticketTypeId Int?
 
@@ -152,6 +154,7 @@ enum OrderStatus {
 }
 
 enum PaymentMethod {
+  CASH
   CREDIT_CARD
   DEBIT_CARD
   BANK_SLIP

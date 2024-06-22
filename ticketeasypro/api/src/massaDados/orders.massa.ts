@@ -87,9 +87,9 @@ async function createOrder(
     }, 0); // Em centavos
 
     try {
-        const result = await prisma.$transaction(async (prisma) => {
+        const result = await prisma.$transaction(async (transaction) => {
             // Criar a ordem de compra (Order)
-            const order = await prisma.order.create({
+            const order = await transaction.order.create({
                 data: {
                     event_id: event.id,
                     payment_method: paymentMethod,
@@ -103,7 +103,7 @@ async function createOrder(
             const ticketPromises = orderTicketsWithDiscount.flatMap(orderTicket => {
                 return Array(orderTicket.quantity).fill(null).map(async () => {
                     // Criar o Ticket
-                    const ticket = await prisma.ticket.create({
+                    const ticket = await transaction.ticket.create({
                         data: {
                             event_id: event.id,
                             status: TicketStatus.RESERVED
@@ -111,7 +111,7 @@ async function createOrder(
                     });
 
                     // Criar o OrderTicket
-                    return prisma.orderTicket.create({
+                    return transaction.orderTicket.create({
                         data: {
                             order_id: order.id,
                             ticket_id: ticket.id,

@@ -2,7 +2,7 @@
 CREATE TYPE "OrderStatus" AS ENUM ('PROCESSING', 'COMPLETED', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "PaymentMethod" AS ENUM ('CREDIT_CARD', 'DEBIT_CARD', 'BANK_SLIP', 'PIX');
+CREATE TYPE "PaymentMethod" AS ENUM ('CASH', 'CREDIT_CARD', 'DEBIT_CARD', 'BANK_SLIP', 'PIX');
 
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'EVENT_MANAGER', 'STAFF', 'SPECTATOR');
@@ -144,10 +144,25 @@ CREATE UNIQUE INDEX "USERS_email_key" ON "USERS"("email");
 CREATE UNIQUE INDEX "USERS_token_key" ON "USERS"("token");
 
 -- CreateIndex
+CREATE INDEX "USERS_email_idx" ON "USERS"("email");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "VENUES_name_key" ON "VENUES"("name");
 
 -- CreateIndex
+CREATE INDEX "ORDERS_customer_id_event_id_idx" ON "ORDERS"("customer_id", "event_id");
+
+-- CreateIndex
+CREATE INDEX "TICKETS_event_id_idx" ON "TICKETS"("event_id");
+
+-- CreateIndex
+CREATE INDEX "ORDERTICKETS_order_id_ticket_id_idx" ON "ORDERTICKETS"("order_id", "ticket_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "TICKETTYPES_name_key" ON "TICKETTYPES"("name");
+
+-- CreateIndex
+CREATE INDEX "EVENTS_category_id_manager_id_location_id_idx" ON "EVENTS"("category_id", "manager_id", "location_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "CATEGORIES_name_key" ON "CATEGORIES"("name");

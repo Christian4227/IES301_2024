@@ -2,7 +2,7 @@ import { Static, Type } from '@sinclair/typebox';
 import { OrderTicketSchema } from './orderTicket.schema';
 // import { EventStatus, OrderStatus } from '@prisma/client';
 
-export enum PaymentMethod { PIX = 'PIX', CREDIT_CARD = 'CREDIT_CARD', DEBIT_CARD = 'DEBIT_CARD', BANK_SLIP = 'BANK_SLIP' }
+export enum PaymentMethod { PIX = 'PIX', CREDIT_CARD = 'CREDIT_CARD', DEBIT_CARD = 'DEBIT_CARD', BANK_SLIP = 'BANK_SLIP', CASH = 'CASH' }
 enum OrderStatus { PROCESSING = "PROCESSING", COMPLETED = "COMPLETED", CANCELLED = "CANCELLED" }
 
 enum EventStatus { PLANNED = "PLANNED", IN_PROGRESS = "IN_PROGRESS", COMPLETED = "COMPLETED", CANCELLED = "CANCELLED" }

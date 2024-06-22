@@ -90,7 +90,7 @@ const createRandomEvents = async () => {
             final_date: finalDate,
             category_id: randomCategory.id,
             status: EventStatus.PLANNED,
-            base_price: getRandomInt(50, 500), // Preço base entre 50 e 500
+            base_price: getRandomInt(25000, 500000), // Preço base entre 50 e 500
             capacity: getRandomInt(100, 10000), // Capacidade entre 100 e 10,000
             img_banner: `https://source.unsplash.com/random/800x600?sig=${uuid4()}`, // Imagem aleatória de banner
             img_thumbnail: `https://source.unsplash.com/random/400x300?sig=${uuid4()}`, // Imagem aleatória de thumbnail

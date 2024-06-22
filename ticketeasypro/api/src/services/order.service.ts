@@ -1,10 +1,12 @@
 import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
 import { Order } from "@interfaces/order.interface";
-import { EventStatus, OrderStatus, Prisma } from "@prisma/client";
+import { EventStatus, OrderStatus, Prisma, TicketStatus } from "@prisma/client";
 import { getLastdayOfNextMonthTimestamp, getStartOfDayTimestamp } from "@utils/mixes";
 import OrderRepository from "src/repositories/order.repository";
 import { OrderCreate } from "types/order.type";
 import AccountService from "./account.service";
+import prisma from "src/repositories/prisma";
+import { PaymentMethod } from "src/schema/order.schema";
 
 export class OrderService {
   private orderRepository: OrderRepository;
@@ -69,4 +71,26 @@ export class OrderService {
     return order
 
   };
+  updateOrderStatus = async (orderId: string, status: OrderStatus, paymentMethod?: PaymentMethod): Promise<Order> => {
+
+    const order = await this.getOrderById(orderId);
+    if (!order) throw new Error('OrderNotFound');
+
+    return await prisma.$transaction(async (transaction) => {
+      // Atualizar status e método de pagamento da ordem (se fornecido)
+      const orderUpdated = await transaction.order.update({
+        where: { id: orderId },
+        data: { status, ...(paymentMethod !== undefined && { payment_method: paymentMethod }) }
+      });
+
+      // Se o status da ordem for COMPLETED, atualizar o status dos tickets relacionados
+      if (status === OrderStatus.COMPLETED) {
+        await transaction.ticket.updateMany({
+          where: { OrderTicket: { some: { order_id: order.id } } },
+          data: { status: TicketStatus.AVAILABLE },
+        });
+      };
+      return orderUpdated;
+    });
+  }
 }

@@ -54,7 +54,7 @@ class TicketTypeRepository {
     delete = async (ticketTypeId: number): Promise<BaseTypeTicket | null> => {
 
         // Iniciar uma transação
-        const result = await prisma.$transaction(async (prisma) => {
+        const result = await prisma.$transaction(async (transaction) => {
             // Verificar se o TypeTicket existe
             const typeTicket = await this.ticketTypeDb.findUnique({ where: { id: ticketTypeId } });
 
@@ -64,7 +64,7 @@ class TicketTypeRepository {
             }
 
             // Contar o número de OrderTicket que referenciam o TypeTicket
-            const orderTicketCount = await prisma.orderTicket.count({
+            const orderTicketCount = await transaction.orderTicket.count({
                 where: { id: ticketTypeId }
             });
 
