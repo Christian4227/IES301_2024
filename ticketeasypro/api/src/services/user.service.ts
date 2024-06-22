@@ -53,7 +53,7 @@ class UserService {
 		if (!correctPassword) throw new Error("InvalidEmailOrPassword");
 
 		const payload: UserPayload = { sub: sub, login: email, role: role, name: userName }
-		const token = await asignJwt(payload, { sign: { expiresIn: '6h' } });
+		const token = await asignJwt(payload, { sign: { expiresIn: '12h' } });
 		setCookie('access_token', token, {
 			path: '/',
 			httpOnly: true,

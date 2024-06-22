@@ -1,16 +1,16 @@
 import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
 import { OrderService } from "../../services/order.service";
 import { EventStatus, OrderStatus, Prisma, Role } from "@prisma/client";
-import {
-  OrderCreateSchema,
-  OrderDetailParamsSchema, QueryPaginationFilterOrderSchema
-} from "../../schema/order.schema";
+import { OrderCreateSchema, OrderDetailParamsSchema, QueryPaginationFilterOrderEmailSchema, QueryPaginationFilterOrderSchema } from "../../schema/order.schema";
 import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
 import {
-  PaginatedOrderResult, QueryPaginationFilterOrder, OrderCreate, OrderDetailParams
+  PaginatedOrderResult, QueryPaginationFilterOrder, OrderCreate, OrderDetailParams,
+  CustomerEmailParams,
+  QueryPaginationFilterOrderEmail
 } from "types/order.type";
 import { AnyRole } from "@utils/auth";
 import { getLastdayOfNextMonthTimestamp, getStartOfDayTimestamp } from "@utils/mixes";
+
 
 
 const mappingFilterStatus: Record<string, OrderStatus> = {
@@ -84,6 +84,42 @@ const OrderRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
     }
 
   );
+  // Rota GET para listar ordens por email
+  api.get<{ Querystring: QueryPaginationFilterOrderEmail; }>('/email',
+    {
+      schema: { querystring: QueryPaginationFilterOrderEmailSchema },
+      preHandler: [api.authenticate, api.authorizeRoles(Role.STAFF)],
+    },
+    async (request: FastifyRequest<{ Querystring: QueryPaginationFilterOrderEmail }>, reply: FastifyReply): Promise<PaginatedOrderResult> => {
+
+      const {
+        query: {
+          "customer-email": customerEmail,
+          page = 1,
+          'page-size': pageSize = 10,
+          'start-date': tsStartDate = getStartOfDayTimestamp(),
+          'end-date': tsEndDate = getLastdayOfNextMonthTimestamp(),
+          national = true, 'order-by': orderBy = 'created-at:asc', 'category-id': categoryId,
+          'order-status': orderStatusParam = OrderStatus.PROCESSING, 'event-status': eventStatusParam = EventStatus.PLANNED,
+        }
+      } = request;
+
+      const orderCriteria: Prisma.OrderOrderByWithRelationInput[] = parseOrderBy(orderBy ?? 'created-at:asc');
+      const paginationParams: PaginationParams = { page, pageSize };
+      const orderStatus = mappingFilterStatus[orderStatusParam.toLowerCase()];
+      const queryIntervalDate: QueryIntervalDate = { tsStartDate, tsEndDate };
+
+      try {
+        const order = await orderService.searchOrdersByEmail(
+          customerEmail, paginationParams, orderCriteria, queryIntervalDate, national, eventStatusParam, orderStatus, categoryId
+        );
+        return reply.code(200).send(order);
+      } catch (error) {
+        return reply.code(404).send(error);
+      }
+    }
+  );
+
 
   // Endpoint para obter detalhes de uma ordem de compra específica
   api.get('/:orderId', { schema: { params: OrderDetailParamsSchema }, preHandler: [api.authenticate] },
@@ -97,6 +133,8 @@ const OrderRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
       }
     }
   );
-}
 
+}
 export default OrderRoute;
+
+
