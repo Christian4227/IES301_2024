@@ -29,8 +29,28 @@ class OrderRepository {
   }
 
   async findDetails(orderId: string): Promise<Order | null> {
+    const select: Prisma.OrderSelect = {
+      id: true,
+      // customer: { select: { name: true, email: true, phone: true, phone_fix: true } },
+      event: {
+        select: {
+          id: true, location: {
+            select: {
+              id: true, name: true, address_type: true, address: true, number: true, zip_code: true, city: true,
+              uf: true, country: true, complements: true, latitude: true, longitude: true
+            },
+          },
+          category: { select: { id: true, name: true, description: true } },
+          capacity: true, status: true, name: true, description: true, initial_date: true, final_date: true,
+          base_price: true, img_banner: true, img_thumbnail: true, color: true
+        },
+      },
+      OrderTicket: { select: { TicketType: { select: { id: true, name: true, discount: true } } } },
+      status: true, payment_method: true, total_amount: true,
+      created_at: true
+    }
     return this.orderDb.findUnique({
-      where: { id: orderId }
+      where: { id: orderId }, select: select
     });
   }
   async getOrders(
@@ -56,7 +76,7 @@ class OrderRepository {
       }
     }
     const select: Prisma.OrderSelect = {
-      id:true,
+      id: true,
       // customer: { select: { name: true, email: true, phone: true, phone_fix: true } },
       event: {
         select: {
@@ -67,7 +87,7 @@ class OrderRepository {
             },
           },
           category: { select: { id: true, name: true, description: true } },
-          capacity: true, status: true, name: true, description: true, initial_date: true, final_date: true, 
+          capacity: true, status: true, name: true, description: true, initial_date: true, final_date: true,
           base_price: true, img_banner: true, img_thumbnail: true, color: true
         },
       },
