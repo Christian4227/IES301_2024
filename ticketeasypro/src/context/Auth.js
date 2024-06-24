@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = (data) => {
+  const login = (data, idEvento) => {
     client
       .post("users/login", data)
       .then((response) => {
@@ -63,7 +63,13 @@ export const AuthProvider = ({ children }) => {
 
         // // O papel do usuário geralmente é armazenado em uma propriedade do payload do token
         const userRole = decoded.role;
-        DirecionarRota(userRole);
+        if (idEvento != null) {
+          router.push(
+            `/Cliente/EventosCliente/EventoEscolhido?eventId=${idEvento}`
+          );
+        } else {
+          DirecionarRota(userRole);
+        }
       })
       .catch((error) => {
         console.log("Erro na requisição. " + error);
@@ -75,12 +81,26 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     destroyCookie(null, "ticket-token", { path: "/" });
     setAuth(false);
+    router.push(router.asPath);
+  };
+
+  const logoutPrivado = () => {
+    destroyCookie(null, "ticket-token", { path: "/" });
+    setAuth(false);
     router.push("/");
   };
 
   return (
     <AuthContext.Provider
-      value={{ auth, user, login, logout, DirecionarRota, retorno }}
+      value={{
+        auth,
+        user,
+        login,
+        logout,
+        logoutPrivado,
+        DirecionarRota,
+        retorno,
+      }}
     >
       {children}
     </AuthContext.Provider>

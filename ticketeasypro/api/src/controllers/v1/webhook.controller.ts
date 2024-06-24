@@ -61,7 +61,7 @@ const WebhookRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         // Outros casos para diferentes ações
         default:
           return reply.code(400).send({ error: 'InvalidAction' });
-      };
+      }
       return reply.code(201).send({ message: 'OrderUpdatedSuccessfully' });
     } catch (error) {
       return reply.code(500).send({ error });

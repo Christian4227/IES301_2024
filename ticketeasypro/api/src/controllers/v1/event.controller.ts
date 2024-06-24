@@ -58,7 +58,7 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
     const eventStatus = mappingFilterStatus[status];
 
     const allFilterOrdenedEvents = await eventService.searchEvents(
-      paginationParams, queryIntervalDate, orderCriteria, uf, filter, status, categoryId
+      paginationParams, queryIntervalDate, orderCriteria, uf, filter, eventStatus, categoryId
     );
 
     return reply.code(200).send(allFilterOrdenedEvents);

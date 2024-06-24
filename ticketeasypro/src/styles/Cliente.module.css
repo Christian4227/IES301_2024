@@ -396,14 +396,6 @@
   width: 120px;
 }
 
-.botao_reservar_evento_escolhido {
-  background-color: #2E302D;
-  color: white;
-  font-size: 1.1em;
-  padding: 10px;
-  border-radius: 10px;
-}
-
 .div_secao_pagamento_qrcode {
   display: flex;
   flex-direction: column;
@@ -416,6 +408,23 @@
   margin-bottom: 1em;
   border: 3px solid black;
   background-color: white;
+}
+
+.secao_tabela_eventos_titulo {
+  display: flex;
+  padding: 1em 1em 0 1em;
+  align-items: baseline;
+}
+
+.secao_tabela_eventos_titulo h2 {
+  width: fit-content;
+  border-right: 1px solid black;
+  padding-right: 10px;
+}
+
+.secao_tabela_eventos_titulo label {
+  padding-left: 10px;
+  height: fit-content;
 }
 
 /* Compra pagamento */
@@ -567,11 +576,94 @@
   font-size: 1.1em !important;
 }
 
+/* EventosEscolhidoForm */
+.botao_adicionar_ingressos, .botao_diminuir_ingressos {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+}
+
+.div_quantidade_ingresso {
+  display: flex;
+  align-items: center;
+}
+
+.div_quantidade_ingresso_botao {
+  margin: 1em;
+  display: inline-block;
+}
+
+.div_quantidade_ingresso_adicionar {
+  height: 0.2em;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.div_quantidade_ingresso_adicionar_filha {
+  position: relative;
+  height: 0.1em;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.btn_quantidade_ingresso_adicionar {
+  position: absolute;
+  top: -20px;
+}
+
+.img_quantidade_ingresso_adicionar {
+  width: 40px;
+  height: 40px;
+  z-index: 1;
+}
+
+
+.div_quantidade_ingresso_adicionar_filha::before,
+.div_quantidade_ingresso_adicionar_filha::after {
+  content: ''; 
+  position: absolute; 
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%;
+}
+
+.div_quantidade_ingresso_adicionar_filha::before {
+  background: linear-gradient(to right, #565555 0%, transparent 10%, transparent 90%, #565555 100%); 
+}
+
+.div_quantidade_ingresso_adicionar_filha::after {
+  background: linear-gradient(to right, #565555 0%, transparent 10%, transparent 90%, #565555 100%);
+}
+
+.div_quantidade_ingresso_adicionar_filha:hover::before,
+.div_quantidade_ingresso_adicionar_filha:hover::after {
+  animation: showLinhaAdicionar 2s;
+  background-color: #565555;
+}
+
 @keyframes encolherSideBar {
   0% {
     padding: 0;
   }
   100% {
     width: 0;
+  }
+}
+
+
+@keyframes showLinhaAdicionar {
+  0% {
+    opacity: 0;
+  }
+  33% {
+    opacity: 0.6;
+  }
+  66% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
   }
 }

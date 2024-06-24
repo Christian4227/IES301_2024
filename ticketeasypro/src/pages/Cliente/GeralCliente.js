@@ -9,9 +9,20 @@ import Link from "next/link";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import client from "@/utils/client_axios";
+// import client from "@/utils/client_axios";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import { parseCookies } from "nookies";
+
+function getToken() {
+  const cookies = parseCookies();
+  let token;
+  let valorToken;
+  if (cookies && cookies["ticket-token"]) {
+    token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
+    valorToken = JSON.parse(token);
+  }
+  return valorToken;
+}
 
 export default function GeralCliente() {
   const [pedidos, setPedidos] = useState([]);
@@ -21,23 +32,18 @@ export default function GeralCliente() {
     setMessage({ text: message, type });
   };
   useEffect(() => {
-    const token = parseCookies();
-    var valorToken = token["ticket-token"];
-    valorToken = JSON.parse(valorToken).accessToken;
-
-    client
-      .get("/orders/", {
-        headers: {
-          Authorization: `Bearer ${valorToken}`,
-        },
-      })
-      .then((response) => {
-        setPedidos(response.data.data);
-      })
-      .catch((error) => {
-        handleSetMessage("Erro ao carregar os dados.", "error");
-        console.log("Erro na requisição " + error);
-      });
+    const fetchCategories = async () => {
+      // try {
+      //   const response = await client.get(`events/${idEvento}`, {
+      //     headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+      //   });
+      //   setEvento(response.data);
+      // } catch (error) {
+      //   handleSetMessage("Erro ao carregar as categorias", "error");
+      //   console.log("Erro na requisição de categorias:", error);
+      // }
+    };
+    fetchCategories();
   }, []);
   return (
     <div>

@@ -120,7 +120,6 @@ const OrderRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
     }
   );
 
-
   // Endpoint para obter detalhes de uma ordem de compra específica
   api.get('/:orderId', { schema: { params: OrderDetailParamsSchema }, preHandler: [api.authenticate] },
     async (request: FastifyRequest<{ Params: OrderDetailParams }>, reply: FastifyReply) => {

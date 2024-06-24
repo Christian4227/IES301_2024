@@ -9,6 +9,7 @@ import Image from "next/image";
 import carteira from "../../../assets/Carteira.png";
 import pdf from "../../../assets/PDF.png";
 import maps from "../../../assets/google_maps.png";
+import excluir from "../../../assets/excluir.png";
 import Link from "next/link";
 import { parseCookies } from "nookies";
 import client from "@/utils/client_axios";
@@ -42,6 +43,9 @@ export default function IngressosCliente() {
   const [message, setMessage] = useState({ text: "", type: "" });
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
+  const [tipoCompra, setTipoCompra] = useState("");
+  const [estrangeiro, setEstrangeiro] = useState(false);
+  const [tipoEvento, setTipoEvento] = useState("");
 
   const AdicionarEventos = () => {
     router.push("../../InfoEventos");
@@ -83,6 +87,109 @@ export default function IngressosCliente() {
     setMessage({ text: message, type });
   };
 
+  const handleDeleteCompra = async (idCompra) => {
+    alert("Compra deletada.");
+    /*
+    try {
+      const response = await client.post(`webhook/${idCompra}/`, {
+        headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+      });
+      if (response.status == 201) {
+        handleSetMessage("Ordem de compra excluída com sucesso!", "success");
+        setTimeout(() => {
+          router.replace("./TelaConfirmacaoIngresso");
+        }, 6000);
+      }
+    } catch (error) {
+      handleSetMessage("Erro ao deletar a ordem de compra.", "error");
+      console.log("Erro na requisição de categorias:", error);
+    }
+      */
+  };
+
+  const FiltrarTabelaOrdemCompra = async () => {
+    var situacaoCompra = "";
+    if (tipoCompra !== "") {
+      situacaoCompra = "?order-status=" + tipoCompra;
+    }
+
+    var nacional = "";
+    if (estrangeiro === "y") {
+      if (situacaoCompra == "") {
+        nacional = "?uf=SP";
+      } else {
+        nacional = "&uf=ES";
+      }
+    }
+
+    var categoriaSelecionada = "";
+    if (categorySelected !== "") {
+      if (situacaoCompra == "" && nacional == "") {
+        categoriaSelecionada = "?category-id=" + categorySelected;
+      } else {
+        categoriaSelecionada = "&category-id=" + categorySelected;
+      }
+    }
+
+    // var situacaoDoEvento = ""; // No need to check for empty value here
+    // if (tipoEvento !== "") {
+    //   if (situacaoCompra == "" && nacional == "" && categoriaSelecionada == ""){
+    //     situacaoDoEvento = "?status-id=" + tipoEvento;
+    //   }
+    //   else {
+    //     situacaoDoEvento = "&status-id=" + tipoEvento;
+    //   }
+    // }
+
+    var dataInicial = "";
+    if (dataInicio !== "") {
+      if (
+        situacaoCompra == "" &&
+        nacional == "" &&
+        tipoEvento == "" &&
+        categoriaSelecionada == ""
+      ) {
+        dataInicial = "?start-date=" + new Date(dataInicio).getTime();
+      } else {
+        dataInicial = "&start-date=" + new Date(dataInicio).getTime();
+      }
+    }
+
+    var dataFinal = "";
+    if (dataFim !== "") {
+      if (
+        situacaoCompra == "" &&
+        nacional == "" &&
+        tipoEvento == "" &&
+        dataFinal == "" &&
+        categoriaSelecionada == ""
+      ) {
+        dataFinal = "?end-date=" + new Date(dataFim).getTime();
+      } else {
+        dataFinal = "&end-date=" + new Date(dataFim).getTime();
+      }
+    }
+
+    const query =
+      situacaoCompra +
+      nacional +
+      categoriaSelecionada +
+      dataInicial +
+      dataFinal;
+    try {
+      const response = await client.get(`orders/${query}`, {
+        headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+      });
+      if (response.status == 200) {
+        handleSetMessage("Dados filtrados com sucesso.", "success");
+        setCompras(response.data.data);
+      }
+    } catch (error) {
+      handleSetMessage("Erro ao carregar os dados", "error");
+      console.log("Erro na requisição de pedidos:", error);
+    }
+  };
+
   // Componente da paginação
   const paginationButtons = [];
   for (let i = 1; i <= Math.ceil(compras.length / 6); i++) {
@@ -117,7 +224,6 @@ export default function IngressosCliente() {
           headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
         });
         setCompras(response.data.data);
-        console.log(response.data.data);
       } catch (error) {
         handleSetMessage("Erro ao carregar os dados", "error");
         console.log("Erro na requisição de pedidos:", error);
@@ -157,16 +263,23 @@ export default function IngressosCliente() {
                 <div className={styles.form_ingressos_campos}>
                   <div className="mb-3">
                     <label>Situação da compra</label>
-                    <select className="form-select">
-                      <option value="">Selecione o status...</option>
+                    <select
+                      className="form-select"
+                      onChange={(e) => setTipoCompra(e.target.value)}
+                    >
+                      <option value="">Selecione os status...</option>
                       <option value="PROCESSING">Processando</option>
-                      <option value="COMPLETED">Completo</option>
+                      <option value="COMPLETED">Completado</option>
                       <option value="CANCELLED">Cancelado</option>
                     </select>
                   </div>
                   <div className="mb-3">
                     <label>Estrangeiro?</label>
-                    <select className="form-select" defaultValue={"n"}>
+                    <select
+                      className="form-select"
+                      defaultValue={"n"}
+                      onChange={(e) => setEstrangeiro(e.target.value)}
+                    >
                       <option value="y">Sim</option>
                       <option value="n">Não</option>
                     </select>
@@ -183,7 +296,7 @@ export default function IngressosCliente() {
                         cotegories.map((categorie) => (
                           <option
                             key={`cat-${categorie.id}`}
-                            value={`cat-${categorie.id}`}
+                            value={`${categorie.id}`}
                           >
                             {categorie.name}
                           </option>
@@ -192,11 +305,14 @@ export default function IngressosCliente() {
                   </div>
                   <div className="mb-3">
                     <label>Situação do evento</label>
-                    <select className="form-select">
+                    <select
+                      className="form-select"
+                      onChange={(e) => setTipoEvento(e.target.value)}
+                    >
                       <option value="">Selecione o status do evento...</option>
                       <option value="PLANNED">Planejado</option>
                       <option value="IN_PROGRESS">Em progresso</option>
-                      <option value="COMPLETED">Completo</option>
+                      <option value="COMPLETED">Realizado</option>
                       <option value="CANCELLED">Cancelado</option>
                     </select>
                   </div>
@@ -226,6 +342,7 @@ export default function IngressosCliente() {
                     type="submit"
                     value="Pesquisar"
                     className="btn btn-primary"
+                    onClick={() => FiltrarTabelaOrdemCompra()}
                   >
                     Pesquisar
                   </button>
@@ -242,86 +359,109 @@ export default function IngressosCliente() {
                       <th>Status evento</th>
                       <th>Sit. da compra</th>
                       <th>Data compra</th>
-                      <th colSpan={3}></th>
+                      <th colSpan={4}></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {compras.map((compra, index) => (
-                      <tr key={`order-${index}`}>
-                        <td>{compra.event.name}</td>
-                        <td>{getFullAddress(compra.event.location)}</td>
-                        <td>{formatDate(compra.event.initial_date)}</td>
-                        <td>{formatDate(compra.event.final_date)}</td>
+                    {compras.length <= 0 ? (
+                      <tr>
                         <td
-                          className={getStatusClassEvent(compra.event.status)}
+                          colSpan={11}
+                          style={{ textAlign: "center", fontWeight: "bold" }}
                         >
-                          {formatarStatusEvento(compra.event.status)}
-                        </td>
-                        <td className={getStatusClass(compra.status)}>
-                          {formatarStatusCompra(compra.status)}
-                        </td>
-                        <td>{formatDate(compra.created_at)}</td>
-                        <td>
-                          <Link
-                            href={
-                              compra.status === "PROCESSING"
-                                ? `./ComprarIngressoCliente?idCompra=${compra.id}`
-                                : "#"
-                            }
-                          >
-                            <Image
-                              src={carteira}
-                              alt="carteira"
-                              width={40}
-                              height={40}
-                              className={
-                                compra.status === "PROCESSING"
-                                  ? styles.td_img_pag_sit_compra_processando
-                                  : compra.status === "COMPLETED"
-                                    ? styles.td_img_pag_sit_compra_completado
-                                    : styles.td_img_pag_sit_compra_cancelado
-                              }
-                            />
-                          </Link>
-                        </td>
-                        <td>
-                          <Link
-                            href={
-                              compra.status == "PROCESSING" ||
-                              compra.status == "CANCELLED"
-                                ? "#"
-                                : `./CompraPDF?idCompra=${compra.id}`
-                            }
-                          >
-                            <Image
-                              src={pdf}
-                              alt="documento"
-                              width={40}
-                              height={40}
-                              className={
-                                compra.status == "PROCESSING"
-                                  ? styles.td_img_pdf_sit_compra_processando
-                                  : compra.status == "COMPLETED"
-                                    ? styles.td_img_pdf_sit_compra_completado
-                                    : styles.td_img_pdf_sit_compra_cancelado
-                              }
-                            />
-                          </Link>
-                        </td>
-                        <td>
-                          <Link
-                            href={`./MapsEventos?idEvento=${compra.event.id}`}
-                          >
-                            <Image
-                              src={maps}
-                              alt="mapa"
-                              width={40}
-                              height={40}
-                            />
-                          </Link>
+                          Nenhum dado foi encontrado.
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      compras.map((compra, index) => (
+                        <tr key={`order-${index}`}>
+                          <td>{compra.event.name}</td>
+                          <td>{getFullAddress(compra.event.location)}</td>
+                          <td>{formatDate(compra.event.initial_date)}</td>
+                          <td>{formatDate(compra.event.final_date)}</td>
+                          <td
+                            className={getStatusClassEvent(compra.event.status)}
+                          >
+                            {formatarStatusEvento(compra.event.status)}
+                          </td>
+                          <td className={getStatusClass(compra.status)}>
+                            {formatarStatusCompra(compra.status)}
+                          </td>
+                          <td>{formatDate(compra.created_at)}</td>
+                          <td>
+                            <Link
+                              href={
+                                compra.status === "PROCESSING"
+                                  ? `./ComprarIngressoCliente?idCompra=${compra.id}`
+                                  : "#"
+                              }
+                            >
+                              <Image
+                                src={carteira}
+                                alt="carteira"
+                                width={40}
+                                height={40}
+                                className={
+                                  compra.status === "PROCESSING"
+                                    ? styles.td_img_pag_sit_compra_processando
+                                    : compra.status === "COMPLETED"
+                                      ? styles.td_img_pag_sit_compra_completado
+                                      : styles.td_img_pag_sit_compra_cancelado
+                                }
+                              />
+                            </Link>
+                          </td>
+                          <td>
+                            <Link
+                              href={
+                                compra.status == "PROCESSING" ||
+                                compra.status == "CANCELLED"
+                                  ? "#"
+                                  : `./IngressoClientePDF?idCompra=${compra.id}`
+                              }
+                            >
+                              <Image
+                                src={pdf}
+                                alt="documento"
+                                width={40}
+                                height={40}
+                                className={
+                                  compra.status == "PROCESSING"
+                                    ? styles.td_img_pdf_sit_compra_processando
+                                    : compra.status == "COMPLETED"
+                                      ? styles.td_img_pdf_sit_compra_completado
+                                      : styles.td_img_pdf_sit_compra_cancelado
+                                }
+                              />
+                            </Link>
+                          </td>
+                          <td>
+                            <Link
+                              href={`./MapsEventos?idEvento=${compra.event.id}`}
+                            >
+                              <Image
+                                src={maps}
+                                alt="mapa"
+                                width={40}
+                                height={40}
+                              />
+                            </Link>
+                          </td>
+                          <td>
+                            <button
+                              onClick={() => handleDeleteCompra(compra.id)}
+                            >
+                              <Image
+                                src={excluir}
+                                alt="excluir"
+                                width={80}
+                                height={80}
+                              />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
                 <div className={styles.div_numero_paginacao_tabela}>

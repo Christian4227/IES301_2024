@@ -4,10 +4,10 @@ import { AuthContext } from "@/context/Auth";
 import styles from "@styles/Componentes.module.css";
 
 export default function MenuUsuario() {
-  const { auth, logout, user } = useContext(AuthContext);
+  const { auth, logoutPrivado, user } = useContext(AuthContext);
 
   const Sair = () => {
-    logout();
+    logoutPrivado();
   };
   return (
     <div>

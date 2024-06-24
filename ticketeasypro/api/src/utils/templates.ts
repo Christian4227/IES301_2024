@@ -82,7 +82,7 @@ export const makeConfirmEmailContent = (user: { name: string, email: string }, c
                     <table style="width: 50%;" align="center">
                       <tr>
                         <td 
-                          style="background-color: #2C1CEE; color: white; border: 0; padding: 2px; width: 50%; border-radius: 5px; font-size: 1.1em; cursor: pointer; margin: 10px; text-align: center;">
+                          style="background-color: #2C1CEE; color: white; border: 0; padding: 10px; width: 50%; border-radius: 5px; font-size: 1.1em; cursor: pointer; margin: 10px; text-align: center;">
                           <a href="${confirmationUrl}" style="color: white; text-decoration: none;">Confirmar</a>
                         </td>
                       </tr>

@@ -9,14 +9,46 @@ import client from "@/utils/client_axios";
 import { parseCookies } from "nookies";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 
+function getToken() {
+  const cookies = parseCookies();
+  let token;
+  let valorToken;
+  if (cookies && cookies["ticket-token"]) {
+    token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
+    valorToken = JSON.parse(token);
+  }
+  return valorToken;
+}
 export default function PagarCompraColaborador() {
   const router = useRouter();
   const idCompra = router.query.idCompra;
   const [compras, setCompras] = useState([]);
   const [message, setMessage] = useState({ text: "", type: "" });
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [tipoPagamento, setTipoPagamento] = useState("");
 
-  const ValidarCompraIngresso = () => {
-    //requisição do axios para alterar o estado da compra
+  const ValidarCompraIngresso = async () => {
+    try {
+      let data = JSON.stringify({
+        paymentMethod: tipoPagamento,
+      });
+      const response = await client.post(
+        `webhook/${idCompra}/payment-confirm`,
+        data,
+        {
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+        }
+      );
+      if (response.status == 201) {
+        handleSetMessage("Pagamento realizado com sucesso!", "success");
+        setTimeout(() => {
+          router.replace("./TelaConfirmacaoIngresso");
+        }, 6000);
+      }
+    } catch (error) {
+      handleSetMessage("Erro ao carregar as categorias", "error");
+      console.log("Erro na requisição de categorias:", error);
+    }
   };
 
   const handleSetMessage = (message, type) => {
@@ -26,15 +58,8 @@ export default function PagarCompraColaborador() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const cookies = parseCookies();
-        let token;
-        let valorToken;
-        if (cookies && cookies["ticket-token"]) {
-          token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
-          valorToken = JSON.parse(token);
-        }
         const response = await client.get(`orders/${idCompra}`, {
-          headers: { Authorization: `Bearer ${valorToken?.accessToken}` },
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
         });
         setCompras(response.data);
       } catch (error) {
@@ -46,6 +71,13 @@ export default function PagarCompraColaborador() {
       fetchData();
     }
   }, [idCompra]);
+
+  useEffect(() => {
+    const allBasicFieldsValid = tipoPagamento !== "";
+    const isFormCurrentlyValid = allBasicFieldsValid;
+
+    setIsFormValid(isFormCurrentlyValid);
+  }, [tipoPagamento]);
   return (
     <div>
       <CabecalhoColaborador />
@@ -58,7 +90,7 @@ export default function PagarCompraColaborador() {
             <div>
               <div className="mb-3">
                 <label>Nome completo</label>
-                <span></span>
+                <span>{}</span>
               </div>
               <div className="mb-3">
                 <label>E-mail</label>
@@ -133,10 +165,25 @@ export default function PagarCompraColaborador() {
               <br />
               <label>{new Date(compras.created_at).toLocaleDateString()}</label>
             </div>
+            <div className="mb-3">
+              <label>Método de pagamento</label>
+              <select
+                id="TxtTipoEvento"
+                className="form-select"
+                onChange={(e) => setTipoPagamento(e.target.value)}
+              >
+                <option value="">Selecione o tipo de pagamento...</option>
+                <option value="CREDIT_CARD">Cartão de crédito</option>
+                <option value="DEBIT_CARD">Cartão de débito</option>
+                <option value="BANK_SLIP">Dinheiro</option>
+                <option value="PIX">Pix</option>
+              </select>
+            </div>
             <button
               type="button"
               className="btn btn-primary"
               onClick={() => ValidarCompraIngresso()}
+              disabled={!isFormValid}
             >
               Validar
             </button>

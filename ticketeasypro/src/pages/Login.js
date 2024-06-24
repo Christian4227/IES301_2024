@@ -1,21 +1,25 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "@styles/Login.module.css";
 import Link from "next/link";
 import { AuthContext } from "@/context/Auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
+import { useRouter } from "next/router";
 
 export default function Login() {
+  const router = useRouter();
+  const idEvento = router.query.idEvento;
   const { login, retorno } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" });
+  const [evento, setEvento] = useState(null);
   const handleSetMessage = (message, type) => {
     setMessage({ text: message, type });
   };
   const handleLogin = () => {
     try {
-      login({ email: email, password: senha });
+      login({ email: email, password: senha }, evento);
       if (retorno == 401) {
         handleSetMessage("Combinação de usuário ou senha incorretos.", "error");
       }
@@ -24,6 +28,12 @@ export default function Login() {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    if (idEvento) {
+      setEvento(idEvento);
+    }
+  }, [idEvento]);
 
   return (
     <div className={styles.body_login_cliente}>

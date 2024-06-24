@@ -42,7 +42,7 @@ const TelaCadastroCliente = () => {
     const isDataNascimentoValid =
       dataNascimento >= minDate && dataNascimento <= maxDate;
     setBirthDateValid(isDataNascimentoValid);
-  }, [dataNascimento, minDate, maxDate]);
+  }, [dataNascimento]);
 
   useEffect(() => {
     checkBirthdateIsValid();

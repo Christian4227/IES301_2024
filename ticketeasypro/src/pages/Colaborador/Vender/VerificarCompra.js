@@ -11,7 +11,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { parseCookies } from "nookies";
 import carteira from "../../../assets/Carteira.png";
-import excluir from "../../../assets/excluir.png";
 import {
   getFullAddress,
   formatDate,
@@ -70,19 +69,6 @@ export default function VerificarCompra() {
     } catch (error) {
       handleSetMessage("Erro ao carregar os dados", "error");
       console.log("Erro na requisição de pedidos:", error);
-    }
-  };
-
-  const FormatarStatusCompra = (estado_compra) => {
-    switch (estado_compra) {
-      case "PROCESSING":
-        return "Processando";
-      case "COMPLETED":
-        return "Completado";
-      case "CANCELLED":
-        return "Cancelado";
-      default:
-        return;
     }
   };
 
@@ -163,7 +149,7 @@ export default function VerificarCompra() {
                   <th>Status evento</th>
                   <th>Sit. da compra</th>
                   <th>Data compra</th>
-                  <th colSpan={2}></th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -179,17 +165,6 @@ export default function VerificarCompra() {
                       </td>
                       <td className={getStatusClass(compra.status)}>
                         {formatarStatusCompra(compra.status)}
-                      </td>
-                      <td
-                        className={
-                          compra.status == "PROCESSING"
-                            ? styles.td_sit_compra_processando
-                            : compra.status == "COMPLETED"
-                              ? styles.td_sit_compra_completado
-                              : styles.td_sit_compra_cancelado
-                        }
-                      >
-                        {FormatarStatusCompra(compra.status)}
                       </td>
                       <td>
                         {new Date(compra.created_at).toLocaleDateString()}
@@ -210,16 +185,6 @@ export default function VerificarCompra() {
                             height={40}
                           />
                         </Link>
-                      </td>
-                      <td>
-                        <button>
-                          <Image
-                            src={excluir}
-                            alt="excluir"
-                            width={80}
-                            height={80}
-                          />
-                        </button>
                       </td>
                     </tr>
                   ))

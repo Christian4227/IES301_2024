@@ -8,33 +8,63 @@ import client from "@/utils/client_axios";
 import { useRouter } from "next/router";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import { parseCookies } from "nookies";
-import uuid4 from "uuid4";
+
+function getToken() {
+  const cookies = parseCookies();
+  let token;
+  let valorToken;
+  if (cookies && cookies["ticket-token"]) {
+    token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
+    valorToken = JSON.parse(token);
+  }
+  return valorToken;
+}
 
 export default function ComprarIngressoCliente() {
   const canvasRef = useRef(null);
   const router = useRouter();
   const idCompra = router.query.idCompra;
   const [message, setMessage] = useState({ text: "", type: "" });
+  const [tipoPagamento, setTipoPagamento] = useState("");
+  const [isFormValid, setIsFormValid] = useState(false);
   // const [ordemCompra, setOrdemCompra] = useState([]);
   const GerarQRCode = () => {
-    const idNovaCompra = uuid4();
-    QRCode.toCanvas(
-      canvasRef.current,
-      idNovaCompra,
-      { width: 250 },
-      (error) => {
-        if (error) {
-          console.error("Erro ao gerar o QR Code.", error);
-        } else {
-          // Capture the image as a Data URL
-          // const dataUrl = canvasRef.current.toDataURL();
-        }
+    QRCode.toCanvas(canvasRef.current, idCompra, { width: 250 }, (error) => {
+      if (error) {
+        console.error("Erro ao gerar o QR Code.", error);
+      } else {
+        // Capture the image as a Data URL
+        // const dataUrl = canvasRef.current.toDataURL();
       }
-    );
+    });
   };
 
   const handleSetMessage = (message, type) => {
     setMessage({ text: message, type });
+  };
+
+  const ValidarCompraIngresso = async () => {
+    try {
+      let data = JSON.stringify({
+        paymentMethod: tipoPagamento,
+      });
+      const response = await client.post(
+        `webhook/${idCompra}/payment-confirm`,
+        data,
+        {
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+        }
+      );
+      if (response.status == 201) {
+        handleSetMessage("Pagamento realizado com sucesso!", "success");
+        setTimeout(() => {
+          router.replace("./IngressosCliente");
+        }, 6000);
+      }
+    } catch (error) {
+      handleSetMessage("Erro ao carregar as categorias", "error");
+      console.log("Erro na requisição de categorias:", error);
+    }
   };
 
   useEffect(() => {
@@ -50,6 +80,10 @@ export default function ComprarIngressoCliente() {
         const response = await client.get(`orders/${idCompra}`, {
           headers: { Authorization: `Bearer ${valorToken?.accessToken}` },
         });
+
+        if (response.status == 200) {
+          handleSetMessage("Dados gerados com sucesso!", "success");
+        }
       } catch (error) {
         handleSetMessage("Erro ao carregar os dados", "error");
         console.log("Erro na requisição " + error);
@@ -59,6 +93,13 @@ export default function ComprarIngressoCliente() {
       fetchData();
     }
   }, [idCompra]);
+
+  useEffect(() => {
+    const allBasicFieldsValid = tipoPagamento !== "";
+    const isFormCurrentlyValid = allBasicFieldsValid;
+
+    setIsFormValid(isFormCurrentlyValid);
+  }, [tipoPagamento]);
   return (
     <div>
       <CabecalhoCliente />
@@ -69,7 +110,7 @@ export default function ComprarIngressoCliente() {
           <div className={styles.div_secao_pagamento_esquerda}>
             <div>
               <div className={styles.titulo_secao}>
-                <h1>Informações do ingresso</h1>
+                <h1>Informações da compra</h1>
               </div>
               <div className={styles.corpo_secao_info_ingresso}>
                 <div className={styles.corpo_info_usuario}>
@@ -174,6 +215,30 @@ export default function ComprarIngressoCliente() {
                 onClick={() => GerarQRCode()}
                 className="botao_sistema"
               />
+              <hr />
+              <div className="mb-3">
+                <label>Método de pagamento</label>
+                <select
+                  id="TxtTipoEvento"
+                  className="form-select"
+                  onChange={(e) => setTipoPagamento(e.target.value)}
+                >
+                  <option value="">Selecione o tipo de pagamento...</option>
+                  <option value="CREDIT_CARD">Cartão de crédito</option>
+                  <option value="DEBIT_CARD">Cartão de débito</option>
+                  <option value="BANK_SLIP">Dinheiro</option>
+                  <option value="PIX">Pix</option>
+                </select>
+              </div>
+              <div className="mb-3">
+                <input
+                  type="button"
+                  className="botao_sistema"
+                  value="Realizar pagamento agora"
+                  onClick={() => ValidarCompraIngresso()}
+                  disabled={!isFormValid}
+                />
+              </div>
             </div>
           </div>
         </div>

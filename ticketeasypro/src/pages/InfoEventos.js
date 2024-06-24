@@ -26,7 +26,7 @@ export default function InfoEventos() {
         `./Cliente/EventosCliente/EventoEscolhido?eventId=${idEvento}`
       );
     } else {
-      router.push("./Login");
+      router.push(`./Login?idEvento=${idEvento}`);
     }
   };
   const VisualizarEvento = () => {
@@ -35,9 +35,7 @@ export default function InfoEventos() {
 
   useEffect(() => {
     client
-      .get(
-        "/events/?start-date=1722470400000&end-date=1730419200000&status=PLANNED&country=BRASIL"
-      )
+      .get("/events/?uf=SP")
       .then((response) => {
         setEventos(response.data.data);
       })
