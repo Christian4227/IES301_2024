@@ -74,13 +74,13 @@ class EventRepository {
       data: filteredData
     });
     return eventUpdated;
-
-  }
+  };
+  
   findEvents = async (
-      paginationParams: PaginationParams,
-      orderBy: Prisma.EventOrderByWithRelationInput[] = [{ name: "asc" }, { base_price: "desc" }, { initial_date: "desc" }, { final_date: "asc" }],
-      location: {},
-      startDate: Date, endDate: Date,
+    paginationParams: PaginationParams,
+    orderBy: Prisma.EventOrderByWithRelationInput[] = [{ name: "asc" }, { base_price: "desc" }, { initial_date: "desc" }, { final_date: "asc" }],
+    location: {},
+    startDate: Date, endDate: Date,
     query?: string,
     status?: EventStatus,
     category_id?: number
@@ -92,7 +92,7 @@ class EventRepository {
       AND: { location: location, initial_date: { gte: startDate, lte: endDate } }
     };
     console.log({ query, startDate, endDate, category_id, status });
-
+    
     if (query) {
       whereClause = ({
         ...whereClause,

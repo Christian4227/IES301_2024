@@ -88,7 +88,7 @@ class EventService {
 		paginationParams: PaginationParams,
 		queryIntervalDate: QueryIntervalDate,
 		orderBy: Prisma.EventOrderByWithRelationInput[] = [{ name: "asc" }, { base_price: "desc" }, { initial_date: "desc" }, { final_date: "asc" }],
-		uf?: string,
+		uf?: string[],
 		query?: string,
 		status?: EventStatus,
 		category_id?: number,
@@ -125,7 +125,9 @@ class EventService {
 		if (!isValidDateRange(startDate.getTime(), endDate.getTime()))
 			throw new Error("The date range is invalid.");
 
-		const location = uf ? { country: 'BRASIL', uf: uf.toUpperCase() } : { country: { not: 'BRASIL' } }
+		const location = uf ?
+			{ country: 'BRASIL', uf: { in: uf.map((estado) => estado.toUpperCase()) } }
+			: { country: { not: 'BRASIL' } }
 
 		const paginatedEventResults: PaginatedEventResult = await this.eventRepository.findEvents(
 			paginationParams, orderBy, location, startDate, endDate, query, status, category_id
