@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
       })
       .catch((error) => {
         console.log("Erro na requisição. " + error);
-        setRetorno(error.response.status);
+        setRetorno(error.response?.status);
         setAuth(false);
       });
   };

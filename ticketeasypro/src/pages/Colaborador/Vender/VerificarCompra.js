@@ -203,7 +203,6 @@ export default function VerificarCompra() {
           </div>
         </div>
       </div>
-
       {!!message.text && (
         <ToastMessage text={message.text} type={message.type} />
       )}

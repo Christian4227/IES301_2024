@@ -1,98 +1,94 @@
-// import React, { useEffect, useState } from "react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Cabecalho from "./Cabecalho";
-import Menu from "./Menu";
 import styles from "@styles/Home.module.css";
 import stylese from "../styles/InfoEventos.module.css";
 import Image from "next/image";
-import torre from "../assets/torre_miroku.jpg";
 import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
-// import client from "@/utils/client_axios";
+import { useRouter } from "next/router";
+import client from "@/utils/client_axios";
+import { getFullAddress } from "@/utils";
+import Link from "next/link";
 
 export default function InfoTipoEvento() {
+  const router = useRouter();
+  const eventId = router.query.eventId;
+  const [evento, setEvento] = useState([]);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await client.get(`events/public/${eventId}`);
+        setEvento(response.data);
+      } catch (error) {
+        console.log("Erro na requisição de categorias:", error);
+      }
+    };
+    if (eventId) {
+      fetchCategories();
+    }
+  }, [eventId]);
   return (
     <div id="div-principal">
       <Cabecalho className={styles.Header} />
       <div>
-        <div className={stylese.header_infoEventos}>
-          <h1>Nome do tipo do evento</h1>
-          <CabecalhoHomeMenu />
+        <div>
+          <CabecalhoHomeMenu componente={evento.name} />
         </div>
         <div className={stylese.body_imagem_tipoEvento}>
           <Image
-            src={torre}
+            src={evento.img_banner == undefined ? "" : evento?.img_banner}
             alt="img_tipo_evento"
             className={stylese.img_tipoEvento}
+            width={200}
+            height={200}
           />
         </div>
         <div className={stylese.body_infoTipoEventos}>
           <div className={stylese.body_infoTipoEvento_secao}>
             <h1>Seção</h1>
             <ul>
-              <li>Informações do evento</li>
-              <li>Ingressos</li>
-              <li>Recomendações</li>
+              <li>
+                <Link href="#Informacoes_evento">Informações do evento</Link>
+              </li>
+              <li>
+                <Link href="#Ingressos">Ingressos</Link>
+              </li>
+              <li>
+                <Link href="#Recomendacoes">Recomendações</Link>
+              </li>
             </ul>
           </div>
           <div className={stylese.infoTipoEvento_Principal}>
-            <div className={stylese.infoTipoEvento_DescricaoEvento}>
-              <h1>Título da descrição ou das informações do evento</h1>
+            <div
+              className={stylese.infoTipoEvento_DescricaoEvento}
+              id="Informacoes_evento"
+            >
+              <h1>{evento.name}</h1>
+              <p>{"Local do evento: " + getFullAddress(evento.location)}</p>
               <p>
-                Descrição do evento - Em meados do ano 2000, o Reverendo Minoru
-                Nakahashi (1935-2012), fundador do Templo Luz do Oriente,
-                visitou, em companhia de alguns adeptos, o templo Horyu,
-                localizado na cidade de Nara, Japão. Erigido pelo príncipe
-                Shotoku em 607, o magnífico templo japonês foi reconhecido em
-                1993 como Patrimônio Histórico e Cultural da Humanidade, pela
-                Organização das Nações Unidas para a Educação, a Ciência e a
-                Cultura (UNESCO).
+                {"Data de início: " +
+                  new Date(evento.initial_date).toLocaleDateString()}
               </p>
               <p>
-                A bela construção causou-lhes tamanha admiração que, ao
-                retornarem, traziam em seus corações o desejo de edificar algo
-                semelhante no Brasil em devoção a Meishu Sama e ao Mundo Ideal
-                anunciado por Ele. A partir de então, erigir a Torre de Miroku
-                tornou-se objetivo de todos os membros do Templo Luz do Oriente,
-                que, para tal intento, em sinal de gratidão a Kannon – principal
-                divindade na doutrina de Meishu Sama –, dedicaram sua devoção,
-                tempo e recursos materiais para a concretização .
+                {"Data de término: " +
+                  new Date(evento.final_date).toLocaleDateString()}
               </p>
+              <p>{evento.description}</p>
             </div>
-            <div className={stylese.infoTipoEvento_Ingressos}>
+            <div className={stylese.infoTipoEvento_Ingressos} id="Ingressos">
               <h1>Ingressos disponíveis</h1>
               <p>
-                As informações sobre os valores, a quantidade de ingressos e
-                datas disponíveis são mostrados na tabela a seguir.
+                {"Preço base: " +
+                  evento.base_price.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
               </p>
-              <table className={stylese.table_info_tipoeventos}>
-                <thead className={stylese.table_head_tipoEventos}>
-                  <tr>
-                    <th>Nome do evento</th>
-                    <th>Local</th>
-                    <th>Data</th>
-                    <th>Ingressos</th>
-                    <th>Disponível</th>
-                    <th colSpan={2}>Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Nome do evento</td>
-                    <td>Local</td>
-                    <td>Data</td>
-                    <td>Ingressos</td>
-                    <td>Disponível</td>
-                    <td>
-                      <button className={stylese.botao_comprar}>Comprar</button>
-                    </td>
-                    <td>
-                      <button className={stylese.botao_ver}>Ver</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <p>{"Capacidade: " + evento.capacity}</p>
             </div>
-            <div className={stylese.infoTipoEvento_Recomendacoes}>
+            <div
+              className={stylese.infoTipoEvento_Recomendacoes}
+              id="Recomendacoes"
+            >
               <h1>Recomendações para os eventos</h1>
               <h2>Prepare-se para a retomada dos eventos</h2>
               <p>
@@ -125,7 +121,6 @@ export default function InfoTipoEvento() {
           </div>
         </div>
       </div>
-      <Menu id="menu-lateral" className={styles.menu_lateral} />
     </div>
   );
 }

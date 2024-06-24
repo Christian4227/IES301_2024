@@ -15,7 +15,7 @@ const IndexColaborador = () => {
     router.push("/Colaborador/Vender/VenderIngressos");
   };
   const ValidarIngressos = () => {
-    router.push("/Colaborador/Validar/ListaEventos");
+    router.push("/Colaborador/Validar/ScannerQrCode");
   };
   const VerificarIngressos = () => {
     router.push("/Colaborador/Verificar/VerificarIngresso");

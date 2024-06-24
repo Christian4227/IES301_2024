@@ -70,10 +70,6 @@
 }
 
 /* Página do formulário do evento para validar Qr Code */
-.body_lista_colaborador {
-    display: flex;
-    justify-content: center;
-}
 
 .header_colaborador {
     position: relative;
@@ -89,22 +85,7 @@
     font-size: 1.5em;
 }
 
-.formulario_colaborador {
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 3px;
-    padding: 20px;
-    width: 90%;
-    min-width: 360px;
-    max-width: 480px;
-}
-
-.cabecalho {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.formulario_campos_colaborador label, .form_pesquisar_periodo label {
+.form_pesquisar_periodo label {
     font-weight: bold;
     margin-bottom: 0;
 }

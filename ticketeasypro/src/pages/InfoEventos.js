@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import client from "@/utils/client_axios";
 import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
 import { AuthContext } from "@/context/Auth";
+import ToastMessage from "@/components/ToastMessage/ToastMessage";
 
 export default function InfoEventos() {
   const router = useRouter();
@@ -17,8 +18,50 @@ export default function InfoEventos() {
   const [categorias, setCategorias] = useState([]);
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
+  const [message, setMessage] = useState({ text: "", type: "" });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [nacional, setNacional] = useState("nacional");
   const Filtrar = () => {
-    alert("Filtrado");
+    const queryParams = [];
+
+    if (searchTerm)
+      queryParams.push(`filter=${encodeURIComponent(searchTerm)}`);
+
+    if (dataInicio)
+      queryParams.push(
+        `start-date=${encodeURIComponent(new Date(dataInicio).getTime())}`
+      );
+
+    if (dataFim)
+      queryParams.push(
+        `end-date=${encodeURIComponent(new Date(dataFim).getTime())}`
+      );
+
+    if (categorias)
+      queryParams.push(`category=${encodeURIComponent(categorias)}`);
+
+    if (nacional == "nacional") {
+      queryParams.push("country=BRASIL");
+      if (filter.location?.state)
+        queryParams.push(`uf=${encodeURIComponent(filter.location.state)}`);
+    }
+
+    const query = `?${queryParams.join("&")}`;
+
+    if (query.length == 0) {
+      handleSetMessage("Preencha pelo menos um campo do filtro.", "error");
+      return;
+    }
+    client
+      .get(`/events/?${query}&start-date=${dataInicial}&end-date=${dataFinal}`)
+      .then((response) => {
+        setEventos(response.data.data);
+        handleSetMessage("Filtro aplicado com sucesso.", "success");
+      })
+      .catch((error) => {
+        handleSetMessage("Erro ao filtrar os eventos.", "error");
+        console.log("Erro na requisição " + error);
+      });
   };
   const ReservarIngresso = (idEvento) => {
     if (auth) {
@@ -29,29 +72,14 @@ export default function InfoEventos() {
       router.push(`./Login?idEvento=${idEvento}`);
     }
   };
-  const VisualizarEvento = () => {
-    router.push("/InfoTipoEvento");
+  const VisualizarEvento = (eventId) => {
+    router.push(`/InfoTipoEvento?eventId=${eventId}`);
+  };
+  const handleSetMessage = (message, type) => {
+    setMessage({ text: message, type });
   };
 
   useEffect(() => {
-    client
-      .get("/events/?uf=SP")
-      .then((response) => {
-        setEventos(response.data.data);
-      })
-      .catch((error) => {
-        console.log("Erro na requisição " + error);
-      });
-
-    client
-      .get(`/categories`)
-      .then((response) => {
-        setCategorias(response.data.data);
-      })
-      .catch((error) => {
-        console.log("Erro na requisição " + error);
-      });
-
     const now = new Date();
     var dia = now.getDate();
     dia = dia < 10 ? "0" + dia : dia;
@@ -69,6 +97,26 @@ export default function InfoEventos() {
     var anoFim = nextMonthLastDay.getFullYear();
 
     setDataFim(anoFim + "-" + mesFim + "-" + diaFim);
+    client
+      .get(
+        `/events/?uf=SP&start-date=${new Date("2024-04-01").getTime()}&end-date=${new Date(anoFim + "-" + mesFim + "-" + diaFim).getTime()}`
+      )
+      .then((response) => {
+        setEventos(response.data.data);
+        console.log(response.data.data);
+      })
+      .catch((error) => {
+        console.log("Erro na requisição " + error);
+      });
+
+    client
+      .get(`/categories`)
+      .then((response) => {
+        setCategorias(response.data.data);
+      })
+      .catch((error) => {
+        console.log("Erro na requisição " + error);
+      });
   }, []);
 
   return (
@@ -90,6 +138,15 @@ export default function InfoEventos() {
             />
           </div>
           <div className={stylese.secao_filtro}>
+            <div className="flex flex-col mt-2">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="mb-2 p-2 border border-gray-300 rounded-md"
+                placeholder="Digite o nome do evento, descrição ou artista"
+              />
+            </div>
             <div className={stylese.secao_filtro_titulo}>
               <label>Período</label>
             </div>
@@ -137,14 +194,21 @@ export default function InfoEventos() {
                   type="radio"
                   name="localidade"
                   className="form-check-input"
+                  value="nacional"
+                  checked={nacional === "nacional"}
+                  onChange={() => setNacional("nacional")}
                 />
               </div>
+
               <div className={stylese.secao_filtro_pais_tipo}>
                 <label>Internacional</label>
                 <input
                   type="radio"
                   name="localidade"
                   className="form-check-input"
+                  value="internacional"
+                  checked={nacional === "internacional"}
+                  onChange={() => setNacional("internacional")}
                 />
               </div>
             </div>
@@ -397,7 +461,7 @@ export default function InfoEventos() {
                                   type="button"
                                   id="btnVerMais"
                                   className={stylese.botao_ver}
-                                  onClick={() => VisualizarEvento()}
+                                  onClick={() => VisualizarEvento(dado.id)}
                                   value="Ver mais"
                                 />
                               </div>
@@ -413,7 +477,9 @@ export default function InfoEventos() {
           )}
         </div>
       </div>
-      {/* <Menu id="menu-lateral" className={styles.menu_lateral} /> */}
+      {!!message.text && (
+        <ToastMessage text={message.text} type={message.type} />
+      )}
     </div>
   );
 }
