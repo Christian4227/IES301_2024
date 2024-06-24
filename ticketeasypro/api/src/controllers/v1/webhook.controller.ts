@@ -52,13 +52,18 @@ const WebhookRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 
     try {
 
-
+      let order;
       switch (action.toLowerCase()) {
         case 'payment-confirm':
           // Lógica para confirmar o pagamento da ordem
-          const order = await orderService.updateOrderStatus(orderId, OrderStatus.COMPLETED, paymentMethod);
+          order = await orderService.updateOrderStatus(orderId, OrderStatus.COMPLETED, paymentMethod);
+          break;
+        case 'cancel':
+          // Lógica para cancelar o pagamento da ordem
+          order = await orderService.updateOrderStatus(orderId, OrderStatus.CANCELLED, paymentMethod);
           break;
         // Outros casos para diferentes ações
+
         default:
           return reply.code(400).send({ error: 'InvalidAction' });
       }

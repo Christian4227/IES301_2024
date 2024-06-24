@@ -90,6 +90,12 @@ export class OrderService {
           data: { status: TicketStatus.AVAILABLE },
         });
       };
+      if (status === OrderStatus.CANCELLED) {
+        await transaction.ticket.updateMany({
+          where: { OrderTicket: { some: { order_id: order.id } } },
+          data: { status: TicketStatus.CANCELLED },
+        });
+      };
       return orderUpdated;
     });
   }
