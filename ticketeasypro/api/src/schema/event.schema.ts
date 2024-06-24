@@ -15,7 +15,8 @@ export const QueryPaginationFilterEventSchema = Type.Object({
     'order-by': Type.Optional(Type.String({ default: 'created-at:asc' })),
     'category-id': Type.Optional(Type.Integer()),
     'status': Type.Enum(EventStatus, { default: EventStatus.PLANNED }),
-    'uf': Type.Optional(Type.String({ default: '' }))
+    'uf': Type.Optional(Type.String({ default: '' })),
+    'national': Type.Boolean({ default: true }),
 });
 
 // status: Type.Enum(OrderStatus, { default: OrderStatus.PROCESSING }),
