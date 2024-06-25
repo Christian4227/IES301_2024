@@ -310,9 +310,9 @@ export default function InfoEventos() {
                                   </li>
                                 </ul>
                                 <ul>
-                                  <li>
+                                  {/* <li>
                                     <label>Ticket Easy Pro</label>
-                                  </li>
+                                  </li> */}
                                   <li>
                                     <label>{dado.location.name}</label>
                                   </li>
