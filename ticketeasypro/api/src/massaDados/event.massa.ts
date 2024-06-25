@@ -76,7 +76,7 @@ const createRandomEvents = async () => {
 
     const events = [];
 
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 100; i++) {
         const randomManager = managers[getRandomInt(0, managers.length - 1)];
         const randomCategory = categories[getRandomInt(0, categories.length - 1)];
         const randomVenue = venues[getRandomInt(0, venues.length - 1)];

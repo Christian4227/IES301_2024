@@ -122,10 +122,10 @@ export default function EventoEscolhido() {
                   <span>
                     {evento.base_price == undefined
                       ? ""
-                      : `${evento.base_price.toLocaleString("pt-BR", {
-                          style: "currency",
-                          currency: "BRL",
-                        })}`}
+                      : `${(evento.base_price / 100).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}`}
                   </span>
                 </div>
               </div>

@@ -129,7 +129,9 @@ class EventService {
 		let location;
 		if (national) {
 			location = { country: 'BRASIL' }
-			if (uf?.length)
+			if (typeof uf === 'string')
+				location = { ...location, uf: uf }
+			if (Array.isArray(uf) && uf.length > 0)
 				location = { ...location, uf: { in: uf.map((estado) => estado.toUpperCase()) } }
 		}
 		else

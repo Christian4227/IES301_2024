@@ -4,7 +4,7 @@ const StateCheckbox = ({ stateCode, stateLabel, handleChange, checked }) => {
     const inputId = `checkbox-${stateCode}`;
 
     return (
-        <div className="mb-3">
+        <div className="mb-3 select-none">
             <label htmlFor={inputId}>{stateLabel}</label>
             <input
                 type="checkbox"

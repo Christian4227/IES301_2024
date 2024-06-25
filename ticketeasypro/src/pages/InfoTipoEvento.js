@@ -89,13 +89,13 @@ export default function InfoTipoEvento() {
             <div className={stylese.infoTipoEvento_Ingressos} id="Ingressos">
               <h1>Ingressos disponíveis</h1>
               <p>
-                {evento.base_price == undefined
+                {evento.base_price === undefined
                   ? ""
                   : "Preço base: " +
-                    evento.base_price.toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
+                  (evento.base_price / 100).toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
               </p>
               <p>{"Capacidade: " + evento.capacity}</p>
             </div>

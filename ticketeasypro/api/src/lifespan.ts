@@ -11,12 +11,12 @@ import createTicketTypes from "./massaDados/ticketTypes.massa";
 
 
 const createVenues = async (prismaCliente: PrismaClient) => {
-    // await prisma.venue.deleteMany({});
     const venues = [
+        // Locais no Brasil
         {
             "name": "Maracanã",
             "address_type": "Avenida",
-            "address": "Avenida Presidente Castelo Branco",
+            "address": "Presidente Castelo Branco",
             "number": "Portão 3",
             "zip_code": "20271-130",
             "city": "Rio de Janeiro",
@@ -29,7 +29,7 @@ const createVenues = async (prismaCliente: PrismaClient) => {
         {
             "name": "Allianz Parque",
             "address_type": "Rua",
-            "address": "Rua Palestra Itália",
+            "address": "Palestra Itália",
             "number": "200",
             "zip_code": "05005-030",
             "city": "São Paulo",
@@ -42,7 +42,7 @@ const createVenues = async (prismaCliente: PrismaClient) => {
         {
             "name": "Mineirão",
             "address_type": "Avenida",
-            "address": "Avenida Antônio Abrahão Caram",
+            "address": "Antônio Abrahão Caram",
             "number": "1001",
             "zip_code": "31275-000",
             "city": "Belo Horizonte",
@@ -55,7 +55,7 @@ const createVenues = async (prismaCliente: PrismaClient) => {
         {
             "name": "Arena Fonte Nova",
             "address_type": "Ladeira",
-            "address": "Ladeira da Fonte das Pedras",
+            "address": "Fonte das Pedras",
             "number": "S/N",
             "zip_code": "40050-565",
             "city": "Salvador",
@@ -68,7 +68,7 @@ const createVenues = async (prismaCliente: PrismaClient) => {
         {
             "name": "Arena da Baixada",
             "address_type": "Rua",
-            "address": "Rua Buenos Aires",
+            "address": "Buenos Aires",
             "number": "1260",
             "zip_code": "80250-070",
             "city": "Curitiba",
@@ -81,7 +81,7 @@ const createVenues = async (prismaCliente: PrismaClient) => {
         {
             "name": "Arena Pernambuco",
             "address_type": "Avenida",
-            "address": "Avenida Deus é Fiel",
+            "address": "Deus é Fiel",
             "number": "S/N",
             "zip_code": "54753-510",
             "city": "São Lourenço da Mata",
@@ -94,7 +94,7 @@ const createVenues = async (prismaCliente: PrismaClient) => {
         {
             "name": "Beira-Rio",
             "address_type": "Avenida",
-            "address": "Avenida Padre Cacique",
+            "address": "Padre Cacique",
             "number": "891",
             "zip_code": "90810-240",
             "city": "Porto Alegre",
@@ -107,7 +107,7 @@ const createVenues = async (prismaCliente: PrismaClient) => {
         {
             "name": "Estádio Olímpico Nilton Santos",
             "address_type": "Rua",
-            "address": "Rua José dos Reis",
+            "address": "José dos Reis",
             "number": "425",
             "zip_code": "20921-320",
             "city": "Rio de Janeiro",
@@ -120,7 +120,7 @@ const createVenues = async (prismaCliente: PrismaClient) => {
         {
             "name": "Morumbi",
             "address_type": "Praça",
-            "address": "Praça Roberto Gomes Pedrosa",
+            "address": "Roberto Gomes Pedrosa",
             "number": "1",
             "zip_code": "05653-070",
             "city": "São Paulo",
@@ -133,7 +133,7 @@ const createVenues = async (prismaCliente: PrismaClient) => {
         {
             "name": "Arena Castelão",
             "address_type": "Avenida",
-            "address": "Avenida Alberto Craveiro",
+            "address": "Alberto Craveiro",
             "number": "2901",
             "zip_code": "60860-212",
             "city": "Fortaleza",
@@ -142,6 +142,164 @@ const createVenues = async (prismaCliente: PrismaClient) => {
             "complements": "Castelão",
             "latitude": -3.7934,
             "longitude": -38.5222
+        },
+        // Locais fora do Brasil
+        {
+            "name": "Wembley Stadium",
+            "address_type": "",
+            "address": "",
+            "number": "London HA9 0WS",
+            "city": "London",
+            "country": "UK",
+            "uf": '',
+            "complements": "",
+            "zip_code": "",
+            "latitude": 51.5558,
+            "longitude": -0.2796
+        },
+        {
+            "name": "Stade de France",
+            "address_type": "",
+            "address": "",
+            "number": "93200",
+            "city": "Saint-Denis",
+            "country": "France",
+            "latitude": 48.9242,
+            "longitude": 2.3608,
+            "uf": '',
+            "complements": "",
+            "zip_code": "",
+        },
+        {
+            "name": "Camp Nou",
+            "address_type": "",
+            "address": "",
+            "number": "s/n",
+            "city": "Barcelona",
+            "country": "Spain",
+            "latitude": 41.3809,
+            "longitude": 2.1228,
+            "uf": '',
+            "complements": "",
+            "zip_code": ""
+        },
+        {
+            "name": "Allianz Arena",
+            "address_type": "",
+            "address": "Werner-Heisenberg-Allee 25, 80939 München",
+            "city": "Munich",
+            "country": "Germany",
+            "latitude": 48.2188,
+            "longitude": 11.6242,
+            "uf": '',
+            "complements": "",
+            "zip_code": "",
+            "number": ""
+        },
+        {
+            "name": "San Siro",
+            "address_type": "",
+            "address": "Via Piccolomini 5, 20151 Milano MI",
+            "city": "Milan",
+            "country": "Italy",
+            "latitude": 45.4789,
+            "longitude": 9.1233,
+            "uf": '',
+            "complements": "",
+            "zip_code": "",
+            "number": ""
+        },
+        {
+            "name": "Estadio Santiago Bernabéu",
+            "address_type": "Avenida",
+            "address": "Concha Espina",
+            "number": "1",
+            "city": "Madrid",
+            "country": "Spain",
+            "latitude": 40.4531,
+            "longitude": -3.6883,
+            "uf": '',
+            "complements": "",
+            "zip_code": ""
+        },
+        {
+            "name": "Signal Iduna Park",
+            "address_type": "",
+            "address": "Strobelallee 50, 44139 Dortmund",
+            "city": "Dortmund",
+            "country": "Germany",
+            "latitude": 51.4926,
+            "longitude": 7.4514,
+            "uf": '',
+            "complements": "",
+            "zip_code": "",
+            "number": ""
+        },
+        {
+            "name": "Estádio da Luz",
+            "address_type": "Avenida",
+            "address": "Eusébio da Silva Ferreira",
+            "number": "1500",
+            "city": "Lisbon",
+            "country": "Portugal",
+            "latitude": 38.7526,
+            "longitude": -9.1841,
+            "uf": '',
+            "complements": "",
+            "zip_code": "",
+
+        },
+        {
+            "name": "Old Trafford",
+            "address_type": "",
+            "address": "Sir Matt Busby Way, Manchester M16 0RA",
+            "city": "Manchester",
+            "country": "UK",
+            "latitude": 53.4631,
+            "longitude": -2.2913,
+            "uf": '',
+            "complements": "",
+            "zip_code": "",
+            "number": ""
+        },
+        {
+            "name": "Estádio José Alvalade",
+            "address_type": "",
+            "address": "R. Professor Fernando da Fonseca 1500",
+            "city": "Lisbon",
+            "country": "Portugal",
+            "latitude": 38.7616,
+            "longitude": -9.1608,
+            "uf": '',
+            "complements": "",
+            "zip_code": "",
+            "number": ""
+        },
+        {
+            "name": "Emirates Stadium",
+            "address_type": "",
+            "address": "75 Drayton Park",
+            "city": "London",
+            "country": "UK",
+            "latitude": 51.5549,
+            "longitude": -0.1084,
+            "uf": '',
+            "complements": "",
+            "zip_code": "",
+            "number": ""
+        },
+        {
+            "name": "Stamford Bridge",
+            "address_type": "",
+            "address": "Fulham Rd, London SW6 1HS",
+            "city": "London",
+            "country": "UK",
+            "latitude": 51.4817,
+            "longitude": -0.1902,
+            "uf": '',
+            "complements": "",
+            "zip_code": "",
+            "number": ""
         }
     ];
 

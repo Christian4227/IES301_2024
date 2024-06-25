@@ -36,8 +36,8 @@ model Venue {
   name         String   @unique @db.VarChar
   address_type String   @db.VarChar(256)
   address      String   @db.VarChar(512)
-  number       String   @db.VarChar(10)
-  zip_code     String   @db.VarChar(10)
+  number       String   @db.VarChar(200)
+  zip_code     String   @db.VarChar(200)
   city         String   @db.VarChar(256)
   uf           String   @db.VarChar(2)
   country      String   @default("BRASIL") @db.VarChar(512)

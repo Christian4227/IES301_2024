@@ -11,11 +11,10 @@ import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
 import { AuthContext } from "@/context/Auth";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import StateFilter from "@/components/StateFilter/StateFilter";
+import Pagination from "@/components/Pagination/Pagination";
 
-import {
-  getFullAddress, formatDate, dateFormat, getStartOfDayTimestamp,
-  getLastdayOfNextMonthTimestamp, getStatusClass, getStatusClassEvent
-} from "@/utils";
+import { dateFormat, getStartOfDayTimestamp, getLastdayOfNextMonthTimestamp } from "@/utils";
+
 
 
 export default function InfoEventos() {
@@ -31,67 +30,66 @@ export default function InfoEventos() {
   const [national, setNational] = useState(true);
   const [selectedStates, setSelectedStates] = useState([]);
 
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const handleCategoryChange = (event) => setCategorySelected(event.target.key);
+  const handleNationalChange = (event) => setNational(prev => !prev);
 
-  const filtrarEventos = () => {
-    console.log(selectedStates)
+  const handleCategoryChange = (event) => setCategorySelected(event.target.value);
+
+  const getQueryString = () => {
+
     let queryParams = {};
 
     // Adiciona 'filter' ao queryParams se searchTerm estiver definido e não vazio
     if (searchTerm) queryParams["filter"] = encodeURIComponent(searchTerm.trim());
 
     // Adiciona 'start-date' ao queryParams se dataInicio estiver definido e não vazio
-    if (dataInicio) queryParams["start-date"] = dataInicio;
+    if (dataInicio) queryParams["start-date"] = new Date(dataInicio).getTime();
 
     // Adiciona 'end-date' ao queryParams se dataFim estiver definido e não vazio
-    if (dataFim) queryParams["end-date"] = dataFim;
+    if (dataFim) queryParams["end-date"] = new Date(dataFim).getTime();
 
     // Adiciona 'category' ao queryParams se categorySelected estiver definido e não vazio
     if (categorySelected !== "" && categorySelected !== null && categorySelected !== undefined) {
-      queryParams["category"] = encodeURIComponent(categorySelected.split("-")[1]);
-    }
+      queryParams["category-id"] = categorySelected;
+    };
+
+    // Adiciona 'category' ao queryParams se categorySelected estiver definido e não vazio
+    if (currentPage)
+      queryParams["page"] = currentPage;
 
     // Adiciona 'national' ao queryParams
     queryParams["national"] = national.toString();
 
+    let selectedStatesQuery = '';
     // Adiciona estados selecionados ao queryParams se 'national' for verdadeiro e selectedStates não estiver vazio
     if (national && selectedStates.length > 0) {
-      selectedStates.forEach((selectedState, index) => {
-        queryParams[`uf[${index}]`] = selectedState;
-      });
+      selectedStatesQuery = selectedStates.reduce((acc, state, index) => {
+        if (index === 0) return `uf=${state}`;
+        else return `${acc}&uf=${state}`;
+      }, '');
     }
 
     // Gera a query string final
-    const queryString = Object.keys(queryParams)
+    let queryString = Object.keys(queryParams)
       .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`)
       .join('&');
 
-    console.log(queryString);
-
-    client
-      .get(`/events/?${query}`)
-      .then((response) => {
-        setEventos(response.data.data);
-
-        handleSetMessage("Filtro aplicado com sucesso.", "success");
-      })
-      .catch((error) => {
-        handleSetMessage("Erro ao filtrar os eventos.", "error");
-        console.log("Erro na requisição " + error);
-      });
+    if (selectedStatesQuery) queryString = `${queryString}&${selectedStatesQuery}`
+    console.log(queryString + selectedStatesQuery);
+    return queryString;
   };
+
   const handleCheckboxChange = (e) => {
     const stateCode = e.target.value;
     setSelectedStates(prevSelectedStates => {
-      if (e.target.checked) {
+      if (e.target.checked)
         return [...prevSelectedStates, stateCode];
-      } else {
+      else
         return prevSelectedStates.filter(code => code !== stateCode);
-      }
     });
   };
-  console.log(selectedStates);
 
   const ReservarIngresso = (idEvento) => {
     if (auth)
@@ -105,26 +103,34 @@ export default function InfoEventos() {
   const handleSetMessage = (message, type) => {
     setMessage({ text: message, type });
   };
-  const fecthData = async () => {
-    client
-      .get(
-        `/events/?uf=SP&start-date=${dataInicio}}&end-date=${dataFim}`
-      )
-      .then((response) => {
-        setEventos(response.data.data);
-      })
-      .catch((error) => {
-        console.log("Erro na requisição " + error);
-      });
+  const fetchData = async () => {
+    try {
+      const query = getQueryString()
+      const response = await client.get(`/events?${query}`);
+      if (response.data.total === 0)
+        handleSetMessage("Nenhum evento encontrado com os critérios de busca. Por favor, tente ajustar seus filtros.", "success");
 
+      setEventos(response.data.data);
+      setTotalPages(response.data.totalPages);
+
+
+    } catch (error) {
+      console.log("Erro na requisição " + error);
+    }
+  };
+  const handleSubmit = async () => {
+    setCurrentPage(1);
+    fetchData()
   }
-  useEffect(() => {
 
+  useEffect(() => { fetchData() }, [currentPage]);
+
+  useEffect(() => {
     const initialDate = new Date(getStartOfDayTimestamp());
     const finalDate = new Date(getLastdayOfNextMonthTimestamp());
     setDataInicio(dateFormat(initialDate));
     setDataFim(dateFormat(finalDate));
-    fecthData()
+    fetchData();
     client
       .get(`/categories`)
       .then((response) => { setCategorias(response.data.data) })
@@ -135,6 +141,7 @@ export default function InfoEventos() {
 
   return (
     <div id="div-principal">
+      {console.log("RENDERIZOU A PÁGINA TODA")}
       <Cabecalho className={styles.header} />
       <CabecalhoHomeMenu componente={"Eventos"} />
       <div className={stylese.body}>
@@ -148,7 +155,7 @@ export default function InfoEventos() {
               type="button"
               className={stylese.botao_filtrar}
               value="Buscar"
-              onClick={() => filtrarEventos()}
+              onClick={handleSubmit}
             />
           </div>
           <div className={stylese.secao_filtro}>
@@ -165,7 +172,7 @@ export default function InfoEventos() {
               <label>Período</label>
             </div>
             <div className="mb-3">
-              <label>Período</label>
+              {/* <label>Período</label> */}
               <input
                 type="date"
                 className="form-control"
@@ -214,7 +221,7 @@ export default function InfoEventos() {
                   className="form-check-input"
                   value="nacional"
                   checked={national}
-                  onChange={() => setNational(national)}
+                  onChange={handleNationalChange}
                 />
               </div>
 
@@ -226,11 +233,13 @@ export default function InfoEventos() {
                   className="form-check-input"
                   value="internacional"
                   checked={!national}
-                  onChange={() => setNational(!national)}
+                  onChange={handleNationalChange}
                 />
               </div>
             </div>
-            <StateFilter selectedStates={selectedStates} handleCheckboxChange={handleCheckboxChange} />
+
+            {national &&
+              <StateFilter selectedStates={selectedStates} handleCheckboxChange={handleCheckboxChange} />}
           </div>
         </div>
         <div className={stylese.eventos}>
@@ -240,42 +249,14 @@ export default function InfoEventos() {
             </div>
           ) : (
             <div>
-              <div>
-                <label>
+              <div className={"flex justify-end"}>
+                {/* <label>
                   Página{" "}
                   {eventos.length / 6 <= 1 ? 1 : Math.ceil(eventos.length / 6)}{" "}
                   - {eventos.length <= 6 ? eventos.length : 6} de{" "}
                   {eventos.length} eventos.
-                </label>
-                <nav aria-label="Navegação de página exemplo">
-                  <ul className="pagination">
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        Anterior
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        1
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        2
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        3
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        Próximo
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
+                </label> */}
+                <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
               </div>
               <div>
                 <table>
@@ -315,9 +296,9 @@ export default function InfoEventos() {
                                 <ul
                                   className={stylese.tabela_eventos_info_topico}
                                 >
-                                  <li>
+                                  {/* <li>
                                     <label>Nome da empresa</label>
-                                  </li>
+                                  </li> */}
                                   <li>
                                     <label>Local</label>
                                   </li>

@@ -55,8 +55,8 @@ export function formatDate(dateString) {
   return date.toLocaleDateString("pt-BR", options);
 }
 export const getFullAddress = (location) => {
-  // console.log(location)
-  return `${location.address_type}: ${location.address}, ${location.number}, ${location.city} - ${location.uf}, ${location.zip_code}`;
+  const address = `${location.address_type}: ${location.address}, ${location.number}, ${location.city} - ${location.uf}, ${location.zip_code}`;
+  return address.replace(/\s{2,}/g, ' ');
 };
 
 const formatPhone = (value) =>
