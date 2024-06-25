@@ -99,7 +99,7 @@ const OrderRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
           'page-size': pageSize = 10,
           'start-date': tsStartDate = getStartOfDayTimestamp(),
           'end-date': tsEndDate = getLastdayOfNextMonthTimestamp(),
-          national = true, 'order-by': orderBy = 'created-at:asc', 'category-id': categoryId,
+          national = 'true', 'order-by': orderBy = 'created-at:asc', 'category-id': categoryId,
           'order-status': orderStatusParam = OrderStatus.PROCESSING, 'event-status': eventStatusParam = EventStatus.PLANNED,
         }
       } = request;
@@ -109,9 +109,11 @@ const OrderRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
       const orderStatus = mappingFilterStatus[orderStatusParam.toLowerCase()];
       const queryIntervalDate: QueryIntervalDate = { tsStartDate, tsEndDate };
 
+      const isNational = national.toLowerCase() === 'true';
+
       try {
         const order = await orderService.searchOrdersByEmail(
-          customerEmail, paginationParams, orderCriteria, queryIntervalDate, national, eventStatusParam, orderStatus, categoryId
+          customerEmail, paginationParams, orderCriteria, queryIntervalDate, isNational, eventStatusParam, orderStatus, categoryId
         );
         return reply.code(200).send(order);
       } catch (error) {

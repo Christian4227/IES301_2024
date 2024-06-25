@@ -92,6 +92,7 @@ class EventService {
 		query?: string,
 		status?: EventStatus,
 		category_id?: number,
+		national: boolean = true,
 	): Promise<PaginatedEventResult> => {
 
 		let { page, pageSize } = paginationParams;
@@ -125,9 +126,14 @@ class EventService {
 		if (!isValidDateRange(startDate.getTime(), endDate.getTime()))
 			throw new Error("The date range is invalid.");
 
-		const location = uf ?
-			{ country: 'BRASIL', uf: { in: uf.map((estado) => estado.toUpperCase()) } }
-			: { country: { not: 'BRASIL' } }
+		let location;
+		if (national) {
+			location = { country: 'BRASIL' }
+			if (uf?.length)
+				location = { ...location, uf: { in: uf.map((estado) => estado.toUpperCase()) } }
+		}
+		else
+			location = { country: { not: 'BRASIL' } }
 
 		const paginatedEventResults: PaginatedEventResult = await this.eventRepository.findEvents(
 			paginationParams, orderBy, location, startDate, endDate, query, status, category_id
