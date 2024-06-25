@@ -61,7 +61,7 @@ export class OrderService {
     const location = { country: national ? { equals: 'BRASIL' } : { not: 'BRASIL' } }
 
     // Lógica para buscar e paginar as ordens
-    const orders = await this.orderRepository.getOrders(customerEmail, location, categoryId, startDate, endDate, orderBy, paginationParams, statusEvent, statusOrder);
+    const orders = await this.orderRepository.getOrders(customerEmail, location, startDate, endDate, orderBy, paginationParams, statusEvent, statusOrder, categoryId);
     return orders;
   };
   getOrderById = async (orderId: string): Promise<Order> => {

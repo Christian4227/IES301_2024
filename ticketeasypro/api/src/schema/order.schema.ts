@@ -40,7 +40,7 @@ export const QueryPaginationFilterOrderEmailSchema = Type.Object({
     'page-size': Type.Integer({ default: 10, minimum: 1, maximum: 50 }),
     'start-date': Type.Optional(Type.Integer()),
     'end-date': Type.Optional(Type.Integer()),
-    'national': Type.Boolean({ default: true }),
+    'national': Type.String({ default: 'true' }),
     'order-by': Type.Optional(Type.String({ default: 'created-at:asc' })),
     'category-id': Type.Optional(Type.Integer()),
     'order-status': Type.Optional(Type.Enum(OrderStatus, { default: OrderStatus.PROCESSING })),

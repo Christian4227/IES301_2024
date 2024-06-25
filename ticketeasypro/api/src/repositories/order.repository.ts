@@ -1,5 +1,5 @@
 // import { OrderCreate, OrderCreateInput, OrderTicketCreate, OrderUpdateInput } from "@interfaces/order.interface";
-import { EventStatus, Order, OrderStatus, Prisma } from "@prisma/client";
+import { Category, EventStatus, Order, OrderStatus, Prisma } from "@prisma/client";
 import { PaymentMethod } from "./../schema/order.schema"
 import prisma from "./prisma";
 import { OrderTicket } from "src/schema/orderTicket.schema";
@@ -56,35 +56,33 @@ class OrderRepository {
   async getOrders(
     customerId: string,
     location: {},
-    categoryId: number | undefined,
     startDate: Date,
     endDate: Date,
-    orderBy: Prisma.OrderOrderByWithRelationInput[] = [{ created_at: "asc" }],
-    paginationParams: PaginationParams = { page: 1, pageSize: 10 },
-    eventStatus: EventStatus,
-    orderStatus: OrderStatus
+    orderBy: Prisma.OrderOrderByWithRelationInput[] = [{ created_at: 'asc' }],
+    paginationParams: PaginationParams = { page: 1, pageSize: 10 }, eventStatus: EventStatus, orderStatus: OrderStatus,
+    categoryId: any
   ): Promise<PaginatedOrderResult> {
-
+    // Inicializando whereClause com event vazio para evitar erro de 'Possibly undefined'
     const whereClause: Prisma.OrderWhereInput = {
       customer_id: customerId,
       status: orderStatus,
-      event: {
-        initial_date: { gte: startDate, lte: endDate }, // deve vir pelo parametro
-        location: location,
-        category_id: categoryId, // deve vir pelo parametro
-        status: { equals: eventStatus }, // deve vir pelo parametro
-      }
-    }
+      event: { initial_date: { gte: startDate, lte: endDate }, location: location, status: { equals: eventStatus } }
+    };
+
+    // Adicionando filtro de categoria apenas se categoryId não for undefined
+    if (!(categoryId === undefined || categoryId === null))
+      whereClause.event = { ...whereClause.event, category_id: categoryId };
+
     const select: Prisma.OrderSelect = {
       id: true,
-      // customer: { select: { name: true, email: true, phone: true, phone_fix: true } },
       event: {
         select: {
-          id: true, location: {
+          id: true,
+          location: {
             select: {
               id: true, name: true, address_type: true, address: true, number: true, zip_code: true, city: true,
               uf: true, country: true, complements: true, latitude: true, longitude: true
-            },
+            }
           },
           category: { select: { id: true, name: true, description: true } },
           capacity: true, status: true, name: true, description: true, initial_date: true, final_date: true,
@@ -94,24 +92,23 @@ class OrderRepository {
       OrderTicket: { select: { TicketType: { select: { id: true, name: true, discount: true } } } },
       status: true, payment_method: true, total_amount: true,
       created_at: true
-    }
-
+    };
 
     // Parâmetros de paginação incluindo orderBy
     const paginateParams: PaginateParams<Prisma.OrderDelegate, Prisma.OrderWhereInput, Prisma.OrderOrderByWithRelationInput[]> = {
-      model: this.orderDb,
+      model: prisma.order,
       where: whereClause,
       paginationParams,
       select,
       orderBy
     };
 
-    const paginated = await paginate<OrderResult, Prisma.OrderWhereInput, Prisma.OrderOrderByWithRelationInput[], typeof this.orderDb>(
+    const paginated = await paginate<OrderResult, Prisma.OrderWhereInput, Prisma.OrderOrderByWithRelationInput[], typeof prisma.order>(
       paginateParams
     );
     return paginated;
 
-  };
+  }
 
 
   async createOrder(customerId: string, eventId: number, payment_method: PaymentMethod, orderTickets: OrderTicket[]) {

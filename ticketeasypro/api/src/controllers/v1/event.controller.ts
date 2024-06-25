@@ -6,6 +6,7 @@ import { PaginatedEventResult, QueryPaginationFilterEvent } from "types/event.ty
 import { BaseEvent, ControllerEventCreate, EventResult, EventUpdate } from "@interfaces/event.interface";
 import { Prisma, Role, EventStatus } from "@prisma/client";
 import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
+import { getLastdayOfNextMonthTimestamp, getStartOfDayTimestamp } from "@utils/mixes";
 
 
 const mappingFilterStatus: Record<string, EventStatus> = {
@@ -29,7 +30,7 @@ const defaultConfig = {
   defaultOrderCriteria: [
     { name: "asc" }, { initial_date: "desc" }, { final_date: "asc" }, { base_price: "desc" }
   ] as Prisma.EventOrderByWithRelationInput[],
-  uf: ""
+  uf: []
 };
 
 const parseOrderBy = (orderBy: string): Prisma.EventOrderByWithRelationInput[] => {
@@ -45,8 +46,9 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 
   api.get('/', async (request: FastifyRequest<{ Querystring: QueryPaginationFilterEvent }>, reply: FastifyReply): Promise<PaginatedEventResult> => {
 
-    const { query: { "customer-id": customerId, filter, 'start-date': tsStartDate, 'end-date': tsEndDate, page, 'page-size': pageSize,
-      'order-by': orderBy, 'category-id': categoryId, uf, status
+    const { query: { filter, 'start-date': tsStartDate = getStartOfDayTimestamp()
+      , 'end-date': tsEndDate = getLastdayOfNextMonthTimestamp(), page, 'page-size': pageSize, national = 'true',
+      'order-by': orderBy = defaultConfig.orderBy, 'category-id': categoryId, uf, status = defaultConfig.status
     } } = request
 
     const orderCriteria = orderBy ? parseOrderBy(orderBy) : defaultConfig.defaultOrderCriteria;
@@ -57,14 +59,16 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 
     const eventStatus = mappingFilterStatus[status];
 
+    const isNational = national.toLowerCase() === 'true';
+
     const allFilterOrdenedEvents = await eventService.searchEvents(
-      paginationParams, queryIntervalDate, orderCriteria, uf, filter, eventStatus, categoryId
+      paginationParams, queryIntervalDate, orderCriteria, uf, filter, eventStatus, categoryId, isNational
     );
 
     return reply.code(200).send(allFilterOrdenedEvents);
   }
   );
-  api.get('/:eventId', { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER, Role.SPECTATOR])] },
+  api.get('/:eventId',
     async (request: FastifyRequest<{ Params: { eventId: number } }>, reply: FastifyReply): Promise<EventResult> => {
       const { body: eventUpdate, params: { eventId } } = request;
       if (!integerRegex.test(eventId.toString()))
