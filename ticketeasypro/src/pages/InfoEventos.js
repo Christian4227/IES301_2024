@@ -10,52 +10,70 @@ import client from "@/utils/client_axios";
 import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
 import { AuthContext } from "@/context/Auth";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
+import StateFilter from "@/components/StateFilter/StateFilter";
+
+import {
+  getFullAddress, formatDate, dateFormat, getStartOfDayTimestamp,
+  getLastdayOfNextMonthTimestamp, getStatusClass, getStatusClassEvent
+} from "@/utils";
+
 
 export default function InfoEventos() {
   const router = useRouter();
   const { auth } = useContext(AuthContext);
   const [eventos, setEventos] = useState([]);
+  const [categorySelected, setCategorySelected] = useState("");
   const [categorias, setCategorias] = useState([]);
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" });
   const [searchTerm, setSearchTerm] = useState("");
-  const [nacional, setNacional] = useState("nacional");
-  const Filtrar = () => {
-    const queryParams = [];
+  const [national, setNational] = useState(true);
+  const [selectedStates, setSelectedStates] = useState([]);
 
-    if (searchTerm)
-      queryParams.push(`filter=${encodeURIComponent(searchTerm)}`);
 
-    if (dataInicio)
-      queryParams.push(
-        `start-date=${encodeURIComponent(new Date(dataInicio).getTime())}`
-      );
+  const handleCategoryChange = (event) => setCategorySelected(event.target.key);
 
-    if (dataFim)
-      queryParams.push(
-        `end-date=${encodeURIComponent(new Date(dataFim).getTime())}`
-      );
+  const filtrarEventos = () => {
+    console.log(selectedStates)
+    let queryParams = {};
 
-    if (categorias)
-      queryParams.push(`category=${encodeURIComponent(categorias)}`);
+    // Adiciona 'filter' ao queryParams se searchTerm estiver definido e não vazio
+    if (searchTerm) queryParams["filter"] = encodeURIComponent(searchTerm.trim());
 
-    // if (nacional == "nacional") {
-    //   queryParams.push("country=BRASIL");
-    //   if (filter.location?.state)
-    //     queryParams.push(`uf=${encodeURIComponent(filter.location.state)}`);
-    // }
+    // Adiciona 'start-date' ao queryParams se dataInicio estiver definido e não vazio
+    if (dataInicio) queryParams["start-date"] = dataInicio;
 
-    const query = `?${queryParams.join("&")}`;
+    // Adiciona 'end-date' ao queryParams se dataFim estiver definido e não vazio
+    if (dataFim) queryParams["end-date"] = dataFim;
 
-    if (query.length == 0) {
-      handleSetMessage("Preencha pelo menos um campo do filtro.", "error");
-      return;
+    // Adiciona 'category' ao queryParams se categorySelected estiver definido e não vazio
+    if (categorySelected !== "" && categorySelected !== null && categorySelected !== undefined) {
+      queryParams["category"] = encodeURIComponent(categorySelected.split("-")[1]);
     }
+
+    // Adiciona 'national' ao queryParams
+    queryParams["national"] = national.toString();
+
+    // Adiciona estados selecionados ao queryParams se 'national' for verdadeiro e selectedStates não estiver vazio
+    if (national && selectedStates.length > 0) {
+      selectedStates.forEach((selectedState, index) => {
+        queryParams[`uf[${index}]`] = selectedState;
+      });
+    }
+
+    // Gera a query string final
+    const queryString = Object.keys(queryParams)
+      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`)
+      .join('&');
+
+    console.log(queryString);
+
     client
-      .get(`/events/?${query}&start-date=${dataInicio}&end-date=${dataFim}`)
+      .get(`/events/?${query}`)
       .then((response) => {
         setEventos(response.data.data);
+
         handleSetMessage("Filtro aplicado com sucesso.", "success");
       })
       .catch((error) => {
@@ -63,43 +81,34 @@ export default function InfoEventos() {
         console.log("Erro na requisição " + error);
       });
   };
-  const ReservarIngresso = (idEvento) => {
-    if (auth) {
-      router.push(
-        `./Cliente/EventosCliente/EventoEscolhido?eventId=${idEvento}`
-      );
-    } else {
-      router.push(`./Login?idEvento=${idEvento}`);
-    }
+  const handleCheckboxChange = (e) => {
+    const stateCode = e.target.value;
+    setSelectedStates(prevSelectedStates => {
+      if (e.target.checked) {
+        return [...prevSelectedStates, stateCode];
+      } else {
+        return prevSelectedStates.filter(code => code !== stateCode);
+      }
+    });
   };
-  const VisualizarEvento = (eventId) => {
+  console.log(selectedStates);
+
+  const ReservarIngresso = (idEvento) => {
+    if (auth)
+      router.push(`./Cliente/EventosCliente/EventoEscolhido?eventId=${idEvento}`);
+    else
+      router.push(`./Login?idEvento=${idEvento}`);
+  };
+  const visualizarEvento = (eventId) => {
     router.push(`/InfoTipoEvento?eventId=${eventId}`);
   };
   const handleSetMessage = (message, type) => {
     setMessage({ text: message, type });
   };
-
-  useEffect(() => {
-    const now = new Date();
-    var dia = now.getDate();
-    dia = dia < 10 ? "0" + dia : dia;
-    var mes = now.getMonth() + 1;
-    mes = mes < 10 ? "0" + mes : mes;
-    var ano = now.getFullYear();
-
-    setDataInicio(ano + "-" + mes + "-" + dia);
-
-    const nextMonthLastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Último dia do próximo mês
-    var diaFim = nextMonthLastDay.getDate();
-    diaFim = diaFim < 10 ? "0" + diaFim : diaFim;
-    var mesFim = nextMonthLastDay.getMonth() + 1;
-    mesFim = mesFim < 10 ? "0" + mesFim : mesFim;
-    var anoFim = nextMonthLastDay.getFullYear();
-
-    setDataFim(anoFim + "-" + mesFim + "-" + diaFim);
+  const fecthData = async () => {
     client
       .get(
-        `/events/?uf=SP&start-date=${new Date(ano + "-" + mes + "-" + dia).getTime()}&end-date=${new Date(anoFim + "-" + mesFim + "-" + diaFim).getTime()}`
+        `/events/?uf=SP&start-date=${dataInicio}}&end-date=${dataFim}`
       )
       .then((response) => {
         setEventos(response.data.data);
@@ -108,11 +117,17 @@ export default function InfoEventos() {
         console.log("Erro na requisição " + error);
       });
 
+  }
+  useEffect(() => {
+
+    const initialDate = new Date(getStartOfDayTimestamp());
+    const finalDate = new Date(getLastdayOfNextMonthTimestamp());
+    setDataInicio(dateFormat(initialDate));
+    setDataFim(dateFormat(finalDate));
+    fecthData()
     client
       .get(`/categories`)
-      .then((response) => {
-        setCategorias(response.data.data);
-      })
+      .then((response) => { setCategorias(response.data.data) })
       .catch((error) => {
         console.log("Erro na requisição " + error);
       });
@@ -133,7 +148,7 @@ export default function InfoEventos() {
               type="button"
               className={stylese.botao_filtrar}
               value="Buscar"
-              onClick={() => Filtrar()}
+              onClick={() => filtrarEventos()}
             />
           </div>
           <div className={stylese.secao_filtro}>
@@ -171,13 +186,17 @@ export default function InfoEventos() {
           <div className={stylese.secao_filtro}>
             <div className={stylese.secao_filtro_titulo}>
               <label>Categoria</label>
-              <select className="form-select">
+              <select className="form-select"
+                value={categorySelected}
+                onChange={handleCategoryChange}
+              >
                 <option value="">Selecione a categoria...</option>
-                {categorias.map((categoria) => (
-                  <option key={categoria.id} value={categoria.id}>
-                    {categoria.name}
-                  </option>
-                ))}
+                {categorias.length !== 0 &&
+                  categorias.map((categoria) => (
+                    <option key={`cat-${categoria.id}`} value={`${categoria.id}`} >
+                      {categoria.name}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>
@@ -194,8 +213,8 @@ export default function InfoEventos() {
                   name="localidade"
                   className="form-check-input"
                   value="nacional"
-                  checked={nacional === "nacional"}
-                  onChange={() => setNacional("nacional")}
+                  checked={national}
+                  onChange={() => setNational(national)}
                 />
               </div>
 
@@ -206,127 +225,12 @@ export default function InfoEventos() {
                   name="localidade"
                   className="form-check-input"
                   value="internacional"
-                  checked={nacional === "internacional"}
-                  onChange={() => setNacional("internacional")}
+                  checked={!national}
+                  onChange={() => setNational(!national)}
                 />
               </div>
             </div>
-            <div className={stylese.filtro_localidade_estado}>
-              <div className={stylese.filtro_localidade_estado_col}>
-                <div className="mb-3">
-                  <label>AC</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>AL</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>AP</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>AM</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>BA</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>CE</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>DF</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>ES</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>GO</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>MA</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-              </div>
-              <div className={stylese.filtro_localidade_estado_col}>
-                <div className="mb-3">
-                  <label>MT</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>MS</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>MG</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>PA</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>PB</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>PR</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>PE</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>PI</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>RJ</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>RN</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-              </div>
-              <div className={stylese.filtro_localidade_estado_col}>
-                <div className="mb-3">
-                  <label>RS</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>RO</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>RR</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>SC</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>SP</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>SE</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-                <div className="mb-3">
-                  <label>TO</label>
-                  <input type="checkbox" className="form-check-input" />
-                </div>
-              </div>
-            </div>
+            <StateFilter selectedStates={selectedStates} handleCheckboxChange={handleCheckboxChange} />
           </div>
         </div>
         <div className={stylese.eventos}>
@@ -460,7 +364,7 @@ export default function InfoEventos() {
                                   type="button"
                                   id="btnVerMais"
                                   className={stylese.botao_ver}
-                                  onClick={() => VisualizarEvento(dado.id)}
+                                  onClick={() => visualizarEvento(dado.id)}
                                   value="Ver mais"
                                 />
                               </div>

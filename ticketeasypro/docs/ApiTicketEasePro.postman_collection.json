@@ -439,7 +439,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NWNkNTM0YS04MTEwLTQ5OGEtYTg1Yy0wYjg2MzlkNWEwMWUiLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE4OTU2ODc5LCJleHAiOjE3MTg5Nzg0Nzl9.6oQzbKfwEF4SUCsf-wa2fYedOSKIg_tkDtArwIQ0r1o",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMTYzMDhiMi0zNzQ5LTQzNTMtOGY5ZC0zZjUzMzI2YzQ5YmIiLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE5MjcxNjYzLCJleHAiOjE3MTkzMTQ4NjN9.z4Z3gzi_ckv9tgLE8utBqtxnpPEARWg9oR--fH7u6L4",
 									"type": "string"
 								}
 							]
@@ -447,12 +447,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_v1}}/orders",
+							"raw": "{{base_v1}}/orders?category-id=7",
 							"host": [
 								"{{base_v1}}"
 							],
 							"path": [
 								"orders"
+							],
+							"query": [
+								{
+									"key": "category-id",
+									"value": "7"
+								}
 							]
 						}
 					},
@@ -620,13 +626,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_v1}}/events/2",
+							"raw": "{{base_v1}}/events/10",
 							"host": [
 								"{{base_v1}}"
 							],
 							"path": [
 								"events",
-								"2"
+								"10"
 							]
 						}
 					},
@@ -783,7 +789,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "// {\r\n//     \"email\": \"client_espectador@ticketeasypro.com.br\",\r\n//     \"password\": \"fatec123#1sem.2024\"\r\n// }\r\n{\r\n    \"email\": \"staff2@ticketeasypro.com.br\",\r\n    \"password\": \"sEcure456@\"\r\n}",
+							"raw": "{\r\n    \"email\": \"client_espectador@ticketeasypro.com.br\",\r\n    \"password\": \"fatec123#1sem.2024\"\r\n}\r\n// {\r\n//     \"email\": \"staff2@ticketeasypro.com.br\",\r\n//     \"password\": \"sEcure456@\"\r\n// }",
 							"options": {
 								"raw": {
 									"language": "json"

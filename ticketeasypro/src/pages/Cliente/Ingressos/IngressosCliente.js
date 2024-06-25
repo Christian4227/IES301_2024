@@ -283,7 +283,7 @@ export default function IngressosCliente() {
                       value={categorySelected}
                       onChange={handleCategoryChange}
                     >
-                      <option value="">Tipo...</option>
+                      <option value="">Categoria...</option>
                       {cotegories.length !== 0 &&
                         cotegories.map((categorie) => (
                           <option
