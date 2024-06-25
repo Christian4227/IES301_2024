@@ -32,6 +32,9 @@ export default function IngressoClientePDF() {
         const response = await client.get(`orders/${idCompra}`, {
           headers: { Authorization: `Bearer ${valorToken?.accessToken}` },
         });
+        if (response.status == 200) {
+          handleSetMessage("Dados gerados com sucesso!", "success");
+        }
       } catch (error) {
         handleSetMessage("Erro ao carregar os dados", "error");
         console.log("Erro na requisição " + error);

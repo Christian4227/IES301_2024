@@ -9,7 +9,7 @@ import Link from "next/link";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-// import client from "@/utils/client_axios";
+import client from "@/utils/client_axios";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import { parseCookies } from "nookies";
 
@@ -25,23 +25,46 @@ function getToken() {
 }
 
 export default function GeralCliente() {
-  const [pedidos, setPedidos] = useState([]);
+  const [evento, setEvento] = useState([]);
   const [message, setMessage] = useState({ text: "", type: "" });
 
   const handleSetMessage = (message, type) => {
     setMessage({ text: message, type });
   };
+
+  // Renderizar os eventos no calendário
+  const handleSetCalendario = (dados) => {
+    var objeto;
+    const array = [];
+
+    var id_objeto = 1;
+    for (var i = 0; i < dados.length; i++) {
+      objeto = new Object();
+      objeto.id = id_objeto;
+      objeto.title = dados[i].event.name;
+      objeto.start = dados[i].event.initial_date;
+      objeto.end = dados[i].event.final_date;
+      objeto.backgroundColor = dados[i].event.color.toUpperCase();
+      id_objeto++;
+
+      array.push(objeto);
+    }
+
+    setEvento(array);
+  };
   useEffect(() => {
     const fetchCategories = async () => {
-      // try {
-      //   const response = await client.get(`events/${idEvento}`, {
-      //     headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
-      //   });
-      //   setEvento(response.data);
-      // } catch (error) {
-      //   handleSetMessage("Erro ao carregar as categorias", "error");
-      //   console.log("Erro na requisição de categorias:", error);
-      // }
+      try {
+        const response = await client.get(`orders/?order-status=COMPLETED`, {
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+        });
+        // setEventos(response.data.data);
+        handleSetCalendario(response.data.data);
+        // console.log(response.data.data);
+      } catch (error) {
+        handleSetMessage("Erro ao carregar as categorias", "error");
+        console.log("Erro na requisição de categorias:", error);
+      }
     };
     fetchCategories();
   }, []);
@@ -53,8 +76,7 @@ export default function GeralCliente() {
       <div className={styles.div_principal_cliente}>
         <div className={styles.div_esquerda_cliente}>
           <div className={styles.div_opcao_cliente}>
-            {/* <Link href="./EventosCliente/EventosGeraisCliente"> */}
-            <Link href="./EventosCliente/EventoEscolhido">
+            <Link href="/InfoEventos">
               <Image
                 src={eventos}
                 alt="img_eventos"
@@ -76,16 +98,12 @@ export default function GeralCliente() {
         </div>
         <div className="div_container_principal">
           <div>
-            <label>Calendário</label>
+            <div className="div_subtitulo">
+              <h2>Calendário</h2>
+            </div>
+
             <FullCalendar
-              events={[
-                {
-                  id: 1,
-                  title: "Evento de teste",
-                  start: "2024-06-15",
-                  end: "2024-06-18",
-                },
-              ]}
+              events={evento}
               plugins={[dayGridPlugin]}
               initialView="dayGridMonth"
             />

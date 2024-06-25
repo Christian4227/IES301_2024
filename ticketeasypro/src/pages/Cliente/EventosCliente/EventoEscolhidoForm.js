@@ -16,17 +16,41 @@ export default function EventoEscolhidoForm() {
   const QRCodeCompra = () => {
     router.push("./CompraQRCode");
   };
-  const [tipoIngressos, setTipoIngressos] = useState([
-    "Ingresso comum",
-    "Meia-Entrada para Estudantes",
-    "Ingresso VIP",
-    "Meia-Entrada para Idosos",
-    "Especial",
-  ]);
+  const ingressosEvento = [
+    {
+      tipo: "Ingresso comum",
+      quantidade: 0,
+      disabled: false,
+    },
+    {
+      tipo: "Meia-Entrada para Estudantes",
+      quantidade: 0,
+      disabled: false,
+    },
+    {
+      tipo: "Ingresso VIP",
+      quantidade: 0,
+      disabled: false,
+    },
+    {
+      tipo: "Meia-Entrada para Idosos",
+      quantidade: 0,
+      disabled: false,
+    },
+    {
+      tipo: "Especial",
+      quantidade: 0,
+      disabled: false,
+    },
+  ];
+  const [tipoIngressos, setTipoIngressos] = useState(ingressosEvento);
+
   const [quantidade, setQuantidade] = useState(0);
   const [adicionarLinha, setAdicionarLinha] = useState([]);
   const [quantidadeLinhas, setQuantidadeLinhas] = useState(1);
   const [message, setMessage] = useState({ text: "", type: "" });
+  const [ingressoSelecionado, setIngressoSelecionado] = useState(null);
+  const [disabled, setDisabled] = useState(false);
 
   const AdicionarQuantidade = () => {
     setQuantidade(quantidade + 1);
@@ -43,21 +67,55 @@ export default function EventoEscolhidoForm() {
   };
 
   const AdicionarLinha = () => {
-    if (quantidadeLinhas >= tipoIngressos.length) {
+    if (quantidadeLinhas >= ingressosEvento.length) {
       handleSetMessage("Quantidade de tipos de ingressos esgotados.", "error");
       return;
     }
+
+    if (tipoIngressos == "" || quantidade == 0) {
+      handleSetMessage(
+        "Selecione um tipo e uma quantidade de ingresso.",
+        "error"
+      );
+      return;
+    }
+    if (quantidadeLinhas > 1) {
+      document.getElementById(
+        `TxtTipoIngresso${quantidadeLinhas - 1}`
+      ).disabled = true;
+    }
+
     setQuantidadeLinhas(quantidadeLinhas + 1);
+
+    const index = tipoIngressos.findIndex(
+      (item) => item.tipo == ingressoSelecionado
+    );
+
+    if (index !== -1) {
+      tipoIngressos.splice(index, 1);
+    }
+    setTipoIngressos(tipoIngressos);
+    setDisabled(true);
+
     const novoComponente = (
       <div>
         <div className={styles.div_quantidade_ingresso}>
           <div className="mb-3">
             <label>Tipo de ingresso</label>
-            <select className="form-select">
+            <select
+              id={`TxtTipoIngresso${quantidadeLinhas}`}
+              className="form-select"
+              onChange={(e) => setIngressoSelecionado(e.target.value)}
+              disabled={tipoIngressos[index].disabled}
+            >
               <option value="">Selecione o tipo de ingresso...</option>
               {tipoIngressos.map((tipoIngresso, index) => (
-                <option key={`tipo-ticket-${index}`} value={tipoIngresso}>
-                  {tipoIngresso}
+                <option
+                  key={`tipo-ticket-${index}`}
+                  index={index}
+                  value={tipoIngresso.tipo}
+                >
+                  {tipoIngresso.tipo}
                 </option>
               ))}
             </select>
@@ -100,18 +158,26 @@ export default function EventoEscolhidoForm() {
       <SuporteTecnico />
       <div className={styles.div_principal}>
         <div className="div_container_principal">
-          <div>
+          <div className="div_subtitulo">
             <h1>Formulário de compra do ingresso</h1>
           </div>
           <div>
             <div className={styles.div_quantidade_ingresso}>
               <div className="mb-3">
                 <label>Tipo de ingresso</label>
-                <select className="form-select">
+                <select
+                  className="form-select"
+                  onChange={(e) => setIngressoSelecionado(e.target.value)}
+                  disabled={disabled}
+                >
                   <option value="">Selecione o tipo de ingresso...</option>
-                  {tipoIngressos.map((tipoIngresso, index) => (
-                    <option key={`tipo-ticket-${index}`} value={tipoIngresso}>
-                      {tipoIngresso}
+                  {ingressosEvento.map((tipoIngresso, index) => (
+                    <option
+                      key={`tipo-ticket-${index}`}
+                      index={index}
+                      value={tipoIngresso.tipo}
+                    >
+                      {tipoIngresso.tipo}
                     </option>
                   ))}
                 </select>
@@ -144,9 +210,11 @@ export default function EventoEscolhidoForm() {
               </div>
             </div>
             {adicionarLinha.map((linhas, index) => (
-              <div key={`linha-${index}`}>{linhas}</div>
+              <div key={`linha-${index}`} index={index}>
+                {linhas}
+              </div>
             ))}
-            {quantidadeLinhas < tipoIngressos.length ? (
+            {quantidadeLinhas < ingressosEvento.length ? (
               <div className={styles.div_quantidade_ingresso_adicionar}>
                 <div className={styles.div_quantidade_ingresso_adicionar_filha}>
                   <button

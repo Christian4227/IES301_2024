@@ -3,7 +3,6 @@ import Cabecalho from "./Cabecalho";
 import styles from "../styles/CadastroCliente.module.css";
 import styleh from "../styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Menu from "./Menu";
 import LoadingOverlay from "@components/LoadingOverlay";
 import Link from "next/link";
 import client from "@/utils/client_axios";
@@ -232,7 +231,6 @@ const TelaCadastroCliente = () => {
             </div>
           </form>
         </div>
-        <Menu id="menu-lateral" className={styleh.menu_lateral} />
         {!!message.text && (
           <ToastMessage text={message.text} type={message.type} />
         )}

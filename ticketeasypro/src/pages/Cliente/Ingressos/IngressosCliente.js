@@ -58,7 +58,7 @@ export default function IngressosCliente() {
       case "COMPLETED":
         return "Completado";
       case "CANCELLED":
-        return "Cancelado";
+        return "Cancelada";
       default:
         return "";
     }
@@ -87,24 +87,26 @@ export default function IngressosCliente() {
     setMessage({ text: message, type });
   };
 
-  const handleDeleteCompra = async (idCompra) => {
-    alert("Compra deletada.");
-    /*
-    try {
-      const response = await client.post(`webhook/${idCompra}/`, {
-        headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
-      });
-      if (response.status == 201) {
-        handleSetMessage("Ordem de compra excluída com sucesso!", "success");
-        setTimeout(() => {
-          router.replace("./TelaConfirmacaoIngresso");
-        }, 6000);
+  const handleDeleteCompra = async (idCompra, indexItem) => {
+    const resposta = window.confirm("Deseja deletar esta ordem de compra?");
+    if (resposta == true) {
+      try {
+        let data = JSON.stringify({});
+        const response = await client.post(`webhook/${idCompra}/cancel`, data, {
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+        });
+        if (response.status == 201) {
+          handleSetMessage("Ordem de compra excluída com sucesso!", "success");
+          const novasCompras = compras.filter(
+            (item, index) => index !== indexItem
+          );
+          setCompras(novasCompras);
+        }
+      } catch (error) {
+        handleSetMessage("Erro ao deletar a ordem de compra.", "error");
+        console.log("Erro na requisição de categorias:", error);
       }
-    } catch (error) {
-      handleSetMessage("Erro ao deletar a ordem de compra.", "error");
-      console.log("Erro na requisição de categorias:", error);
     }
-      */
   };
 
   const FiltrarTabelaOrdemCompra = async () => {
@@ -157,17 +159,7 @@ export default function IngressosCliente() {
 
     var dataFinal = "";
     if (dataFim !== "") {
-      if (
-        situacaoCompra == "" &&
-        nacional == "" &&
-        tipoEvento == "" &&
-        dataFinal == "" &&
-        categoriaSelecionada == ""
-      ) {
-        dataFinal = "?end-date=" + new Date(dataFim).getTime();
-      } else {
-        dataFinal = "&end-date=" + new Date(dataFim).getTime();
-      }
+      dataFinal = "&end-date=" + new Date(dataFim).getTime();
     }
 
     const query =
@@ -269,8 +261,8 @@ export default function IngressosCliente() {
                     >
                       <option value="">Selecione os status...</option>
                       <option value="PROCESSING">Processando</option>
-                      <option value="COMPLETED">Completado</option>
-                      <option value="CANCELLED">Cancelado</option>
+                      <option value="COMPLETED">Completo</option>
+                      <option value="CANCELLED">Cancelada</option>
                     </select>
                   </div>
                   <div className="mb-3">
@@ -449,7 +441,17 @@ export default function IngressosCliente() {
                           </td>
                           <td>
                             <button
-                              onClick={() => handleDeleteCompra(compra.id)}
+                              disabled={
+                                compra.status == "CANCELLED" ? true : false
+                              }
+                              className={
+                                compra.status == "CANCELLED"
+                                  ? styles.td_button_compra_cancelada
+                                  : styles.td_button_compra_disponivel
+                              }
+                              onClick={() =>
+                                handleDeleteCompra(compra.id, index)
+                              }
                             >
                               <Image
                                 src={excluir}

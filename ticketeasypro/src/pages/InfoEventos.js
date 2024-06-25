@@ -40,11 +40,11 @@ export default function InfoEventos() {
     if (categorias)
       queryParams.push(`category=${encodeURIComponent(categorias)}`);
 
-    if (nacional == "nacional") {
-      queryParams.push("country=BRASIL");
-      if (filter.location?.state)
-        queryParams.push(`uf=${encodeURIComponent(filter.location.state)}`);
-    }
+    // if (nacional == "nacional") {
+    //   queryParams.push("country=BRASIL");
+    //   if (filter.location?.state)
+    //     queryParams.push(`uf=${encodeURIComponent(filter.location.state)}`);
+    // }
 
     const query = `?${queryParams.join("&")}`;
 
@@ -53,7 +53,7 @@ export default function InfoEventos() {
       return;
     }
     client
-      .get(`/events/?${query}&start-date=${dataInicial}&end-date=${dataFinal}`)
+      .get(`/events/?${query}&start-date=${dataInicio}&end-date=${dataFim}`)
       .then((response) => {
         setEventos(response.data.data);
         handleSetMessage("Filtro aplicado com sucesso.", "success");
@@ -99,11 +99,10 @@ export default function InfoEventos() {
     setDataFim(anoFim + "-" + mesFim + "-" + diaFim);
     client
       .get(
-        `/events/?uf=SP&start-date=${new Date("2024-04-01").getTime()}&end-date=${new Date(anoFim + "-" + mesFim + "-" + diaFim).getTime()}`
+        `/events/?uf=SP&start-date=${new Date(ano + "-" + mes + "-" + dia).getTime()}&end-date=${new Date(anoFim + "-" + mesFim + "-" + diaFim).getTime()}`
       )
       .then((response) => {
         setEventos(response.data.data);
-        console.log(response.data.data);
       })
       .catch((error) => {
         console.log("Erro na requisição " + error);

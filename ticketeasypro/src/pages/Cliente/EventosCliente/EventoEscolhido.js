@@ -26,6 +26,7 @@ export default function EventoEscolhido() {
   const eventId = router.query.eventId;
   const [message, setMessage] = useState({ text: "", type: "" });
   const [evento, setEvento] = useState([]);
+  const [imageData, setImageData] = useState("");
 
   const handleSetMessage = useCallback((message, type) => {
     setMessage({ text: message, type });
@@ -42,7 +43,7 @@ export default function EventoEscolhido() {
           headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
         });
         setEvento(response.data);
-        console.log(response.data);
+        setImageData(response.data.img_banner);
       } catch (error) {
         handleSetMessage("Erro ao carregar as categorias", "error");
         console.log("Erro na requisição de categorias:", error);
@@ -53,6 +54,8 @@ export default function EventoEscolhido() {
       fetchCategories();
     }
   }, [eventId]);
+
+  if (!imageData) return <div>Carregando imagem...</div>;
 
   return (
     <div>
@@ -79,7 +82,7 @@ export default function EventoEscolhido() {
           <div className={styles.div_corpo_evento_escolhido}>
             <div className={styles.div_img_evento_escolhido}>
               <Image
-                src={evento.img_banner}
+                src={imageData}
                 alt="img_evento"
                 className={styles.img_evento_escolhido}
                 width={300}
@@ -116,7 +119,14 @@ export default function EventoEscolhido() {
                 </div>
                 <div className={styles.div_descricao_info_eventos}>
                   <label>Preço base</label>
-                  <span>{`R$ ${evento.base_price}`}</span>
+                  <span>
+                    {evento.base_price == undefined
+                      ? ""
+                      : `${evento.base_price.toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}`}
+                  </span>
                 </div>
               </div>
               <div className={styles.div_botao_reservar_evento_escolhido}>

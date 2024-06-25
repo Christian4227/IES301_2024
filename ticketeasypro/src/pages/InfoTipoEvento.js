@@ -13,19 +13,27 @@ export default function InfoTipoEvento() {
   const router = useRouter();
   const eventId = router.query.eventId;
   const [evento, setEvento] = useState([]);
+  const [imageData, setImageData] = useState("");
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await client.get(`events/public/${eventId}`);
         setEvento(response.data);
+        setImageData(response.data.img_banner);
       } catch (error) {
         console.log("Erro na requisição de categorias:", error);
       }
     };
     if (eventId) {
       fetchCategories();
+    } else {
+      router.back();
     }
   }, [eventId]);
+
+  if (!imageData) return <div>Carregando imagem...</div>;
+
   return (
     <div id="div-principal">
       <Cabecalho className={styles.Header} />
@@ -35,7 +43,7 @@ export default function InfoTipoEvento() {
         </div>
         <div className={stylese.body_imagem_tipoEvento}>
           <Image
-            src={evento.img_banner == undefined ? "" : evento?.img_banner}
+            src={imageData}
             alt="img_tipo_evento"
             className={stylese.img_tipoEvento}
             width={200}
@@ -63,7 +71,11 @@ export default function InfoTipoEvento() {
               id="Informacoes_evento"
             >
               <h1>{evento.name}</h1>
-              <p>{"Local do evento: " + getFullAddress(evento.location)}</p>
+              <p>
+                {evento.location == undefined
+                  ? ""
+                  : "Local do evento: " + getFullAddress(evento.location)}
+              </p>
               <p>
                 {"Data de início: " +
                   new Date(evento.initial_date).toLocaleDateString()}
@@ -77,11 +89,13 @@ export default function InfoTipoEvento() {
             <div className={stylese.infoTipoEvento_Ingressos} id="Ingressos">
               <h1>Ingressos disponíveis</h1>
               <p>
-                {"Preço base: " +
-                  evento.base_price.toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
+                {evento.base_price == undefined
+                  ? ""
+                  : "Preço base: " +
+                    evento.base_price.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
               </p>
               <p>{"Capacidade: " + evento.capacity}</p>
             </div>

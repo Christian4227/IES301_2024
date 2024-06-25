@@ -214,6 +214,7 @@
   height: 4em;
   display: flex;
   align-items: end;
+  margin-bottom: 1em;
 }
 
 .div_titulo_tabela h3 {
@@ -236,6 +237,7 @@
 
 .form_ingressos_campos {
   display: flex;
+  justify-content: center;
 }
 
 .form_ingressos_campos div {
@@ -273,7 +275,8 @@
   vertical-align: middle;
 }
 
-.td_img_pag_sit_compra_completado, .td_img_pag_sit_compra_cancelado, .td_img_pdf_sit_compra_processando, .td_img_pdf_sit_compra_cancelado {
+.td_img_pag_sit_compra_completado, .td_img_pag_sit_compra_cancelado, .td_img_pdf_sit_compra_processando, 
+.td_img_pdf_sit_compra_cancelado, .td_button_compra_cancelada {
   opacity: 0.3;
 } 
 
@@ -400,6 +403,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 300px;
 }
 
 .div_secao_pagamento_qrcode_img {
@@ -467,12 +471,13 @@
   display: flex;
 }
 
-.corpo_info_usuario {
-  width: 70%;
-}
-
 .div_info_evento_compras_cliente {
   margin-bottom: 1em;
+}
+
+.div_secao_pagamento_esquerda_ingressos {
+  display: flex;
+  justify-content: center;
 }
 
 .corpo_secao_info_ingresso_financeiras {
@@ -485,7 +490,7 @@
 
 .div_info_financeiras_tipos label {
   font-weight: bold;
-  width: 200px;
+  width: 400px;
   display: inline-block;
 }
 
@@ -641,6 +646,7 @@
 .div_quantidade_ingresso_adicionar_filha:hover::after {
   animation: showLinhaAdicionar 2s;
   background-color: #565555;
+  z-index: 0;
 }
 
 @keyframes encolherSideBar {

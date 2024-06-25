@@ -92,6 +92,15 @@ h3 {
   font-size: 1.4em !important;
 }
 
+.div_subtitulo {
+  border-bottom: 1px solid black;
+  margin-bottom: 1em;
+}
+
+.div_subtitulo label {
+  font-weight: bold;
+}
+
 /* Divisões */
 .div_container_pequeno {
     border: 1px solid black;
