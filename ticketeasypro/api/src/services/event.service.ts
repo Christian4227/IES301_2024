@@ -1,5 +1,5 @@
 
-import { EventStatus, Prisma } from "@prisma/client";
+import { EventStatus, Prisma, TicketStatus } from "@prisma/client";
 import { isValidDateRange } from "../utils/mixes";
 import EventRepository from "./../repositories/event.repository";
 import { BaseEvent, Event, EventCreate, EventResult, EventUpdateResult } from "@interfaces/event.interface";
@@ -7,6 +7,7 @@ import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interfac
 import { EventUniqueResult, PaginatedEventResult, PartialEventUpdate } from "types/event.type";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { integerRegex } from "@utils/validators";
+import prisma from "src/repositories/prisma";
 
 class EventService {
 	private eventRepository: EventRepository;
@@ -38,6 +39,31 @@ class EventService {
 	filterNullsData = (data: PartialEventUpdate): PartialEventUpdate => {
 		return Object.fromEntries(Object.entries(data).filter(([_, value]) => value !== null && value !== undefined));
 	};
+
+	cancel = async (eventId: number): Promise<EventUniqueResult> => {
+		eventId = Number(eventId);
+		// const eventStored: EventUniqueResult = await this.eventRepository.findDetails(eventId);
+
+		const result = await prisma.$transaction(async (transaction) => {
+			// Verificar se o TypeTicket existe
+			const eventStored = await transaction.event.findUnique({ where: { id: eventId } });
+
+			// Se o TypeTicket não existir, lançar um erro
+			if (!eventStored) throw new Error(`Event id: ${eventStored} not found.`);
+
+			const orderUpdated = await transaction.event.update({
+				where: { id: eventStored.id },
+				data: { status: EventStatus.CANCELLED }
+			});
+			await transaction.ticket.updateMany({
+				where: { event_id: orderUpdated.id },
+				data: { status: TicketStatus.CANCELLED },
+			});
+			return orderUpdated;
+		});
+		return this.getEvent(result.id);
+
+	}
 
 	modify = async (eventId: number, dataUpdate: PartialEventUpdate): Promise<EventUpdateResult> => {
 		const filteredDataUpdate = this.filterNullsData(dataUpdate);

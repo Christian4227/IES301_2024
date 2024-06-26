@@ -53,12 +53,20 @@ export function formatDate(dateString) {
   const date = new Date(dateString);
   const options = { day: "2-digit", month: "2-digit", year: "numeric" };
   return date.toLocaleDateString("pt-BR", options);
-}
-export const getFullAddress = (location) => {
-  const address = `${location.address_type}: ${location.address}, ${location.number}, ${location.city} - ${location.uf}, ${location.zip_code}`;
-  return address.replace(/\s{2,}/g, ' ');
 };
 
+export const getFullAddress = (location) => {
+  const addressParts = [
+    location.address_type.trim(),
+    location.address.trim(),
+    location.number.trim(),
+    location.city.trim() + " - " + location.uf.trim(),
+    location.zip_code.trim()
+  ];
+
+  const address = addressParts.filter(part => part !== "").join(", ");
+  return address.replace(/\s{2,}/g, ' ');
+};
 const formatPhone = (value) =>
   value.replace(/\D/g, "").replace(/(\d{2})(\d)/, "($1) $2");
 const formatFixPhone = (value) =>
@@ -80,4 +88,15 @@ export const getLastdayOfNextMonthTimestamp = () => {
   return Math.floor(nextMonth.getTime()); // Retorna o timestamp UNIX
 };
 
-export { emailRegex, dateFormat, formatFixPhone, formatCellPhone };
+function getToken() {
+  const cookies = parseCookies();
+  let token;
+  let valorToken;
+  if (cookies && cookies["ticket-token"]) {
+    token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
+    valorToken = JSON.parse(token);
+  }
+  return valorToken;
+}
+
+export { emailRegex, dateFormat, formatFixPhone, formatCellPhone, getToken };

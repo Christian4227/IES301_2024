@@ -130,6 +130,14 @@ const EventRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 
       return reply.code(201).send(eventCreated);
     });
+  api.put('/:eventId/cancel', { preHandler: [api.authenticate, api.authorizeRoles([Role.EVENT_MANAGER,])] },
+    async (request: FastifyRequest<{
+      Params: { eventId: number }, Body: EventUpdate
+    }>, reply: FastifyReply): Promise<BaseEvent> => {
+      const { params: { eventId } } = request;
+      const eventCancelled = await eventService.cancel(eventId);
+      return reply.code(201).send(eventCancelled);
+    })
 
 }
 export default EventRoute;

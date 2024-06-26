@@ -273,7 +273,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_v1}}/events?uf=Sp",
+							"raw": "{{base_v1}}/events?start-date=1708819200000&end-date=1724716800000&page=1&national=true",
 							"host": [
 								"{{base_v1}}"
 							],
@@ -282,28 +282,20 @@
 							],
 							"query": [
 								{
-									"key": "status",
-									"value": "planned",
-									"disabled": true
+									"key": "start-date",
+									"value": "1708819200000"
 								},
 								{
-									"key": "order-by",
-									"value": "price:asc,date:asc,name:desc",
-									"disabled": true
+									"key": "end-date",
+									"value": "1724716800000"
 								},
 								{
-									"key": "status",
-									"value": "PLANNED",
-									"disabled": true
+									"key": "page",
+									"value": "1"
 								},
 								{
-									"key": "uf",
-									"value": "Sp"
-								},
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
+									"key": "national",
+									"value": "true"
 								}
 							]
 						}
@@ -382,6 +374,43 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Update Cancel Event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNjJlYjc2Yy1hMWQwLTQyMzQtODQ1YS1jZDM1MmQwMDRlYTEiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE2MDQ5MTAyLCJleHAiOjE3MTYwNzA3MDJ9.XbQXRTm9WwA7DZmHXBXQ0AqQgpSniHalAH9dPwfBjf0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Corinthians x Santos\",\r\n    \"extra_key\": \"sdasdasd\",\r\n    \"description\": \"Jogo de volta.\",\r\n    \"location_id\": 1,\r\n    \"ts_final_date\": 1716082602020,\r\n    \"ts_initial_date\": 1716082442020,\r\n    \"status\": \"AVAILABLE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/events/1",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"events",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -396,7 +425,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhM2E0Mjk3MC0wYmJkLTRjZGYtYTA5Zi03OGIyZjVhYmNkYjEiLCJsb2dpbiI6InN0YWZmMkB0aWNrZXRlYXN5cHJvLmNvbS5iciIsInJvbGUiOiJTVEFGRiIsIm5hbWUiOiJTdGFmZiBUd28iLCJpYXQiOjE3MTkwODAyOTgsImV4cCI6MTcxOTEyMzQ5OH0.Hcugg08ktuSLL2w-aT7YOww6_XciEqqFN_Pvo30laOM",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhM2E0Mjk3MC0wYmJkLTRjZGYtYTA5Zi03OGIyZjVhYmNkYjEiLCJsb2dpbiI6InN0YWZmMkB0aWNrZXRlYXN5cHJvLmNvbS5iciIsInJvbGUiOiJTVEFGRiIsIm5hbWUiOiJTdGFmZiBUd28iLCJpYXQiOjE3MTkyNjA1MjQsImV4cCI6MTcxOTMwMzcyNH0.aEtNqATJJld4Q44koDgxSdSNiyKl5yjsZBx0nJzmEA4",
 									"type": "string"
 								}
 							]
@@ -405,7 +434,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "// {\r\n//     \"paymentMethod\": \"CASH\"\r\n// } //opcional obrigatório mesmo que vazio",
+							"raw": "{}\r\n\r\n// {\r\n//     \"paymentMethod\": \"CASH\"\r\n// } //obrigatório mesmo que vazio",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -413,14 +442,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_v1}}/webhook/867d4abe-dd75-48d2-ab35-f65a8edef7ae/payment-confirm",
+							"raw": "{{base_v1}}/webhook/24cad17b-e220-4d46-81f9-e04a5f9808b3/cancel",
 							"host": [
 								"{{base_v1}}"
 							],
 							"path": [
 								"webhook",
-								"867d4abe-dd75-48d2-ab35-f65a8edef7ae",
-								"payment-confirm"
+								"24cad17b-e220-4d46-81f9-e04a5f9808b3",
+								"cancel"
 							]
 						}
 					},
@@ -522,7 +551,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNTUyY2ZiNi0yNmMzLTRlYzQtOTMyMS02YzU1YzRiYzViZTciLCJsb2dpbiI6InN0YWZmMkB0aWNrZXRlYXN5cHJvLmNvbS5iciIsInJvbGUiOiJTVEFGRiIsIm5hbWUiOiJTdGFmZiBUd28iLCJpYXQiOjE3MTkwNTk2NzksImV4cCI6MTcxOTEwMjg3OX0.-Jx755GTeGBSjb6o15fjS__g43NsJj5fPSNzRhBI7bo",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhM2E0Mjk3MC0wYmJkLTRjZGYtYTA5Zi03OGIyZjVhYmNkYjEiLCJsb2dpbiI6InN0YWZmMkB0aWNrZXRlYXN5cHJvLmNvbS5iciIsInJvbGUiOiJTVEFGRiIsIm5hbWUiOiJTdGFmZiBUd28iLCJpYXQiOjE3MTkxNjM2OTksImV4cCI6MTcxOTIwNjg5OX0.9X0-mAukG9iguw4siiuM2aKPaQsD2KH4nK15-c4faxE",
 									"type": "string"
 								}
 							]
@@ -530,13 +559,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_v1}}/orders/f5c06e4d-2cd8-48fa-8038-ec71db52c0a5",
+							"raw": "{{base_v1}}/orders/0319b068-cd10-4e2d-b15d-3d397978c142",
 							"host": [
 								"{{base_v1}}"
 							],
 							"path": [
 								"orders",
-								"f5c06e4d-2cd8-48fa-8038-ec71db52c0a5"
+								"0319b068-cd10-4e2d-b15d-3d397978c142"
 							]
 						}
 					},
@@ -789,7 +818,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"client_espectador@ticketeasypro.com.br\",\r\n    \"password\": \"fatec123#1sem.2024\"\r\n}\r\n// {\r\n//     \"email\": \"staff2@ticketeasypro.com.br\",\r\n//     \"password\": \"sEcure456@\"\r\n// }",
+							"raw": "// {\r\n//     \"email\": \"client_espectador@ticketeasypro.com.br\",\r\n//     \"password\": \"fatec123#1sem.2024\"\r\n// }\r\n// {\r\n//     \"email\": \"staff2@ticketeasypro.com.br\",\r\n//     \"password\": \"sEcure456@\"\r\n// }\r\n{\r\n    \"email\": \"manager@ticketeasypro.com.br\",\r\n    \"password\": \"maNaGeR1-2_3#2024&*\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -943,7 +972,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_v1}}/ticket-types?filter=est&order-by=discount:asc",
+							"raw": "{{base_v1}}/ticket-types?order-by=discount:asc",
 							"host": [
 								"{{base_v1}}"
 							],
@@ -953,7 +982,8 @@
 							"query": [
 								{
 									"key": "filter",
-									"value": "est"
+									"value": "est",
+									"disabled": true
 								},
 								{
 									"key": "order-by",

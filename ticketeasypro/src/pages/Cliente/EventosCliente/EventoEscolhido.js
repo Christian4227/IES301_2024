@@ -63,7 +63,7 @@ export default function EventoEscolhido() {
       <CabecalhoInfoCliente secao="Evento escolhido" />
       <SuporteTecnico />
       <div className={styles.div_principal}>
-        <div className="div_container_principal">
+        <div className="div_container_principal flex-auto">
           <div>
             <div className={styles.secao_tabela_eventos_titulo}>
               <h2>{evento.name}</h2>
@@ -122,10 +122,7 @@ export default function EventoEscolhido() {
                   <span>
                     {evento.base_price == undefined
                       ? ""
-                      : `${(evento.base_price / 100).toLocaleString("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      })}`}
+                      : `${(evento.base_price / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL", })}`}
                   </span>
                 </div>
               </div>
