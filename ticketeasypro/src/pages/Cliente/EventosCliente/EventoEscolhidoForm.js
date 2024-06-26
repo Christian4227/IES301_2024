@@ -16,13 +16,13 @@ const TicketForm = () => {
   const router = useRouter();
   const { eventId } = router.query;
   
+  
 
 
   const fetchDataEvent = useCallback(async (eventId) => {
     try {
       const response = await client.get(`events/${eventId}`);
       setEvent(response.data);
-      
     } catch (error) {
       console.error('Erro ao buscar os detalhes do evento:', error);
     }
