@@ -11,7 +11,7 @@ const userRepo = new UserRepository();
 const usersToCreate = [
     {
         "email": "client_espectador@ticketeasypro.com.br",
-        "password": "fatec123#1sem.2024",
+        "password": "senha123",
         "email_confirmed": true,
         "birth_date": new Date("1992-07-08"),
         "name": "fulano de tal",
@@ -22,7 +22,7 @@ const usersToCreate = [
     },
     {
         "email": "client_espectador1@ticketeasypro.com.br",
-        "password": "fatec123#1sem.2024",
+        "password": "senha123",
         "email_confirmed": true,
         "birth_date": new Date("1990-05-15"),
         "name": "Maria da Silva",
@@ -33,7 +33,7 @@ const usersToCreate = [
     },
     {
         "email": "client_espectador2@ticketeasypro.com.br",
-        "password": "fatec123#1sem.2024",
+        "password": "senha123",
         "email_confirmed": true,
         "birth_date": new Date("1988-09-23"),
         "name": "João Pereira",
@@ -44,7 +44,7 @@ const usersToCreate = [
     },
     {
         "email": "client_espectador3@ticketeasypro.com.br",
-        "password": "fatec123#1sem.2024",
+        "password": "senha123",
         "email_confirmed": true,
         "birth_date": new Date("1995-12-30"),
         "name": "Ana Oliveira",
@@ -55,7 +55,7 @@ const usersToCreate = [
     },
     {
         "email": "client_espectador4@ticketeasypro.com.br",
-        "password": "fatec123#1sem.2024",
+        "password": "senha123",
         "email_confirmed": true,
         "birth_date": new Date("1985-03-05"),
         "name": "Carlos Santos",
@@ -66,7 +66,7 @@ const usersToCreate = [
     },
     {
         "email": "client_espectador5@ticketeasypro.com.br",
-        "password": "fatec123#1sem.2024",
+        "password": "senha123",
         "email_confirmed": true,
         "birth_date": new Date("1993-11-17"),
         "name": "Lucia Almeida",
@@ -75,11 +75,9 @@ const usersToCreate = [
         "phone_fix": "95620-5555",
         "role": Role.SPECTATOR
     },
-
-
     {
         "email": "root@ticketeasypro.com.br",
-        "password": "fatec123#1sem.2024",
+        "password": "admin123",
         "email_confirmed": true,
         "birth_date": new Date("1992-07-08"),
         "name": "root",
@@ -90,7 +88,7 @@ const usersToCreate = [
     },
     {
         "email": "root2@ticketeasypro.com.br",
-        "password": "fatec123_2#1sem.2024",
+        "password": "admin123",
         "email_confirmed": true,
         "birth_date": new Date("1992-07-08"),
         "name": "root 2",
@@ -101,7 +99,7 @@ const usersToCreate = [
     },
     {
         "email": "manager@ticketeasypro.com.br",
-        "password": "maNaGeR1-2_3#2024&*",
+        "password": "manager123",
         "email_confirmed": true,
         "birth_date": new Date("1990-05-15"),
         "name": "Manager",
@@ -111,17 +109,7 @@ const usersToCreate = [
     },
     {
         "email": "staff@ticketeasypro.com.br",
-        "password": "sTaFf-2_3#2024&*",
-        "email_confirmed": true,
-        "birth_date": new Date("1995-03-21"),
-        "name": "Staff Member",
-        "salt": "as1da561sd5as1da56s4d",
-        "phone": "9135-2023",
-        "role": Role.STAFF
-    },
-    {
-        "email": "staff@ticketeasypro.com.br",
-        "password": "sTaFf-2_3#2024&*",
+        "password": "staff123",
         "email_confirmed": true,
         "birth_date": new Date("1995-03-21"),
         "name": "Staff Member",
@@ -131,7 +119,7 @@ const usersToCreate = [
     },
     {
         email: "staff1@ticketeasypro.com.br",
-        password: "stAff123!",
+        password: "staff123",
         email_confirmed: true,
         birth_date: new Date("1986-02-15"),
         name: "Staff One",
@@ -142,7 +130,7 @@ const usersToCreate = [
     },
     {
         email: "staff2@ticketeasypro.com.br",
-        password: "sEcure456@",
+        password: "staff123",
         email_confirmed: true,
         birth_date: new Date("1987-03-16"),
         name: "Staff Two",
@@ -152,7 +140,7 @@ const usersToCreate = [
     },
     {
         email: "staff3@ticketeasypro.com.br",
-        password: "paSs789*",
+        password: "staff123",
         email_confirmed: true,
         birth_date: new Date("1988-04-17"),
         name: "Staff Three",
@@ -162,7 +150,7 @@ const usersToCreate = [
     },
     {
         email: "staff4@ticketeasypro.com.br",
-        password: "wOrd012#",
+        password: "staff123",
         email_confirmed: true,
         birth_date: new Date("1989-05-18"),
         name: "Staff Four",
@@ -172,7 +160,7 @@ const usersToCreate = [
     },
     {
         "email": "staff5@ticketeasypro.com.br",
-        "password": "secure234%",
+        "password": "staff123",
         "email_confirmed": true,
         "birth_date": new Date("1990-06-19"),
         "name": "Staff Five",
@@ -183,7 +171,7 @@ const usersToCreate = [
     },
     {
         "email": "manager1@ticketeasypro.com.br",
-        "password": "Manager123!",
+        "password": "manager123",
         "email_confirmed": true,
         "birth_date": new Date("1981-07-20"),
         "name": "Manager One",
@@ -193,7 +181,7 @@ const usersToCreate = [
     },
     {
         "email": "manager2@ticketeasypro.com.br",
-        "password": "Password234!",
+        "password": "manager123",
         "email_confirmed": true,
         "birth_date": new Date("1982-08-21"),
         "name": "Manager Two",
@@ -203,7 +191,7 @@ const usersToCreate = [
     },
     {
         "email": "manager3@ticketeasypro.com.br",
-        "password": "SecurePass345!",
+        "password": "manager123",
         "email_confirmed": true,
         "birth_date": new Date("1983-09-22"),
         "name": "Manager Three",
@@ -213,7 +201,7 @@ const usersToCreate = [
     },
     {
         "email": "manager4@ticketeasypro.com.br",
-        "password": "ManagerPassword456!",
+        "password": "manager123",
         "email_confirmed": true,
         "birth_date": new Date("1984-10-23"),
         "name": "Manager Four",
@@ -223,7 +211,7 @@ const usersToCreate = [
     },
     {
         "email": "manager5@ticketeasypro.com.br",
-        "password": "BestManager567!",
+        "password": "manager123",
         "email_confirmed": true,
         "birth_date": new Date("1985-11-24"),
         "name": "Manager Five",
@@ -233,7 +221,6 @@ const usersToCreate = [
         "role": Role.EVENT_MANAGER
     }
 ];
-
 
 // Função que inicia logo após API estar online, cria dados para teste
 const createUsers = async () => {

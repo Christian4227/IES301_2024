@@ -15,9 +15,7 @@ const TicketForm = () => {
   const MAX_TICKETS_FOR_USER = 5;
   const router = useRouter();
   const { eventId } = router.query;
-  
-  
-
+  let tickets_free = 0
 
   const fetchDataEvent = useCallback(async (eventId) => {
     try {
@@ -36,6 +34,16 @@ const TicketForm = () => {
       console.error('Erro ao buscar os tipos de ingressos:', error);
     }
   });
+
+  const fetchTicketFree = useCallback(async () => {
+    try {
+      const response = await client.get(`ticket/${eventId}`);
+      tickets_free = response.data.data;
+    } catch (error) {
+      console.error('Erro ao buscar os tipos de ingressos:', error);
+    }
+  });
+
 
   useEffect(() => {
     if (!eventId)
@@ -78,7 +86,13 @@ const TicketForm = () => {
   };
 
   const updateTotal = (tickets) => {
-    const total = tickets.reduce((acc, curr) => acc + curr.quantity * 100, 0);
+    const basePrice = 100;
+    const total = tickets.reduce((acc, ticket) => {
+      const type = availableTicketTypes.find(t => t.name === ticket.type);
+      if (!type) return acc;
+      const discount = type.discount;
+      return acc + ((basePrice - (basePrice * discount / 100)) * ticket.quantity);
+    }, 0);
     setTotal(total);
   };
 
@@ -93,44 +107,43 @@ const TicketForm = () => {
       <CabecalhoInfoCliente secao="Formulário de compra" />
       <SuporteTecnico />
       <div className={styles.div_principal}>
-        <div className="div_container_principal">
-          <div className="flex flex-col items-center justify-center w-2/3 mx-auto">
-            <div className="div_subtitulo">
-              <h1 className="text-center py-5">Formulário de compra do ingresso</h1>
-              <div className="flex justify-between">
-                <div className="mb-4">
-                  <label className="block text-gray-700">Ingressos disponíveis</label>
-                  <p>100</p>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Preço base</label>
-                  <p>R$ {(event.base_price / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                </div>
+        <div className="flex-col justify-center items-center w-2/3">
+          <div className="div_subtitulo ">
+            <h1 className='text-center py-5'>Formulário de compra do ingresso</h1>
+            <div className='flex justify-between'>
+              <div className="mb-4">
+                <label className="block text-gray-700">Ingressos disponíveis</label>
+                <p> {tickets_free}</p>
               </div>
-              <div className="flex flex-col items-center justify-center">
-                {tickets.map((ticket, index) => (
-                  <TicketRow
-                    key={index}
-                    index={index}
-                    ticket={ticket}
-                    onAddRow={handleAddRow}
-                    onRemoveRow={handleRemoveRow}
-                    onQuantityChange={handleQuantityChange}
-                    onTypeChange={handleTypeChange}
-                    availableTypes={getAvailableTypes(index)}
-                    totalTickets={tickets.length}
-                  />
-                ))}
+              <div className="mb-4">
+                <label className="block text-gray-700">Preço base</label>
+                <p>R$ {(event.base_price / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
               </div>
             </div>
-            <div className="flex w-9/12 justify-end items-center my-4">
-              <h2 className="text-xl font-bold mr-4">Total</h2>
-              <h2 className="text-xl font-bold ml-4">R$ {(total / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h2>
+            <div className={`flex flex-col items-center justify-center`}>
+              {tickets.map((ticket, index) => (
+                <TicketRow
+                  key={index}
+                  basePrice={event.base_price}
+                  index={index}
+                  ticket={ticket}
+                  onAddRow={handleAddRow}
+                  onRemoveRow={handleRemoveRow}
+                  onQuantityChange={handleQuantityChange}
+                  onTypeChange={handleTypeChange}
+                  availableTypes={getAvailableTypes(index)}
+                  totalTickets={tickets.length}
+                />
+              ))}
             </div>
-            <div className={`flex w-4/6 justify-center my-4`}>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded mr-4">Salvar</button>
-              <button className="bg-red-500 text-white px-4 py-2 rounded ml-4">Cancelar</button>
-            </div>
+          </div>
+          <div className="flex justify-between items-center my-4">
+            <h2 className="text-xl font-bold">Total</h2>
+            <h2 className="text-xl font-bold">R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h2>
+          </div>
+          <div className="flex justify-between">
+            <button className="bg-blue-500 text-white px-4 py-2 rounded">Salvar</button>
+            <button className="bg-red-500 text-white px-4 py-2 rounded">Cancelar</button>
           </div>
         </div>
       </div>

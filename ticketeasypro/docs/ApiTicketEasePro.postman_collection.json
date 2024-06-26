@@ -816,6 +816,16 @@
 				{
 					"name": "Get Paginate Venues",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNTdhNWQ0MS01YzI1LTRlYzUtYTQ4NC1iZjkwOTVmZTBiZDAiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE5MzcwMTI5LCJleHAiOjE3MTk0MTMzMjl9.0Imh5l6eiFE-3scYf0j0jHdT60AsW3O8kDRUJ0A6QLA",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -825,28 +835,6 @@
 							],
 							"path": [
 								"venues"
-							],
-							"query": [
-								{
-									"key": "status",
-									"value": "planned",
-									"disabled": true
-								},
-								{
-									"key": "category-id",
-									"value": "4",
-									"disabled": true
-								},
-								{
-									"key": "filter",
-									"value": "rock",
-									"disabled": true
-								},
-								{
-									"key": "order-by",
-									"value": "price:asc,date:asc,name:desc",
-									"disabled": true
-								}
 							]
 						}
 					},
@@ -1145,6 +1133,134 @@
 									"value": "1",
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ticket",
+			"item": [
+				{
+					"name": "create new TicketType",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"INGRESSO MEIA-Idoso\",\r\n  \"discount\": 50,\r\n  \"description\": \"Em cumprimento a lei de benficios sociais.\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/ticket-types",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"ticket-types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update TicketType",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"name\": \"INGRESSO COMUM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/ticket-types/6",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"ticket-types",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/users/2671c006-86e5-43d1-b811-9b6c2c2d2fd9",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"users",
+								"2671c006-86e5-43d1-b811-9b6c2c2d2fd9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Checkin With Ticket",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MTMxNWQ0Zi01ZTUwLTRlODctYTJjYy1hODE5YzAzYTlhYzQiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE1ODg3OTYwLCJleHAiOjE3MTU5MDk1NjB9.Ieh3OljFJ9pMABdyZui-O7ro8Y5_kXm0wJjDthEJKdg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZWE3OGI2YS1jOGU3LTQwMzItYmRhYS1iMjcxNzc0YTMzNjAiLCJsb2dpbiI6InJvb3RAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiQURNSU4iLCJuYW1lIjoicm9vdCIsImlhdCI6MTcxNDU3Mzc0NywiZXhwIjoxNzE0NTk1MzQ3fQ.7ZptQElh_lrAcHg4PJPy_GIl5gWxLcWYO_bXVRwLs6U",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{base_v1}}/ticket-types/1",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"ticket-types",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Free Tickets Count",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/tickets/66",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"tickets",
+								"66"
 							]
 						}
 					},

@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import fastify, { FastifyRequest, FastifyReply } from "fastify";
 import fastifyJwt from "@fastify/jwt";
 import fCookie from '@fastify/cookie';
@@ -5,7 +8,7 @@ import cors from "@fastify/cors";
 import { initialData } from "./lifespan";
 import Authentication, { AuthorizeRoles } from "./middlewares/JWTAuth";
 import { FastifyInstance } from "./types/fastify";
-import { WebhookRoute, OrderRoute, EventRoute, VenueRoute, UserRoute, AccountRoute, CategoryRoute, TicketTypeRoute } from "./controllers/all_controllers";
+import { WebhookRoute, TicketRoute, OrderRoute, EventRoute, VenueRoute, UserRoute, AccountRoute, CategoryRoute, TicketTypeRoute } from "./controllers/all_controllers";
 
 
 const api: FastifyInstance = fastify({ logger: true });
@@ -37,6 +40,7 @@ api.register(CategoryRoute, { prefix: '/v1/categories' });
 api.register(OrderRoute, { prefix: '/v1/orders' });
 api.register(WebhookRoute, { prefix: '/v1/webhook' });
 api.register(VenueRoute, { prefix: '/v1/venues' });
+api.register(TicketRoute, { prefix: '/v1/tickets' });
 
 
 const start = async () => {
@@ -44,6 +48,8 @@ const start = async () => {
     api.ready(async err => {
         if (err) throw err;
         console.log("Todos os plugins foram carregados e o servidor está pronto.");
+        // console.log('JWT Secret Key:', process.env.JWT_SECRET_KEY);
+        // console.log('Cookie Secret Key:', process.env.COOKIE_SECRET_KEY);
         await initialData();
     }
     )
