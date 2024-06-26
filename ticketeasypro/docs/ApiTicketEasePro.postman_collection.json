@@ -247,7 +247,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZGYzOGRhZS05N2I5LTRhYmQtYTNhNS0yYmZhYjAwNjFjNDEiLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE4ODk0MTEyLCJleHAiOjE3MTg5MTU3MTJ9.C5rzGGXaAQdLjwLXH-iFMMsHy0Mlvfz15nM395DrymI",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNTdhNWQ0MS01YzI1LTRlYzUtYTQ4NC1iZjkwOTVmZTBiZDAiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE5MzcwMTI5LCJleHAiOjE3MTk0MTMzMjl9.0Imh5l6eiFE-3scYf0j0jHdT60AsW3O8kDRUJ0A6QLA",
 									"type": "string"
 								}
 							]
@@ -383,7 +383,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNjJlYjc2Yy1hMWQwLTQyMzQtODQ1YS1jZDM1MmQwMDRlYTEiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE2MDQ5MTAyLCJleHAiOjE3MTYwNzA3MDJ9.XbQXRTm9WwA7DZmHXBXQ0AqQgpSniHalAH9dPwfBjf0",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNTdhNWQ0MS01YzI1LTRlYzUtYTQ4NC1iZjkwOTVmZTBiZDAiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE5MzY2ODg3LCJleHAiOjE3MTk0MTAwODd9.uhUm2BZOQIHp9QBEBJ50wkoXdy8DuuccadrUdhlpIjY",
 									"type": "string"
 								}
 							]
@@ -400,13 +400,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_v1}}/events/1",
+							"raw": "{{base_v1}}/events/109/cancel",
 							"host": [
 								"{{base_v1}}"
 							],
 							"path": [
 								"events",
-								"1"
+								"109",
+								"cancel"
 							]
 						}
 					},
@@ -744,6 +745,151 @@
 				},
 				{
 					"name": "Update Event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNjJlYjc2Yy1hMWQwLTQyMzQtODQ1YS1jZDM1MmQwMDRlYTEiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE2MDQ5MTAyLCJleHAiOjE3MTYwNzA3MDJ9.XbQXRTm9WwA7DZmHXBXQ0AqQgpSniHalAH9dPwfBjf0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Corinthians x Santos\",\r\n    \"extra_key\": \"sdasdasd\",\r\n    \"description\": \"Jogo de volta.\",\r\n    \"location_id\": 1,\r\n    \"ts_final_date\": 1716082602020,\r\n    \"ts_initial_date\": 1716082442020,\r\n    \"status\": \"AVAILABLE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/events/1",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"events",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Venue",
+			"item": [
+				{
+					"name": "Get Venue by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNTdhNWQ0MS01YzI1LTRlYzUtYTQ4NC1iZjkwOTVmZTBiZDAiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE5MzcwMTI5LCJleHAiOjE3MTk0MTMzMjl9.0Imh5l6eiFE-3scYf0j0jHdT60AsW3O8kDRUJ0A6QLA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/venues/10",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"venues",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Paginate Venues",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/venues",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"venues"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "planned",
+									"disabled": true
+								},
+								{
+									"key": "category-id",
+									"value": "4",
+									"disabled": true
+								},
+								{
+									"key": "filter",
+									"value": "rock",
+									"disabled": true
+								},
+								{
+									"key": "order-by",
+									"value": "price:asc,date:asc,name:desc",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Venue",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MTMxNWQ0Zi01ZTUwLTRlODctYTJjYy1hODE5YzAzYTlhYzQiLCJsb2dpbiI6Im1hbmFnZXJAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiRVZFTlRfTUFOQUdFUiIsIm5hbWUiOiJNYW5hZ2VyIiwiaWF0IjoxNzE1NzQzOTI1LCJleHAiOjE3MTU3NjU1MjV9.GDD6ZPdm75WFLcey8R373iKvV8gykJVSj1MzXm12sm8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Show do Supla\",\r\n    \"description\": \"Show da Véio do Rock\",\r\n    \"ts_initial_date\": 1715506200000,\r\n    \"ts_final_date\": 1715644999000,\r\n    \"base_price\": 1450,\r\n    \"capacity\": 125,\r\n    \"img_banner\": \"https://plus.unsplash.com/premium_photo-1682855222843-0cd0827ed6e3\",\r\n    \"img_thumbnail\": \"https://plus.unsplash.com/premium_photo-1682855222930-210943bfdd6c\",\r\n    \"color\": \"#FF5733\",\r\n    \"category_id\": 82,\r\n    \"location_id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_v1}}/events",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Venue",
 					"request": {
 						"auth": {
 							"type": "bearer",

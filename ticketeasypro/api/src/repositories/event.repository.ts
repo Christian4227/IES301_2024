@@ -75,7 +75,7 @@ class EventRepository {
     });
     return eventUpdated;
   };
-  
+
   findEvents = async (
     paginationParams: PaginationParams,
     orderBy: Prisma.EventOrderByWithRelationInput[] = [{ name: "asc" }, { base_price: "desc" }, { initial_date: "desc" }, { final_date: "asc" }],
@@ -92,7 +92,7 @@ class EventRepository {
       AND: { location: location, initial_date: { gte: startDate, lte: endDate } }
     };
     console.log({ query, startDate, endDate, category_id, status });
-    
+
     if (query) {
       whereClause = ({
         ...whereClause,
@@ -131,14 +131,6 @@ class EventRepository {
       select,
       orderBy
     };
-    const allEvents = await prisma.event.findMany({
-      where: {
-
-        initial_date: { gte: startDate, lte: endDate }
-
-      }
-    });
-
     const paginated = await paginate<EventResult, Prisma.EventWhereInput, Prisma.EventOrderByWithRelationInput[], typeof this.eventDb>(paginateParams);
     return paginated;
   }

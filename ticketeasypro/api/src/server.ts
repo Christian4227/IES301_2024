@@ -5,7 +5,7 @@ import cors from "@fastify/cors";
 import { initialData } from "./lifespan";
 import Authentication, { AuthorizeRoles } from "./middlewares/JWTAuth";
 import { FastifyInstance } from "./types/fastify";
-import { WebhookRoute, OrderRoute, EventRoute, UserRoute, AccountRoute, CategoryRoute, TicketTypeRoute } from "./controllers/all_controllers";
+import { WebhookRoute, OrderRoute, EventRoute, VenueRoute, UserRoute, AccountRoute, CategoryRoute, TicketTypeRoute } from "./controllers/all_controllers";
 
 
 const api: FastifyInstance = fastify({ logger: true });
@@ -36,6 +36,7 @@ api.register(TicketTypeRoute, { prefix: '/v1/ticket-types' });
 api.register(CategoryRoute, { prefix: '/v1/categories' });
 api.register(OrderRoute, { prefix: '/v1/orders' });
 api.register(WebhookRoute, { prefix: '/v1/webhook' });
+api.register(VenueRoute, { prefix: '/v1/venues' });
 
 
 const start = async () => {

@@ -7,4 +7,5 @@ import TicketTypeRoute from "./v1/ticketType.controller";
 import CategoryRoute from "./v1/category.controller";
 import OrderRoute from "./v1/order.controller";
 import WebhookRoute from "./v1/webhook.controller";
-export { EventRoute, UserRoute, OrderRoute, AccountRoute, TicketTypeRoute, CategoryRoute, WebhookRoute };
+import VenueRoute from "./v1/venue.controller";
+export { EventRoute, UserRoute, OrderRoute, AccountRoute,VenueRoute, TicketTypeRoute, CategoryRoute, WebhookRoute };
