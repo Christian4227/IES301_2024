@@ -340,7 +340,7 @@ export default function IngressosCliente() {
                   </button>
                 </div>
               </div>
-              <div className={styles.div_tabela_dados}>
+              <div className="div_tabela_dados">
                 <table className="table table-striped">
                   <thead className="thead-dark">
                     <tr>

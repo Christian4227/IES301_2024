@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
 import CabecalhoCliente from "../CabecalhoCliente";
 import CabecalhoInfoCliente from "../CabecalhoInfoCliente";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import styles from "@styles/Cliente.module.css";
-import TicketRow from '@/components/TicketRow/TicketRow';
+import TicketRow from "@/components/TicketRow/TicketRow";
 import client from "@/utils/client_axios";
 
 const TicketForm = () => {
-  const [tickets, setTickets] = useState([{ type: '', quantity: 0 }]);
+  const [tickets, setTickets] = useState([{ type: "", quantity: 0 }]);
   const [total, setTotal] = useState(0);
   const [availableTicketTypes, setAvailableTicketTypes] = useState([]);
 
@@ -16,10 +15,10 @@ const TicketForm = () => {
     // Função para buscar os tipos de ingressos
     const fetchTicketTypes = async () => {
       try {
-        const response = await client.get('ticket-types/');
+        const response = await client.get("ticket-types/");
         setAvailableTicketTypes(response.data.data);
       } catch (error) {
-        console.error('Erro ao buscar os tipos de ingressos:', error);
+        console.error("Erro ao buscar os tipos de ingressos:", error);
       }
     };
 
@@ -28,7 +27,7 @@ const TicketForm = () => {
 
   const handleAddRow = () => {
     if (tickets.length < 5) {
-      setTickets([...tickets, { type: '', quantity: 0 }]);
+      setTickets([...tickets, { type: "", quantity: 0 }]);
     }
   };
 
@@ -39,7 +38,9 @@ const TicketForm = () => {
   };
 
   const handleQuantityChange = (index, quantity) => {
-    const newTickets = tickets.map((ticket, i) => (i === index ? { ...ticket, quantity } : ticket));
+    const newTickets = tickets.map((ticket, i) =>
+      i === index ? { ...ticket, quantity } : ticket
+    );
     if (newTickets.reduce((acc, curr) => acc + curr.quantity, 0) <= 5) {
       setTickets(newTickets);
       updateTotal(newTickets);
@@ -47,7 +48,9 @@ const TicketForm = () => {
   };
 
   const handleTypeChange = (index, type) => {
-    const newTickets = tickets.map((ticket, i) => (i === index ? { ...ticket, type } : ticket));
+    const newTickets = tickets.map((ticket, i) =>
+      i === index ? { ...ticket, type } : ticket
+    );
     setTickets(newTickets);
   };
 
@@ -57,8 +60,13 @@ const TicketForm = () => {
   };
 
   const getAvailableTypes = (index) => {
-    const selectedTypes = tickets.map((ticket) => ticket.type).filter((type) => type);
-    return availableTicketTypes.filter((type) => !selectedTypes.includes(type.name) || tickets[index].type === type.name);
+    const selectedTypes = tickets
+      .map((ticket) => ticket.type)
+      .filter((type) => type);
+    return availableTicketTypes.filter(
+      (type) =>
+        !selectedTypes.includes(type.name) || tickets[index].type === type.name
+    );
   };
 
   return (
@@ -69,10 +77,12 @@ const TicketForm = () => {
       <div className={styles.div_principal}>
         <div className="div_container_principal w-2/3">
           <div className="div_subtitulo ">
-            <h1 className='text-center'>Formulário de compra do ingresso</h1>
-            <div className='flex justify-between'>
+            <h1 className="text-center">Formulário de compra do ingresso</h1>
+            <div className="flex justify-between">
               <div className="mb-4">
-                <label className="block text-gray-700">Ingressos disponíveis</label>
+                <label className="block text-gray-700">
+                  Ingressos disponíveis
+                </label>
                 <p>100</p>
               </div>
               <div className="mb-4">
@@ -97,11 +107,17 @@ const TicketForm = () => {
           </div>
           <div className="flex justify-between items-center my-4">
             <h2 className="text-xl font-bold">Total</h2>
-            <h2 className="text-xl font-bold">R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h2>
+            <h2 className="text-xl font-bold">
+              R$ {total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+            </h2>
           </div>
           <div className="flex justify-between">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">Salvar</button>
-            <button className="bg-red-500 text-white px-4 py-2 rounded">Cancelar</button>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded">
+              Salvar
+            </button>
+            <button className="bg-red-500 text-white px-4 py-2 rounded">
+              Cancelar
+            </button>
           </div>
         </div>
       </div>

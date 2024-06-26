@@ -44,7 +44,7 @@ export default function Cabecalho() {
                         ? "Cliente"
                         : user.role == "STAFF"
                           ? "Colaborador"
-                          : user.role == "MANAGER"
+                          : user.role == "EVENT_MANAGER"
                             ? "Gerente"
                             : user.role == "ADMINISTRATOR"
                               ? "Administrador"

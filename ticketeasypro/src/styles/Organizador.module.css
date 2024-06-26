@@ -1,0 +1,161 @@
+/* Cabeçalho */
+.header_cabecalho_organizador {
+  background-color: #1019DE;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 10px;
+  min-height: 120px;
+  width: 100%;
+  top: 0;
+}
+
+.header_cabecalho_organizador label {
+  color: white;
+}
+
+.header_cabecalho_organizador label a {
+  color: white !important;
+}
+
+.li_organizador_sair a {
+  color: white !important;
+}
+
+.header_organizador a {
+  color: black;
+}
+
+.li_organizador_sair {
+  color: white;
+}
+
+/* Cabeçalho Info Organizador */
+
+.header_organizador {
+  border-bottom: 1px solid black;
+  width: 98%;
+  margin-left: 1%;
+  display: flex;
+  padding: 10px 0 0 0;
+  position: relative;
+}
+
+.header_organizador h1 {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.header_organizador_nav {
+  position: absolute;
+  right: calc(100% - 95%);
+}
+
+.header_organizador_menu {
+  display: flex;
+}
+
+.header_organizador_menu li {
+  padding: 0 20px;
+  font-weight: bold;
+}
+
+.header_organizador_menu li:nth-of-type(n + 2), .header_organizador_subtitulo label{
+  border-left: 2px solid black;
+}
+
+.header_organizador_subtitulo {
+display: flex;
+align-items: center;
+}
+
+.header_organizador_subtitulo h1, .header_organizador_subtitulo label {
+padding: 0 20px;
+}
+
+/* GeralOrganizador */
+.div_home_eventos {
+  background-color: #F95109;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  border-radius: 30px;
+  padding: 1em;
+  height: 250px;
+}
+
+.div_principal_organizador {
+  display: flex;
+  justify-content: center;
+  margin: 1em;
+}
+
+.div_principal_home_eventos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px; 
+  justify-items: center;
+  align-items: center; 
+  width: 50%;
+}
+
+.div_home_eventos_texto {
+  text-align: center;
+}
+
+.div_home_eventos_texto p {
+  margin-top: 20%;
+  text-align: center;
+}
+
+.div_home_eventos_texto h1, .div_home_eventos_texto p {
+  color: white;
+}
+
+.botao_adicionar_eventos {
+  background-color: #0ABF00;
+  color: white;
+  padding: 0.5em;
+  padding-left: 3em;
+  border-radius: 5px;
+  background-image: url("../assets/Adicionar.png");
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: cover;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/* Form Organizador Eventos */
+.div_form_evento, .div_form_evento_img_mapa, .div_form_evento_dados_data, 
+.div_form_evento_dados_categoria {
+  display: flex;
+}
+
+.div_form_evento {
+  margin-bottom: 1em;
+}
+
+.div_form_evento_dados {
+  width: 55%;
+  margin-right: 1em;
+}
+
+.div_form_evento_img_mapa_descricao {
+  width: 44%;
+}
+
+.div_form_evento_img_mapa {
+  display: flex;
+  justify-content: center;
+  margin: 0 1em;
+}
+
+.img_evento_form{
+  border: 2px solid #D1CECE;
+  padding: 5px;
+  border-radius: 5px;
+  width: 100%;
+  height: 250px;
+}

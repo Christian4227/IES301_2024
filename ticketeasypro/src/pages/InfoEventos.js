@@ -13,9 +13,11 @@ import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import StateFilter from "@/components/StateFilter/StateFilter";
 import Pagination from "@/components/Pagination/Pagination";
 
-import { dateFormat, getStartOfDayTimestamp, getLastdayOfNextMonthTimestamp } from "@/utils";
-
-
+import {
+  dateFormat,
+  getStartOfDayTimestamp,
+  getLastdayOfNextMonthTimestamp,
+} from "@/utils";
 
 export default function InfoEventos() {
   const router = useRouter();
@@ -33,16 +35,17 @@ export default function InfoEventos() {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const handleNationalChange = (event) => setNational(prev => !prev);
+  const handleNationalChange = () => setNational((prev) => !prev);
 
-  const handleCategoryChange = (event) => setCategorySelected(event.target.value);
+  const handleCategoryChange = (event) =>
+    setCategorySelected(event.target.value);
 
   const getQueryString = () => {
-
     let queryParams = {};
 
     // Adiciona 'filter' ao queryParams se searchTerm estiver definido e não vazio
-    if (searchTerm) queryParams["filter"] = encodeURIComponent(searchTerm.trim());
+    if (searchTerm)
+      queryParams["filter"] = encodeURIComponent(searchTerm.trim());
 
     // Adiciona 'start-date' ao queryParams se dataInicio estiver definido e não vazio
     if (dataInicio) queryParams["start-date"] = new Date(dataInicio).getTime();
@@ -51,51 +54,57 @@ export default function InfoEventos() {
     if (dataFim) queryParams["end-date"] = new Date(dataFim).getTime();
 
     // Adiciona 'category' ao queryParams se categorySelected estiver definido e não vazio
-    if (categorySelected !== "" && categorySelected !== null && categorySelected !== undefined) {
+    if (
+      categorySelected !== "" &&
+      categorySelected !== null &&
+      categorySelected !== undefined
+    ) {
       queryParams["category-id"] = categorySelected;
-    };
+    }
 
     // Adiciona 'category' ao queryParams se categorySelected estiver definido e não vazio
-    if (currentPage)
-      queryParams["page"] = currentPage;
+    if (currentPage) queryParams["page"] = currentPage;
 
     // Adiciona 'national' ao queryParams
     queryParams["national"] = national.toString();
 
-    let selectedStatesQuery = '';
+    let selectedStatesQuery = "";
     // Adiciona estados selecionados ao queryParams se 'national' for verdadeiro e selectedStates não estiver vazio
     if (national && selectedStates.length > 0) {
       selectedStatesQuery = selectedStates.reduce((acc, state, index) => {
         if (index === 0) return `uf=${state}`;
         else return `${acc}&uf=${state}`;
-      }, '');
+      }, "");
     }
 
     // Gera a query string final
     let queryString = Object.keys(queryParams)
-      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`)
-      .join('&');
+      .map(
+        (key) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`
+      )
+      .join("&");
 
-    if (selectedStatesQuery) queryString = `${queryString}&${selectedStatesQuery}`
+    if (selectedStatesQuery)
+      queryString = `${queryString}&${selectedStatesQuery}`;
     console.log(queryString + selectedStatesQuery);
     return queryString;
   };
 
   const handleCheckboxChange = (e) => {
     const stateCode = e.target.value;
-    setSelectedStates(prevSelectedStates => {
-      if (e.target.checked)
-        return [...prevSelectedStates, stateCode];
-      else
-        return prevSelectedStates.filter(code => code !== stateCode);
+    setSelectedStates((prevSelectedStates) => {
+      if (e.target.checked) return [...prevSelectedStates, stateCode];
+      else return prevSelectedStates.filter((code) => code !== stateCode);
     });
   };
 
   const ReservarIngresso = (idEvento) => {
     if (auth)
-      router.push(`./Cliente/EventosCliente/EventoEscolhido?eventId=${idEvento}`);
-    else
-      router.push(`./Login?idEvento=${idEvento}`);
+      router.push(
+        `./Cliente/EventosCliente/EventoEscolhido?eventId=${idEvento}`
+      );
+    else router.push(`./Login?idEvento=${idEvento}`);
   };
   const visualizarEvento = (eventId) => {
     router.push(`/InfoTipoEvento?eventId=${eventId}`);
@@ -105,25 +114,28 @@ export default function InfoEventos() {
   };
   const fetchData = async () => {
     try {
-      const query = getQueryString()
+      const query = getQueryString();
       const response = await client.get(`/events?${query}`);
       if (response.data.total === 0)
-        handleSetMessage("Nenhum evento encontrado com os critérios de busca. Por favor, tente ajustar seus filtros.", "success");
+        handleSetMessage(
+          "Nenhum evento encontrado com os critérios de busca. Por favor, tente ajustar seus filtros.",
+          "success"
+        );
 
       setEventos(response.data.data);
       setTotalPages(response.data.totalPages);
-
-
     } catch (error) {
       console.log("Erro na requisição " + error);
     }
   };
   const handleSubmit = async () => {
     setCurrentPage(1);
-    fetchData()
-  }
+    fetchData();
+  };
 
-  useEffect(() => { fetchData() }, [currentPage]);
+  useEffect(() => {
+    fetchData();
+  }, [currentPage]);
 
   useEffect(() => {
     const initialDate = new Date(getStartOfDayTimestamp());
@@ -133,7 +145,9 @@ export default function InfoEventos() {
     fetchData();
     client
       .get(`/categories`)
-      .then((response) => { setCategorias(response.data.data) })
+      .then((response) => {
+        setCategorias(response.data.data);
+      })
       .catch((error) => {
         console.log("Erro na requisição " + error);
       });
@@ -193,14 +207,18 @@ export default function InfoEventos() {
           <div className={stylese.secao_filtro}>
             <div className={stylese.secao_filtro_titulo}>
               <label>Categoria</label>
-              <select className="form-select"
+              <select
+                className="form-select"
                 value={categorySelected}
                 onChange={handleCategoryChange}
               >
                 <option value="">Selecione a categoria...</option>
                 {categorias.length !== 0 &&
                   categorias.map((categoria) => (
-                    <option key={`cat-${categoria.id}`} value={`${categoria.id}`} >
+                    <option
+                      key={`cat-${categoria.id}`}
+                      value={`${categoria.id}`}
+                    >
                       {categoria.name}
                     </option>
                   ))}
@@ -238,8 +256,12 @@ export default function InfoEventos() {
               </div>
             </div>
 
-            {national &&
-              <StateFilter selectedStates={selectedStates} handleCheckboxChange={handleCheckboxChange} />}
+            {national && (
+              <StateFilter
+                selectedStates={selectedStates}
+                handleCheckboxChange={handleCheckboxChange}
+              />
+            )}
           </div>
         </div>
         <div className={stylese.eventos}>
@@ -256,7 +278,11 @@ export default function InfoEventos() {
                   - {eventos.length <= 6 ? eventos.length : 6} de{" "}
                   {eventos.length} eventos.
                 </label> */}
-                <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
+                <Pagination
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  onPageChange={setCurrentPage}
+                />
               </div>
               <div>
                 <table>

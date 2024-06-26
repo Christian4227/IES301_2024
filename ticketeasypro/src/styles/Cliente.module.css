@@ -233,6 +233,7 @@
   background-size: cover;
   position: absolute;
   right: 0;
+  top: 0;
 }
 
 .form_ingressos_campos {
@@ -247,13 +248,6 @@
 .div_botao_filtrar_ingressos {
   display: flex;
   justify-content: center;
-}
-
-.div_tabela_dados {
-  border: 1px solid #D1CECE;
-  padding: 1em;
-  margin-top: 1em;
-  border-radius: 15px;
 }
 
 .div_numero_paginacao_tabela {

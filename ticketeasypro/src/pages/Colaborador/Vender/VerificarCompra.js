@@ -138,7 +138,7 @@ export default function VerificarCompra() {
               Pesquisar
             </button>
           </div>
-          <div className={styles.div_tabela_dados_colaborador}>
+          <div className="div_tabela_dados">
             <table className="table table-striped">
               <thead className="thead-dark">
                 <tr>

@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     } else if (userRole === "SPECTATOR") {
       router.push("/Cliente/GeralCliente");
     } else if (userRole === "EVENT_MANAGER") {
-      router.push("/Organizador/DadosOrganizador");
+      router.push("/Organizador/GeralOrganizador");
     } else if (userRole === "STAFF") {
       router.push("/Colaborador/IndexColaborador");
     }
@@ -90,6 +90,16 @@ export const AuthProvider = ({ children }) => {
     router.push("/");
   };
 
+  const setPoliticaCookies = () => {
+    const cookieConfig = {
+      sameSite: "Strict",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30 * 12,
+      secure: true,
+    };
+    setCookie(undefined, "ticket-politica", true, cookieConfig);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -100,6 +110,7 @@ export const AuthProvider = ({ children }) => {
         logoutPrivado,
         DirecionarRota,
         retorno,
+        setPoliticaCookies,
       }}
     >
       {children}

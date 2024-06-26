@@ -58,9 +58,7 @@ export default function GeralCliente() {
         const response = await client.get(`orders/?order-status=COMPLETED`, {
           headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
         });
-        // setEventos(response.data.data);
         handleSetCalendario(response.data.data);
-        // console.log(response.data.data);
       } catch (error) {
         handleSetMessage("Erro ao carregar as categorias", "error");
         console.log("Erro na requisição de categorias:", error);

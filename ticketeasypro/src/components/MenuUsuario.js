@@ -36,7 +36,7 @@ export default function MenuUsuario() {
                       ? "Cliente"
                       : user.role == "STAFF"
                         ? "Colaborador"
-                        : user.role == "MANAGER"
+                        : user.role == "EVENT_MANAGER"
                           ? "Gerente"
                           : user.role == "ADMINISTRATOR"
                             ? "Administrador"

@@ -95,10 +95,15 @@ h3 {
 .div_subtitulo {
   border-bottom: 1px solid black;
   margin-bottom: 1em;
+  position: relative;
 }
 
 .div_subtitulo label {
   font-weight: bold;
+}
+
+.mb-3 {
+  margin: 0 1em;
 }
 
 /* Divisões */
@@ -137,6 +142,13 @@ h3 {
 
 .div_principal {
   padding: 1em;
+}
+
+.div_tabela_dados {
+  border: 1px solid #D1CECE;
+  padding: 1em;
+  margin-top: 1em;
+  border-radius: 15px;
 }
 
 /* Loading */

@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "@styles/Home.module.css";
 import facebook from "../assets/facebook.png";
@@ -16,7 +16,8 @@ import musica from "../assets/rock in rio.jpg";
 import seta_direita from "../assets/seta_direita.png";
 import seta_esquerda from "../assets/seta esquerda.png";
 import Cabecalho from "./Cabecalho";
-import { parseCookies, setCookie } from "nookies";
+import { parseCookies } from "nookies";
+import { AuthContext } from "@/context/Auth";
 
 export default function Home() {
   const listaImagens = [
@@ -30,6 +31,7 @@ export default function Home() {
   ];
   const router = useRouter();
   const containerRef = useRef();
+  const { setPoliticaCookies } = useContext(AuthContext);
   const [imagem, setImagem] = useState(listaImagens[0].imagem);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [click, setClick] = useState(false);
@@ -93,12 +95,7 @@ export default function Home() {
 
   // Política de cookies
   const FecharPolitica = () => {
-    const cookieConfig = {
-      sameSite: "Strict",
-      path: "/",
-      secure: true,
-    };
-    setCookie(undefined, "ticket-politica", true, cookieConfig);
+    setPoliticaCookies();
     setDivCokkie(false);
   };
   return (
