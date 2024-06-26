@@ -32,12 +32,13 @@ export default function EventoEscolhido() {
     setMessage({ text: message, type });
   }, []);
 
-  const DirecionarFormulario = () => {
-    router.push("./EventoEscolhidoForm");
+  const direcionarFormulario = () => {
+    // router.push("./EventoEscolhidoForm");
+    router.push(`./EventoEscolhidoForm?eventId=${eventId}`);
   };
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchEvent = async () => {
       try {
         const response = await client.get(`events/${eventId}`, {
           headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
@@ -51,7 +52,7 @@ export default function EventoEscolhido() {
     };
 
     if (eventId) {
-      fetchCategories();
+      fetchEvent();
     }
   }, [eventId]);
 
@@ -98,7 +99,7 @@ export default function EventoEscolhido() {
               </div>
               <div>
                 <div className={styles.div_descricao_info_eventos}>
-                  <label>Local</label>
+                  <label>Local: </label>
                   <span>
                     {evento.location == undefined
                       ? ""
@@ -106,19 +107,19 @@ export default function EventoEscolhido() {
                   </span>
                 </div>
                 <div className={styles.div_descricao_info_eventos}>
-                  <label>Data início</label>
+                  <label>Data início: </label>
                   <span>
                     {new Date(evento.initial_date).toLocaleDateString()}
                   </span>
                 </div>
                 <div className={styles.div_descricao_info_eventos}>
-                  <label>Data término</label>
+                  <label>Data término: </label>
                   <span>
                     {new Date(evento.final_date).toLocaleDateString()}
                   </span>
                 </div>
                 <div className={styles.div_descricao_info_eventos}>
-                  <label>Preço base</label>
+                  <label>Preço base: </label>
                   <span>
                     {evento.base_price == undefined
                       ? ""
@@ -131,7 +132,7 @@ export default function EventoEscolhido() {
                   type="button"
                   value="Comprar"
                   className="botao_sistema"
-                  onClick={() => DirecionarFormulario()}
+                  onClick={direcionarFormulario}
                 />
               </div>
             </div>
