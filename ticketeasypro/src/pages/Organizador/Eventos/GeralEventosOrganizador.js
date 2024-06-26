@@ -17,6 +17,7 @@ import {
 } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
+import ToastMessage from "@/components/ToastMessage/ToastMessage";
 
 function getToken() {
   const cookies = parseCookies();
@@ -33,6 +34,13 @@ export default function GeralEventosOrganizador() {
   const router = useRouter();
   const [message, setMessage] = useState({ text: "", type: "" });
   const [eventos, setEventos] = useState([]);
+  const [cotegories, setCategories] = useState([]);
+  const [categorySelected, setCategorySelected] = useState("");
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
+  const [tipoCompra, setTipoCompra] = useState("");
+  const [estrangeiro, setEstrangeiro] = useState(false);
+  const [tipoEvento, setTipoEvento] = useState("");
 
   const AdicionarEventos = () => {
     router.push("./EventoOrganizadorForm");
@@ -42,8 +50,89 @@ export default function GeralEventosOrganizador() {
     setMessage({ text: message, type });
   };
 
+  const handleCategoryChange = (event) => {
+    setCategorySelected(event.target.value);
+  };
+
+  const FiltrarTabelaOrdemCompra = async () => {
+    var situacaoCompra = "";
+    if (tipoCompra !== "") {
+      situacaoCompra = "?order-status=" + tipoCompra;
+    }
+
+    var nacional = "";
+    if (estrangeiro === "y") {
+      if (situacaoCompra == "") {
+        nacional = "?uf=SP";
+      } else {
+        nacional = "&uf=ES";
+      }
+    }
+
+    var categoriaSelecionada = "";
+    if (categorySelected !== "") {
+      if (situacaoCompra == "" && nacional == "") {
+        categoriaSelecionada = "?category-id=" + categorySelected;
+      } else {
+        categoriaSelecionada = "&category-id=" + categorySelected;
+      }
+    }
+
+    var situacaoDoEvento = ""; // No need to check for empty value here
+    if (tipoEvento !== "") {
+      if (
+        situacaoCompra == "" &&
+        nacional == "" &&
+        categoriaSelecionada == ""
+      ) {
+        situacaoDoEvento = "?status=" + tipoEvento;
+      } else {
+        situacaoDoEvento = "&status=" + tipoEvento;
+      }
+    }
+
+    var dataInicial = "";
+    if (dataInicio !== "") {
+      if (
+        situacaoCompra == "" &&
+        nacional == "" &&
+        tipoEvento == "" &&
+        categoriaSelecionada == ""
+      ) {
+        dataInicial = "?start-date=" + new Date(dataInicio).getTime();
+      } else {
+        dataInicial = "&start-date=" + new Date(dataInicio).getTime();
+      }
+    }
+
+    var dataFinal = "";
+    if (dataFim !== "") {
+      dataFinal = "&end-date=" + new Date(dataFim).getTime();
+    }
+
+    const query =
+      situacaoCompra +
+      nacional +
+      categoriaSelecionada +
+      situacaoDoEvento +
+      dataInicial +
+      dataFinal;
+    try {
+      const response = await client.get(`events/${query}`, {
+        headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+      });
+      if (response.status == 200) {
+        handleSetMessage("Dados filtrados com sucesso.", "success");
+        setEventos(response.data.data);
+      }
+    } catch (error) {
+      handleSetMessage("Erro ao carregar os dados", "error");
+      console.log("Erro na requisição de pedidos:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchEventos = async () => {
       try {
         const hoje = new Date().getTime();
         const depois = new Date().getTime() + 5184000;
@@ -54,7 +143,21 @@ export default function GeralEventosOrganizador() {
           }
         );
         setEventos(response.data.data);
-        console.log(response.data.data);
+      } catch (error) {
+        handleSetMessage("Erro ao carregar as categorias", "error");
+        console.log("Erro na requisição de categorias:", error);
+      }
+    };
+    fetchEventos();
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await client.get("categories/", {
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+        });
+        setCategories(response.data.data);
       } catch (error) {
         handleSetMessage("Erro ao carregar as categorias", "error");
         console.log("Erro na requisição de categorias:", error);
@@ -77,6 +180,93 @@ export default function GeralEventosOrganizador() {
               value="Adicionar eventos"
               onClick={() => AdicionarEventos()}
             />
+          </div>
+          <div className={styles.form_ingressos_campos}>
+            <div className="mb-3">
+              <label>Situação da compra</label>
+              <select
+                className="form-select"
+                onChange={(e) => setTipoCompra(e.target.value)}
+              >
+                <option value="">Selecione os status...</option>
+                <option value="PROCESSING">Processando</option>
+                <option value="COMPLETED">Completo</option>
+                <option value="CANCELLED">Cancelada</option>
+              </select>
+            </div>
+            <div className="mb-3">
+              <label>Estrangeiro?</label>
+              <select
+                className="form-select"
+                defaultValue={"n"}
+                onChange={(e) => setEstrangeiro(e.target.value)}
+              >
+                <option value="y">Sim</option>
+                <option value="n">Não</option>
+              </select>
+            </div>
+            <div className="mb-3">
+              <label>Tipo de evento</label>
+              <select
+                className="form-select"
+                value={categorySelected}
+                onChange={handleCategoryChange}
+              >
+                <option value="">Categoria...</option>
+                {cotegories.length !== 0 &&
+                  cotegories.map((categorie) => (
+                    <option
+                      key={`cat-${categorie.id}`}
+                      value={`${categorie.id}`}
+                    >
+                      {categorie.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            <div className="mb-3">
+              <label>Situação do evento</label>
+              <select
+                className="form-select"
+                onChange={(e) => setTipoEvento(e.target.value)}
+              >
+                <option value="">Selecione o status do evento...</option>
+                <option value="PLANNED">Planejado</option>
+                <option value="IN_PROGRESS">Em progresso</option>
+                <option value="COMPLETED">Realizado</option>
+                <option value="CANCELLED">Cancelado</option>
+              </select>
+            </div>
+            <div className={styles.form_ingressos_campos}>
+              <div className="mb-3">
+                <label>Data de início</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={dataInicio}
+                  onChange={(e) => setDataInicio(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label>Data final</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={dataFim}
+                  onChange={(e) => setDataFim(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+          <div className={styles.div_botao_filtrar_ingressos}>
+            <button
+              type="submit"
+              value="Pesquisar"
+              className="btn btn-primary"
+              onClick={() => FiltrarTabelaOrdemCompra()}
+            >
+              Pesquisar
+            </button>
           </div>
           <div>
             <div className="div_tabela_dados">
@@ -150,6 +340,9 @@ export default function GeralEventosOrganizador() {
           </div>
         </div>
       </div>
+      {!!message.text && (
+        <ToastMessage text={message.text} type={message.type} />
+      )}
     </div>
   );
 }

@@ -127,6 +127,15 @@ padding: 0 20px;
   top: 0;
 }
 
+.form_ingressos_campos {
+  display: flex;
+  justify-content: center;
+}
+
+.form_ingressos_campos div {
+  margin: 0 1em 0 0;
+}
+
 /* Form Organizador Eventos */
 .div_form_evento, .div_form_evento_img_mapa, .div_form_evento_dados_data, 
 .div_form_evento_dados_categoria {

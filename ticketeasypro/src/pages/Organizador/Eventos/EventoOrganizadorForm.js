@@ -26,6 +26,7 @@ function getToken() {
 
 export default function EventoOrganizadorForm() {
   const router = useRouter();
+  const idEvento = router.query.eventId;
   const { user } = useContext(AuthContext);
   const [nome, setNome] = useState("");
   const [dataInicio, setDataInicio] = useState();
@@ -65,7 +66,6 @@ export default function EventoOrganizadorForm() {
 
   const inserirDados = async () => {
     const agora = new Date();
-    console.log(user.sub);
     let data = JSON.stringify({
       name: nome,
       event_manager: user.sub,
@@ -121,9 +121,7 @@ export default function EventoOrganizadorForm() {
   };
 
   const VisualizarMapa = () => {
-    router.push(
-      `./MapsEventoOrganizador?latitude=${latitude}&longitude=${longitude}`
-    );
+    router.push(`./MapsEventoOrganizador?lat=${latitude}&long=${longitude}`);
   };
 
   useEffect(() => {
@@ -139,6 +137,7 @@ export default function EventoOrganizadorForm() {
   useEffect(() => {
     const isNomeValid = nome.length > 0;
     const isEventTipo = categoria != "";
+    const isEventStatus = status != "" && status == "PLANNED";
     const isPreco = preco >= 0;
     const isCapacidade = capacidade >= 0;
     const isDescricao = descricao.length > 0;
@@ -151,6 +150,7 @@ export default function EventoOrganizadorForm() {
       dataInicio &&
       dataFinal &&
       isEventTipo &&
+      isEventStatus &&
       isPreco &&
       isCapacidade &&
       isDescricao &&
@@ -172,6 +172,7 @@ export default function EventoOrganizadorForm() {
     img_miniatura,
     latitude,
     longitude,
+    status,
   ]);
 
   useEffect(() => {
@@ -210,6 +211,25 @@ export default function EventoOrganizadorForm() {
       }
     };
     fetchCategorias();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await client.get(`events/${idEvento}`, {
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+        });
+        if (response.status == 200) {
+          setNome(response.data.name);
+        }
+      } catch (error) {
+        handleSetMessage("Erro ao carregar os dados", "error");
+        console.log("Erro na requisição de pedidos:", error);
+      }
+    };
+    if (idEvento) {
+      fetchData();
+    }
   }, []);
 
   return (
@@ -308,6 +328,9 @@ export default function EventoOrganizadorForm() {
                   >
                     <option value="">Selecione o status do evento...</option>
                     <option value="PLANNED">Planejado</option>
+                    <option value="IN_PROGRESS">Em progresso</option>
+                    <option value="COMPLETED">Realizado</option>
+                    <option value="CANCELLED">Cancelado</option>
                   </select>
                 </div>
                 <div className="mb-3">
