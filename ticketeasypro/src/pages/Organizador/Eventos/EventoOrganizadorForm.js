@@ -11,6 +11,7 @@ import eventos from "../../../assets/Evento desconhecido.png";
 import { parseCookies } from "nookies";
 import { useRouter } from "next/router";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
+// import { dateFormat } from "@/utils";
 
 function getToken() {
   const cookies = parseCookies();
@@ -37,7 +38,7 @@ export default function EventoOrganizadorForm() {
   const [img_miniatura, setImgMiniatura] = useState(null);
   const [categoria, setCategoria] = useState(0);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [cor, setCor] = useState(null);
+  const [cor, setCor] = useState("#000000");
   const [message, setMessage] = useState({ text: "", type: "" });
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
@@ -64,25 +65,28 @@ export default function EventoOrganizadorForm() {
 
   const inserirDados = async () => {
     const agora = new Date();
-    const data = {
+    console.log(user.sub);
+    let data = JSON.stringify({
       name: nome,
-      event_manager: user.id,
+      event_manager: user.sub,
       description: descricao,
-      initial_date: dataInicio,
-      final_date: dataFinal,
-      base_price: preco,
-      capacity: capacidade,
+      ts_initial_date: new Date(dataInicio).getTime(),
+      ts_final_date: new Date(dataFinal).getTime(),
+      base_price: parseInt(preco),
+      capacity: parseInt(capacidade),
       status: status,
       img_banner: img_baner,
       img_thumbnail: img_miniatura,
-      category_id: categoria,
-      color: cor,
-      location_id: idLocal,
-      created_at: agora,
-      updated_at: agora,
-    };
+      category_id: parseInt(categoria),
+      color: cor.toUpperCase(),
+      location_id: parseInt(idLocal),
+      created_at: new Date(agora),
+      updated_at: new Date(agora),
+    });
     try {
-      await client.post("/users/signin", data);
+      await client.post("/events/", data, {
+        headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+      });
       handleSetMessage(
         "Dados cadastrados com sucesso!\nVerifique no seu e-mail cadastrado uma mensagem de confirmação.",
         "success"
@@ -95,16 +99,23 @@ export default function EventoOrganizadorForm() {
     }
   };
 
-  const TransformarImagem = (arquivo) => {
+  const TransformarImagem = (arquivo, tipo) => {
     if (arquivo) {
       const reader = new FileReader();
 
-      reader.onload = function (e) {
-        const base64Image = e.target.result;
-        setImgBaner(base64Image);
-        setImgMiniatura(base64Image);
-        setImageData(base64Image);
-      };
+      if (tipo == "Banner") {
+        reader.onload = function (e) {
+          const base64Image = e.target.result;
+          setImgBaner(base64Image);
+          setImageData(base64Image);
+        };
+      } else {
+        reader.onload = function (e) {
+          const base64Image = e.target.result;
+          setImgMiniatura(base64Image);
+        };
+      }
+
       reader.readAsDataURL(arquivo);
     }
   };
@@ -225,6 +236,9 @@ export default function EventoOrganizadorForm() {
                   maxLength={20}
                   onChange={(e) => setNome(e.target.value)}
                 />
+                <label className="form-label">
+                  Caracteres: {nome.length} / 20
+                </label>
               </div>
               <div className="mb-3">
                 <label className="form-label">Gerente</label>
@@ -294,9 +308,6 @@ export default function EventoOrganizadorForm() {
                   >
                     <option value="">Selecione o status do evento...</option>
                     <option value="PLANNED">Planejado</option>
-                    <option value="IN_PROGRESS">Em progresso</option>
-                    <option value="COMPLETED">Realizado</option>{" "}
-                    <option value="CANCELLED">Cancelado</option>{" "}
                   </select>
                 </div>
                 <div className="mb-3">
@@ -368,6 +379,9 @@ export default function EventoOrganizadorForm() {
                     value={descricao}
                     onChange={(e) => setDescricao(e.target.value)}
                   ></textarea>
+                  <label className="form-label">
+                    Caracteres: {descricao.length} / 400
+                  </label>
                 </div>
               </div>
             </div>
@@ -390,7 +404,9 @@ export default function EventoOrganizadorForm() {
                     type="file"
                     accept="image/*"
                     className="form-control"
-                    onChange={(img) => TransformarImagem(img.target.files[0])}
+                    onChange={(img) =>
+                      TransformarImagem(img.target.files[0], "Banner")
+                    }
                   />
                 </div>
                 <div className="mb-3">
@@ -401,7 +417,9 @@ export default function EventoOrganizadorForm() {
                     type="file"
                     accept="image/*"
                     className="form-control"
-                    onChange={(img) => TransformarImagem(img.target.files[0])}
+                    onChange={(img) =>
+                      TransformarImagem(img.target.files[0], "Miniatura")
+                    }
                   />
                 </div>
                 <input
@@ -409,6 +427,7 @@ export default function EventoOrganizadorForm() {
                   className="botao_sistema"
                   value="Ver mapa"
                   onClick={() => VisualizarMapa()}
+                  disabled={!(latitude && longitude)}
                 />
               </div>
             </div>
