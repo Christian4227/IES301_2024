@@ -301,8 +301,8 @@ export default function GeralEventosOrganizador() {
                           <Link
                             href={
                               evento.status != "CANCELLED"
-                                ? "#"
-                                : `./EventoOrganizadorForm?eventId=${evento.id}`
+                                ? `./EventoOrganizadorForm?eventId=${evento.id}`
+                                : "#"
                             }
                           >
                             <Image
