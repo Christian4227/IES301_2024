@@ -426,7 +426,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhM2E0Mjk3MC0wYmJkLTRjZGYtYTA5Zi03OGIyZjVhYmNkYjEiLCJsb2dpbiI6InN0YWZmMkB0aWNrZXRlYXN5cHJvLmNvbS5iciIsInJvbGUiOiJTVEFGRiIsIm5hbWUiOiJTdGFmZiBUd28iLCJpYXQiOjE3MTkyNjA1MjQsImV4cCI6MTcxOTMwMzcyNH0.aEtNqATJJld4Q44koDgxSdSNiyKl5yjsZBx0nJzmEA4",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZjE5NjFjZi00MzY2LTRmMzktYWViMy00NzU1OWQ1YzUwNzciLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE5NTAzNzUwLCJleHAiOjE3MTk1NDY5NTB9.OaJnUBLa97IkngjnBjkSlfcjWC9IHa53iMvDkZCngwc",
 									"type": "string"
 								}
 							]
@@ -443,14 +443,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_v1}}/webhook/24cad17b-e220-4d46-81f9-e04a5f9808b3/cancel",
+							"raw": "{{base_v1}}/webhook/27a6b58f-8eb5-4ce7-abd4-5a28c11314c8/payment-confirm",
 							"host": [
 								"{{base_v1}}"
 							],
 							"path": [
 								"webhook",
-								"24cad17b-e220-4d46-81f9-e04a5f9808b3",
-								"cancel"
+								"27a6b58f-8eb5-4ce7-abd4-5a28c11314c8",
+								"payment-confirm"
 							]
 						}
 					},
@@ -552,7 +552,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhM2E0Mjk3MC0wYmJkLTRjZGYtYTA5Zi03OGIyZjVhYmNkYjEiLCJsb2dpbiI6InN0YWZmMkB0aWNrZXRlYXN5cHJvLmNvbS5iciIsInJvbGUiOiJTVEFGRiIsIm5hbWUiOiJTdGFmZiBUd28iLCJpYXQiOjE3MTkxNjM2OTksImV4cCI6MTcxOTIwNjg5OX0.9X0-mAukG9iguw4siiuM2aKPaQsD2KH4nK15-c4faxE",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZDJhYzNkNi1hZGIzLTQ2NTktYWE3Zi1iMGRmMzVlMDQyZWYiLCJsb2dpbiI6InJvb3RAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiQURNSU4iLCJuYW1lIjoicm9vdCIsImlhdCI6MTcxOTQ5NDA0MCwiZXhwIjoxNzE5NTM3MjQwfQ.hSKKmXQlcrGjtipK680MUiYUdN__MEESFn0lDwNI-M8",
 									"type": "string"
 								}
 							]
@@ -560,13 +560,42 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_v1}}/orders/0319b068-cd10-4e2d-b15d-3d397978c142",
+							"raw": "{{base_v1}}/orders/27a6b58f-8eb5-4ce7-abd4-5a28c11314c8",
 							"host": [
 								"{{base_v1}}"
 							],
 							"path": [
 								"orders",
-								"0319b068-cd10-4e2d-b15d-3d397978c142"
+								"27a6b58f-8eb5-4ce7-abd4-5a28c11314c8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Request Tickets for Email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZjE5NjFjZi00MzY2LTRmMzktYWViMy00NzU1OWQ1YzUwNzciLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE5NTAzNzUwLCJleHAiOjE3MTk1NDY5NTB9.OaJnUBLa97IkngjnBjkSlfcjWC9IHa53iMvDkZCngwc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_v1}}/orders/27a6b58f-8eb5-4ce7-abd4-5a28c11314c8/tickets-email",
+							"host": [
+								"{{base_v1}}"
+							],
+							"path": [
+								"orders",
+								"27a6b58f-8eb5-4ce7-abd4-5a28c11314c8",
+								"tickets-email"
 							]
 						}
 					},
@@ -580,7 +609,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZGYzOGRhZS05N2I5LTRhYmQtYTNhNS0yYmZhYjAwNjFjNDEiLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE4ODk0MTEyLCJleHAiOjE3MTg5MTU3MTJ9.C5rzGGXaAQdLjwLXH-iFMMsHy0Mlvfz15nM395DrymI",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZjE5NjFjZi00MzY2LTRmMzktYWViMy00NzU1OWQ1YzUwNzciLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE5NTAzNzUwLCJleHAiOjE3MTk1NDY5NTB9.OaJnUBLa97IkngjnBjkSlfcjWC9IHa53iMvDkZCngwc",
 									"type": "string"
 								}
 							]
@@ -952,7 +981,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"root@ticketeasypro.com.br\",\r\n    \"password\": \"admin123\"\r\n}\r\n//  {\r\n//     \"email\": \"client_espectador@ticketeasypro.com.br\",\r\n//     \"password\": \"senha123\"\r\n// }\r\n// {\r\n//     \"email\": \"staff2@ticketeasypro.com.br\",\r\n//     \"password\": \"sEcure456@\"\r\n// }\r\n// {\r\n//     \"email\": \"manager@ticketeasypro.com.br\",\r\n//     \"password\": \"maNaGeR1-2_3#2024&*\"\r\n// }",
+							"raw": "{\r\n    \"email\": \"client_espectador@ticketeasypro.com.br\",\r\n    \"password\": \"senha123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
