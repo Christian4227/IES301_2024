@@ -2,7 +2,8 @@
 import { Category, EventStatus, Order, OrderStatus, Prisma } from "@prisma/client";
 import { PaymentMethod } from "./../schema/order.schema"
 import prisma from "./prisma";
-import { OrderTicket } from "src/schema/orderTicket.schema";
+import { OrderTicket } from "@prisma/client"
+import { OrderTicket as OrderTicketSchema } from "src/schema/orderTicket.schema";
 import { OrderResult, RepoOrderCreate } from "@interfaces/order.interface";
 import { PaginateParams } from "types/common.type";
 import { PaginatedOrderResult } from "types/order.type";
@@ -26,6 +27,10 @@ class OrderRepository {
         status: OrderStatus.PROCESSING // Default status if not provided
       }
     });
+  }
+  async findOrderTickets(orderId: string): Promise<OrderTicket[]> {
+    return prisma.orderTicket.findMany({ where: { order_id: orderId } })
+
   }
 
   async findDetails(orderId: string): Promise<Order | null> {
@@ -111,7 +116,7 @@ class OrderRepository {
   }
 
 
-  async createOrder(customerId: string, eventId: number, payment_method: PaymentMethod, orderTickets: OrderTicket[]) {
+  async createOrder(customerId: string, eventId: number, payment_method: PaymentMethod, orderTickets: OrderTicketSchema[]) {
     // 1. Buscar informações do evento
     const event = await prisma.event.findUniqueOrThrow({
       where: { id: eventId },

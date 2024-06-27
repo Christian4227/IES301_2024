@@ -32,11 +32,37 @@ const parseOrderBy = (orderBy: string): Prisma.OrderOrderByWithRelationInput[] =
   });
 };
 
+// Esquema de validação para os parâmetros da rota
+const OrderDetailParams = Type.Object({
+  orderId: Type.String(),
+});
 
+// Esquema de validação para a querystring
+const QueryStringSchema = Type.Object({
+  "multi-page": Type.Boolean({ default: false }),
+});
 
 const OrderRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
   const orderService: OrderService = new OrderService();
 
+  // Endpoint para solicitar ingressos ja pagos por email.
+  api.get('/:orderId/tickets-email', {
+    schema: { params: OrderDetailParams, querystring: QueryStringSchema },
+    preHandler: [api.authenticate]
+  },
+    async (request: FastifyRequest<{ Params: OrderDetailParams, Querystring: { "multi-page": boolean } }>, reply: FastifyReply) => {
+
+      const { orderId } = request.params;
+      const { "multi-page": multiPage } = request.query;
+
+      try {
+        const order = await orderService.sendTicketsQrCodeForEmail(orderId, multiPage);
+        return reply.code(200).send(order);
+      } catch (error) {
+        return reply.code(404).send(error);
+      }
+    }
+  )
   // Endpoint para criar uma nova ordem de compra
   api.post('/', {
     schema: { body: OrderCreateSchema, }
@@ -134,23 +160,6 @@ const OrderRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         return reply.code(404).send(error);
       }
     });
-  // Endpoint para solicitar ingressos ja pagos por email.
-  api.get('/:orderId/tickets-email', {
-    schema: {
-      params: Type.Object({ orderId: Type.String() })
-    },
-    preHandler: [api.authenticate]
-  },
-    async (request: FastifyRequest<{ Params: OrderDetailParams }>, reply: FastifyReply) => {
-      const { orderId } = request.params;
-      try {
-        const order = await orderService.getOrderById(orderId);
-        return reply.code(200).send(order);
-      } catch (error) {
-        return reply.code(404).send(error);
-      }
-    }
-  );
 
 }
 export default OrderRoute;

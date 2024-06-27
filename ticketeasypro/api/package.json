@@ -22,17 +22,21 @@
     "@sinclair/typebox": "^0.32.32",
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
-    "nodemailer": "^6.9.13",
+    "nodemailer": "^6.9.14",
+    "pdf-lib": "^1.17.1",
+    "qrcode": "^1.5.3",    
     "uuid4": "^2.0.3"
   },
   "devDependencies": {
-    "@types/node": "^20.12.2",
+    "@types/node": "^20.14.9",
     "@types/nodemailer": "^6.4.15",
+    "@types/pdfkit": "^0.13.4",
+    "@types/qrcode": "^1.5.5",
     "@types/uuid4": "^2.0.3",
     "nodemon": "^3.1.0",
     "prisma": "^5.15.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.4.3"
+    "typescript": "^5.5.2"
   }
 }
