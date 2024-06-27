@@ -1,6 +1,5 @@
 import styles from "@styles/Cliente.module.css";
 import { parseCookies } from "nookies";
-
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const getStatusClass = (status) => {
@@ -99,5 +98,7 @@ function getToken() {
   }
   return valorToken;
 }
+
+
 
 export { emailRegex, dateFormat, formatFixPhone, formatCellPhone, getToken };

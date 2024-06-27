@@ -134,7 +134,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMDE0MWQ0Ni0wMTI5LTRiN2ItYTk0NC05MGYxM2FkZTRmOGEiLCJsb2dpbiI6InN0YWZmM0B0aWNrZXRlYXN5cHJvLmNvbS5iciIsInJvbGUiOiJTVEFGRiIsIm5hbWUiOiJTdGFmZiBUaHJlZSIsImlhdCI6MTcxNDcwMjI5NCwiZXhwIjoxNzE0NzIzODk0fQ.uxD1fFUoHqmxuDQFhxMg1iwZkBpUk59UEiCuD-Yq77w",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNTIyNGIyMi1mMTViLTQxZjktYTg4ZC04MGZmODgxZmFkYjMiLCJsb2dpbiI6InJvb3RAdGlja2V0ZWFzeXByby5jb20uYnIiLCJyb2xlIjoiQURNSU4iLCJuYW1lIjoicm9vdCIsImlhdCI6MTcxOTQ1NDg2NiwiZXhwIjoxNzE5NDk4MDY2fQ.QrWG6eb22dINOemSnaHlyK7NjoyaRtG5YvQDrg_jrIE",
 									"type": "string"
 								}
 							]
@@ -143,7 +143,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"luiz0loon@gmail.com\",\r\n    \"name\": \"Luiz Otavio de Oliveira Nogueira\",\r\n    \"email_confirmed\": false,\r\n    \"birth_date\":\"1992-07-08T00:00:00.000Z\",\r\n    \"phone\": \"930122314\",\r\n    \"phone_fix\": null,\r\n    \"role\": \"ADMIN\"\r\n}",
+							"raw": "{\r\n    \"email\": \"luiz_loon@yahoo.com.br\",\r\n    \"name\": \"Luiz Otavio de Oliveira Nogueira\",\r\n    \"email_confirmed\": false,\r\n    \"birth_date\":\"1992-07-08T00:00:00.000Z\",\r\n    \"phone\": \"930122314\",\r\n    \"phone_fix\": null,\r\n    \"role\": \"ADMIN\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -952,7 +952,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "// {\r\n//     \"email\": \"client_espectador@ticketeasypro.com.br\",\r\n//     \"password\": \"fatec123#1sem.2024\"\r\n// }\r\n// {\r\n//     \"email\": \"staff2@ticketeasypro.com.br\",\r\n//     \"password\": \"sEcure456@\"\r\n// }\r\n{\r\n    \"email\": \"manager@ticketeasypro.com.br\",\r\n    \"password\": \"maNaGeR1-2_3#2024&*\"\r\n}",
+							"raw": "{\r\n    \"email\": \"root@ticketeasypro.com.br\",\r\n    \"password\": \"admin123\"\r\n}\r\n//  {\r\n//     \"email\": \"client_espectador@ticketeasypro.com.br\",\r\n//     \"password\": \"senha123\"\r\n// }\r\n// {\r\n//     \"email\": \"staff2@ticketeasypro.com.br\",\r\n//     \"password\": \"sEcure456@\"\r\n// }\r\n// {\r\n//     \"email\": \"manager@ticketeasypro.com.br\",\r\n//     \"password\": \"maNaGeR1-2_3#2024&*\"\r\n// }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1236,13 +1236,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_v1}}/ticket-types/1",
+							"raw": "{{base_v1}}/tickets/1e330117-04bb-4567-bd6b-470f3c1f6382/checkin",
 							"host": [
 								"{{base_v1}}"
 							],
 							"path": [
-								"ticket-types",
-								"1"
+								"tickets",
+								"1e330117-04bb-4567-bd6b-470f3c1f6382",
+								"checkin"
 							]
 						}
 					},
@@ -1251,6 +1252,16 @@
 				{
 					"name": "Get Free Tickets Count",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ZGNiYjYyMy1jNjdhLTRjMjItOTU5Yi1mZmU1MjllMTViYzIiLCJsb2dpbiI6ImNsaWVudF9lc3BlY3RhZG9yQHRpY2tldGVhc3lwcm8uY29tLmJyIiwicm9sZSI6IlNQRUNUQVRPUiIsIm5hbWUiOiJmdWxhbm8gZGUgdGFsIiwiaWF0IjoxNzE5NDQ1Nzk5LCJleHAiOjE3MTk0ODg5OTl9.d3wXBKlquDdgRWhdgSv99PJPKy3xJlF4gVDF39LS0sY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {

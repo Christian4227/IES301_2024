@@ -7,19 +7,8 @@ import { useRouter } from "next/router";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import styles from "@styles/Cliente.module.css";
 import Image from "next/image";
-import { parseCookies } from "nookies";
-import { getFullAddress } from "@/utils";
+import { getFullAddress, getToken } from "@/utils";
 
-function getToken() {
-  const cookies = parseCookies();
-  let token;
-  let valorToken;
-  if (cookies && cookies["ticket-token"]) {
-    token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
-    valorToken = JSON.parse(token);
-  }
-  return valorToken;
-}
 
 export default function EventoEscolhido() {
   const router = useRouter();
@@ -33,7 +22,7 @@ export default function EventoEscolhido() {
   }, []);
 
   const direcionarFormulario = () => {
-    // router.push("./EventoEscolhidoForm");
+    
     router.push(`./EventoEscolhidoForm?eventId=${eventId}`);
   };
 
