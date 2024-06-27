@@ -54,7 +54,7 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
                 if (error instanceof Error) {
                     return reply.code(200).send(error);
                 }
-            };
+            }
 
         });
 
@@ -73,7 +73,7 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
                 if (error instanceof Error) {
                     return reply.code(200).send(error);
                 }
-            };
+            }
             return reply.code(200).send(false);
         }
     );
@@ -103,7 +103,7 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
             if (error instanceof Error)
                 if (error.message === "InvalidOrExpiredToken")
                     reply.status(400).send({ "Success": false });
-        };
+        }
         return reply.code(200).send({ "Success": true });
     });
 

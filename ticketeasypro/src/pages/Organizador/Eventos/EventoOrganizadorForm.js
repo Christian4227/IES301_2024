@@ -140,6 +140,12 @@ export default function EventoOrganizadorForm() {
       if (tipo == "Banner") {
         reader.onload = function (e) {
           const base64Image = e.target.result;
+          const tamanhoMaximo = 250 * 1024; // 300 KB
+
+          if (atob(base64Image.split(",")[1]).length > tamanhoMaximo) {
+            handleSetMessage("Tamanho da imagem não suportável.", "error");
+            return;
+          }
           setImgBaner(base64Image);
           setImageData(base64Image);
         };
@@ -449,7 +455,7 @@ export default function EventoOrganizadorForm() {
                   <textarea
                     className="form-control"
                     id="InputDescricao"
-                    rows="3"
+                    rows="4"
                     maxLength={400}
                     value={descricao}
                     onChange={(e) => setDescricao(e.target.value)}
@@ -462,6 +468,9 @@ export default function EventoOrganizadorForm() {
             </div>
             <div className={styles.div_form_evento_img_mapa_descricao}>
               <div className={styles.div_form_evento_img}>
+                <label className="form-label m-0">
+                  Tamanho máximo da soma das duas imagens: 500 KB.
+                </label>
                 <div className={styles.div_form_evento_img_mapa}>
                   <Image
                     src={imageData == null ? eventos : imageData}

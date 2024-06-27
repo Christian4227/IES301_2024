@@ -213,6 +213,9 @@
 .embaixo {
     position: absolute;
     bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .botao_grupo {
@@ -292,4 +295,59 @@
 .div_titulo_tabela_colaborador {
   border-bottom: 1px solid black;
   margin-bottom: 1em;
+}
+
+/* SucessoValidacao */
+.img_sucesso_colaborador {
+  width: 200px;
+}
+
+.div_img_sucesso_colaborador {
+  display: flex;
+  justify-content: center;
+}
+
+.div_img_sucesso_colaborador_itens {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 50%;
+}
+
+.div_img_sucesso_colaborador_itens p {
+  margin-bottom: 1em;
+}
+
+/* Verificar Ingressos */
+.form_evento_campos {
+  display: flex;
+}
+
+.form_evento_data {
+  display: flex;
+}
+
+.form_evento_botoes {
+  margin: 1em 0;
+}
+
+.form_evento_campos_data {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.form_evento_campos_eventos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 1em;
+  padding-left: 1em;
+  border-left: 1px solid #D1CECE;
+  width: 50%;
+}
+
+.form_evento_campos_eventos_select {
+  width: 100%;
 }

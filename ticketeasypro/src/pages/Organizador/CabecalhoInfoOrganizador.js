@@ -17,7 +17,7 @@ export default function CabecalhoInfoOrganizador({ secao }) {
       <nav className={styles.header_organizador_nav}>
         <ul className={styles.header_organizador_menu}>
           <li>
-            <Link href="/organizador/Indexorganizador">Home</Link>
+            <Link href="/Organizador/GeralOrganizador">Home</Link>
           </li>
           <li>
             <Link href="/organizador/Dados/Dadosorganizador">Meus dados</Link>

@@ -1,26 +1,35 @@
-import React, { useState, useEffect } from "react";
-import Cabecalho from "./Cabecalho";
-import styles from "../styles/CadastroCliente.module.css";
-import styleh from "../styles/Home.module.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useCallback, useEffect, useState } from "react";
+import CabecalhoOrganizador from "../CabecalhoOrganizador";
+import CabecalhoInfoOrganizador from "../CabecalhoInfoOrganizador";
+import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import LoadingOverlay from "@components/LoadingOverlay";
-import Link from "next/link";
+import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "@styles/Organizador.module.css";
 import client from "@/utils/client_axios";
-import PasswordAndConfirmForm from "@/components/forms/PasswordAndConfirmForm";
 import {
   emailRegex,
   dateFormat,
   formatFixPhone,
   formatCellPhone,
 } from "@/utils";
-import { useCallback } from "react";
-import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
+import { parseCookies } from "nookies";
 
 const minDate = (() => new Date("1910-01-01"))();
 const maxDate = (() => new Date())();
 
-const TelaCadastroCliente = () => {
+function getToken() {
+  const cookies = parseCookies();
+  let token;
+  let valorToken;
+  if (cookies && cookies["ticket-token"]) {
+    token = cookies["ticket-token"]; // Assumindo que o nome do cookie é 'ticket-token'
+    valorToken = JSON.parse(token);
+  }
+  return valorToken;
+}
+
+export default function CadastrarColaborador() {
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [celular, setCelular] = useState("");
@@ -28,8 +37,6 @@ const TelaCadastroCliente = () => {
   const [birthDateValid, setBirthDateValid] = useState(true);
   const [email, setEmail] = useState("");
   const [emailValid, setEmailValid] = useState(true);
-  const [password, setPassword] = useState("");
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
@@ -58,17 +65,14 @@ const TelaCadastroCliente = () => {
       isCelularValid &&
       birthDateValid &&
       isEmailValid;
-    const isFormCurrentlyValid = allBasicFieldsValid && isPasswordValid;
+    const isFormCurrentlyValid = allBasicFieldsValid;
 
     setIsFormValid(isFormCurrentlyValid);
-  }, [nome, telefone, celular, email, isPasswordValid, birthDateValid]);
+  }, [nome, telefone, celular, email, birthDateValid]);
 
   const handleSetMessage = (message, type) => {
     setMessage({ text: message, type });
   };
-
-  const handleValidityChange = (isValid) => setIsPasswordValid(isValid);
-  const handlePasswordChange = (password) => setPassword(password);
 
   const validateEmail = (email) => emailRegex.test(email);
   const handleEmailChange = (e) => {
@@ -83,47 +87,47 @@ const TelaCadastroCliente = () => {
 
   const inserirDados = async () => {
     const data = {
-      email,
-      password,
-      confirm_password: password,
+      email: email,
       name: nome,
+      email_confirmed: false,
       birth_date: dataNascimento,
       phone: telefone,
       cellphone: celular,
+      role: "STAFF",
     };
     try {
       setLoadingWithDelay(true);
-      await client.post("/users/signin", data);
-      handleSetMessage(
-        "Dados cadastrados com sucesso!\nVerifique no seu e-mail cadastrado uma mensagem de confirmação.",
-        "success"
-      );
-    } catch (error) {
-      const messageError = error?.response?.data?.message;
-      switch (messageError) {
-        case "UserAlreadyExists":
-          handleSetMessage("Email já cadastrado. Faça seu login.", "error");
-          break;
-        default:
-          handleSetMessage("Erro desconhecido.", "error");
-          break;
+      const response = await client.post("/accounts/", data, {
+        headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+      });
+      if (response.status == 201) {
+        handleSetMessage(
+          "Dados cadastrados com sucesso!\nVerifique no seu e-mail cadastrado uma mensagem de confirmação.",
+          "success"
+        );
+      } else {
+        handleSetMessage("Email ainda não enviado. Tente novamente.", "error");
       }
+    } catch (error) {
+      handleSetMessage("Erro desconhecido.", "error");
     } finally {
       setLoadingWithDelay(false);
     }
   };
-
   return (
-    <main>
+    <div>
+      <CabecalhoOrganizador />
+      <CabecalhoInfoOrganizador secao="Cadastrar colaborador" />
+      <SuporteTecnico />
       {loading && <LoadingOverlay />}
-      <div id="div-principal">
-        <Cabecalho className={styleh.header} />
-        <CabecalhoHomeMenu componente="Cadastrar" />
-        <div className={styles.div_cadastrar}>
+      <div className="div_principal">
+        <div className={styles.div_form_body_organizador}>
           <form className="div_container_grande">
             <div className={styles.cabecalho_cadastro}>
-              <h1>Cadastro das informações</h1>
-              <label>Insira os seus dados para se inscrever nos eventos</label>
+              <h1>Cadastro do colaborador</h1>
+              <label>
+                Insira os dados do colaborador para ajudar nos eventos.
+              </label>
             </div>
             <div className="mb-3">
               <label htmlFor="InputNomeCompleto" className="form-label">
@@ -208,11 +212,6 @@ const TelaCadastroCliente = () => {
                   Por favor, insira um e-mail válido.
                 </i>
               )}
-              <PasswordAndConfirmForm
-                minStrength={2}
-                onPasswordChange={handlePasswordChange}
-                onValidityChange={handleValidityChange}
-              />
             </div>
             <button
               type="button"
@@ -222,21 +221,12 @@ const TelaCadastroCliente = () => {
             >
               Cadastrar
             </button>
-            <hr />
-            <div className={styles.footer_form}>
-              <label>
-                Não recebeu o e-mail de confirmação?{" "}
-                <Link href="/Contas/RecuperarEmail">Clique aqui</Link>
-              </label>
-            </div>
           </form>
         </div>
-        {!!message.text && (
-          <ToastMessage text={message.text} type={message.type} />
-        )}
       </div>
-    </main>
+      {!!message.text && (
+        <ToastMessage text={message.text} type={message.type} />
+      )}
+    </div>
   );
-};
-
-export default TelaCadastroCliente;
+}
