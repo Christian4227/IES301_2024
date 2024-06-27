@@ -263,7 +263,7 @@
 }
 
 .td_sit_compra_processando, .td_sit_compra_completado, .td_sit_compra_cancelado, 
-.td_sit_evento_planejado, .td_sit_evento_em_curso, .td_sit_evento_completado, .td_sit_evento_completado {
+.td_sit_evento_planejado, .td_sit_evento_em_curso, .td_sit_evento_completado, .td_sit_evento_cancelado {
   color: white !important;
   text-align: center;
   vertical-align: middle;

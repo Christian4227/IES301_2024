@@ -136,6 +136,19 @@ padding: 0 20px;
   margin: 0 1em 0 0;
 }
 
+.img_evento_table_disponivel {
+  opacity: 1;
+}
+
+.img_evento_table_cancelado {
+  opacity: 0.3;
+}
+
+.div_botao_filtrar_ingressos {
+  display: flex;
+  justify-content: center;
+}
+
 /* Form Organizador Eventos */
 .div_form_evento, .div_form_evento_img_mapa, .div_form_evento_dados_data, 
 .div_form_evento_dados_categoria {

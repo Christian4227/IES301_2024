@@ -9,6 +9,7 @@ import { parseCookies } from "nookies";
 import client from "@/utils/client_axios";
 import maps from "../../../assets/google_maps.png";
 import editar from "../../../assets/Editar.png";
+import excluir from "../../../assets/excluir.png";
 
 import {
   getFullAddress,
@@ -38,7 +39,6 @@ export default function GeralEventosOrganizador() {
   const [categorySelected, setCategorySelected] = useState("");
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
-  const [capacidade, setCapacidade] = useState("");
   const [estrangeiro, setEstrangeiro] = useState(false);
   const [tipoEvento, setTipoEvento] = useState("");
 
@@ -52,6 +52,27 @@ export default function GeralEventosOrganizador() {
 
   const handleCategoryChange = (event) => {
     setCategorySelected(event.target.value);
+  };
+
+  const handleExcluir = async (eventoId) => {
+    const resposta = window.confirm(
+      "Deseja mesmo excluir o evento? Esta ação não poderá ser desfeita."
+    );
+
+    if (resposta == true) {
+      try {
+        const response = await client.put(`events/${eventoId}/cancel`, {
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+        });
+
+        if (response == 200) {
+          handleSetMessage("Evento excluído com sucesso!", "success");
+        }
+      } catch (error) {
+        handleSetMessage("Erro ao cancelar o evento.", "error");
+        console.log("Erro na requisição de categorias:", error);
+      }
+    }
   };
 
   const FiltrarTabelaOrdemCompra = async () => {
@@ -163,17 +184,6 @@ export default function GeralEventosOrganizador() {
             />
           </div>
           <div className={styles.form_ingressos_campos}>
-            <div className="mb-3">
-              <label>Capacidade</label>
-              <input
-                type="number"
-                className="form-control"
-                id="InputCapacidade"
-                value={capacidade}
-                min={0}
-                onChange={(e) => setCapacidade(e.target.value)}
-              />
-            </div>
             <div className="mb-3">
               <label>Estrangeiro?</label>
               <select
@@ -289,13 +299,22 @@ export default function GeralEventosOrganizador() {
                         <td>{evento.capacity}</td>
                         <td>
                           <Link
-                            href={`./EventoOrganizadorForm?eventId=${evento.id}`}
+                            href={
+                              evento.status != "CANCELLED"
+                                ? "#"
+                                : `./EventoOrganizadorForm?eventId=${evento.id}`
+                            }
                           >
                             <Image
                               src={editar}
                               alt="editar"
                               width={40}
                               height={40}
+                              className={
+                                evento.status != "CANCELLED"
+                                  ? styles.img_evento_table_disponivel
+                                  : styles.img_evento_table_cancelado
+                              }
                             />
                           </Link>
                         </td>
@@ -310,6 +329,21 @@ export default function GeralEventosOrganizador() {
                               height={40}
                             />
                           </Link>
+                        </td>
+                        <td>
+                          <button onClick={() => handleExcluir(evento.id)}>
+                            <Image
+                              src={excluir}
+                              alt="excluir"
+                              width={80}
+                              height={80}
+                              className={
+                                evento.status != "CANCELLED"
+                                  ? styles.img_evento_table_disponivel
+                                  : styles.img_evento_table_cancelado
+                              }
+                            />
+                          </button>
                         </td>
                       </tr>
                     ))
