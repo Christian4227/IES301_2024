@@ -1,4 +1,5 @@
 import styles from "@styles/Cliente.module.css";
+import { parseCookies } from "nookies";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -53,7 +54,7 @@ export function formatDate(dateString) {
   const date = new Date(dateString);
   const options = { day: "2-digit", month: "2-digit", year: "numeric" };
   return date.toLocaleDateString("pt-BR", options);
-};
+}
 
 export const getFullAddress = (location) => {
   const addressParts = [
@@ -61,11 +62,11 @@ export const getFullAddress = (location) => {
     location.address.trim(),
     location.number.trim(),
     location.city.trim() + " - " + location.uf.trim(),
-    location.zip_code.trim()
+    location.zip_code.trim(),
   ];
 
-  const address = addressParts.filter(part => part !== "").join(", ");
-  return address.replace(/\s{2,}/g, ' ');
+  const address = addressParts.filter((part) => part !== "").join(", ");
+  return address.replace(/\s{2,}/g, " ");
 };
 const formatPhone = (value) =>
   value.replace(/\D/g, "").replace(/(\d{2})(\d)/, "($1) $2");

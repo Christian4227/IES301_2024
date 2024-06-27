@@ -38,7 +38,7 @@ export default function GeralEventosOrganizador() {
   const [categorySelected, setCategorySelected] = useState("");
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
-  const [tipoCompra, setTipoCompra] = useState("");
+  const [capacidade, setCapacidade] = useState("");
   const [estrangeiro, setEstrangeiro] = useState(false);
   const [tipoEvento, setTipoEvento] = useState("");
 
@@ -55,23 +55,14 @@ export default function GeralEventosOrganizador() {
   };
 
   const FiltrarTabelaOrdemCompra = async () => {
-    var situacaoCompra = "";
-    if (tipoCompra !== "") {
-      situacaoCompra = "?order-status=" + tipoCompra;
-    }
-
     var nacional = "";
-    if (estrangeiro === "y") {
-      if (situacaoCompra == "") {
-        nacional = "?uf=SP";
-      } else {
-        nacional = "&uf=ES";
-      }
+    if (estrangeiro === "n") {
+      nacional = "?national=true";
     }
 
     var categoriaSelecionada = "";
     if (categorySelected !== "") {
-      if (situacaoCompra == "" && nacional == "") {
+      if (nacional == "") {
         categoriaSelecionada = "?category-id=" + categorySelected;
       } else {
         categoriaSelecionada = "&category-id=" + categorySelected;
@@ -80,25 +71,16 @@ export default function GeralEventosOrganizador() {
 
     var situacaoDoEvento = ""; // No need to check for empty value here
     if (tipoEvento !== "") {
-      if (
-        situacaoCompra == "" &&
-        nacional == "" &&
-        categoriaSelecionada == ""
-      ) {
-        situacaoDoEvento = "?status=" + tipoEvento;
+      if (nacional == "" && categoriaSelecionada == "") {
+        situacaoDoEvento = "?status=" + tipoEvento.toLowerCase();
       } else {
-        situacaoDoEvento = "&status=" + tipoEvento;
+        situacaoDoEvento = "&status=" + tipoEvento.toLowerCase();
       }
     }
 
     var dataInicial = "";
     if (dataInicio !== "") {
-      if (
-        situacaoCompra == "" &&
-        nacional == "" &&
-        tipoEvento == "" &&
-        categoriaSelecionada == ""
-      ) {
+      if (nacional == "" && tipoEvento == "" && categoriaSelecionada == "") {
         dataInicial = "?start-date=" + new Date(dataInicio).getTime();
       } else {
         dataInicial = "&start-date=" + new Date(dataInicio).getTime();
@@ -111,7 +93,6 @@ export default function GeralEventosOrganizador() {
     }
 
     const query =
-      situacaoCompra +
       nacional +
       categoriaSelecionada +
       situacaoDoEvento +
@@ -183,16 +164,15 @@ export default function GeralEventosOrganizador() {
           </div>
           <div className={styles.form_ingressos_campos}>
             <div className="mb-3">
-              <label>Situação da compra</label>
-              <select
-                className="form-select"
-                onChange={(e) => setTipoCompra(e.target.value)}
-              >
-                <option value="">Selecione os status...</option>
-                <option value="PROCESSING">Processando</option>
-                <option value="COMPLETED">Completo</option>
-                <option value="CANCELLED">Cancelada</option>
-              </select>
+              <label>Capacidade</label>
+              <input
+                type="number"
+                className="form-control"
+                id="InputCapacidade"
+                value={capacidade}
+                min={0}
+                onChange={(e) => setCapacidade(e.target.value)}
+              />
             </div>
             <div className="mb-3">
               <label>Estrangeiro?</label>

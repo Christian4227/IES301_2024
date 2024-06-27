@@ -11,6 +11,7 @@ import eventos from "../../../assets/Evento desconhecido.png";
 import { parseCookies } from "nookies";
 import { useRouter } from "next/router";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
+import { dateFormat } from "@/utils";
 // import { dateFormat } from "@/utils";
 
 function getToken() {
@@ -64,38 +65,71 @@ export default function EventoOrganizadorForm() {
     setMessage({ text: message, type });
   };
 
-  const inserirDados = async () => {
+  const salvarDados = async () => {
     const agora = new Date();
-    let data = JSON.stringify({
-      name: nome,
-      event_manager: user.sub,
-      description: descricao,
-      ts_initial_date: new Date(dataInicio).getTime(),
-      ts_final_date: new Date(dataFinal).getTime(),
-      base_price: parseInt(preco),
-      capacity: parseInt(capacidade),
-      status: status,
-      img_banner: img_baner,
-      img_thumbnail: img_miniatura,
-      category_id: parseInt(categoria),
-      color: cor.toUpperCase(),
-      location_id: parseInt(idLocal),
-      created_at: new Date(agora),
-      updated_at: new Date(agora),
-    });
-    try {
-      await client.post("/events/", data, {
-        headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+
+    let data;
+    if (idEvento) {
+      data = JSON.stringify({
+        name: nome,
+        event_manager: user.sub,
+        description: descricao,
+        ts_initial_date: new Date(dataInicio).getTime(),
+        ts_final_date: new Date(dataFinal).getTime(),
+        base_price: parseInt(preco),
+        capacity: parseInt(capacidade),
+        status: status,
+        img_banner: img_baner,
+        img_thumbnail: img_miniatura,
+        category_id: parseInt(categoria),
+        color: cor.toUpperCase(),
+        location_id: parseInt(idLocal),
+        updated_at: new Date(agora),
       });
-      handleSetMessage(
-        "Dados cadastrados com sucesso!\nVerifique no seu e-mail cadastrado uma mensagem de confirmação.",
-        "success"
-      );
-    } catch (error) {
-      handleSetMessage(
-        "O seu evento não foi adicionado. Tente novamente.",
-        "error"
-      );
+    } else {
+      data = JSON.stringify({
+        name: nome,
+        event_manager: user.sub,
+        description: descricao,
+        ts_initial_date: new Date(dataInicio).getTime(),
+        ts_final_date: new Date(dataFinal).getTime(),
+        base_price: parseInt(preco),
+        capacity: parseInt(capacidade),
+        status: status,
+        img_banner: img_baner,
+        img_thumbnail: img_miniatura,
+        category_id: parseInt(categoria),
+        color: cor.toUpperCase(),
+        location_id: parseInt(idLocal),
+        created_at: new Date(agora),
+        updated_at: new Date(agora),
+      });
+    }
+
+    if (idEvento) {
+      try {
+        await client.put(`/events/${idEvento}`, data, {
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+        });
+        handleSetMessage("Dados do evento atualizados com sucesso!", "success");
+      } catch (error) {
+        handleSetMessage(
+          "O seu evento não foi atualizado. Tente novamente.",
+          "error"
+        );
+      }
+    } else {
+      try {
+        await client.post("/events/", data, {
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+        });
+        handleSetMessage("Dados do evento cadastrados com sucesso!", "success");
+      } catch (error) {
+        handleSetMessage(
+          "O seu evento não foi adicionado. Tente novamente.",
+          "error"
+        );
+      }
     }
   };
 
@@ -137,7 +171,14 @@ export default function EventoOrganizadorForm() {
   useEffect(() => {
     const isNomeValid = nome.length > 0;
     const isEventTipo = categoria != "";
-    const isEventStatus = status != "" && status == "PLANNED";
+
+    var isEventStatus;
+    if (idEvento) {
+      isEventStatus = status != "";
+    } else {
+      isEventStatus = status != "" && status == "PLANNED";
+    }
+
     const isPreco = preco >= 0;
     const isCapacidade = capacidade >= 0;
     const isDescricao = descricao.length > 0;
@@ -173,6 +214,7 @@ export default function EventoOrganizadorForm() {
     latitude,
     longitude,
     status,
+    idEvento,
   ]);
 
   useEffect(() => {
@@ -214,13 +256,27 @@ export default function EventoOrganizadorForm() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDataAtualizar = async () => {
       try {
         const response = await client.get(`events/${idEvento}`, {
           headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
         });
         if (response.status == 200) {
           setNome(response.data.name);
+          setDataInicio(dateFormat(new Date(response.data.initial_date)));
+          setDataFinal(dateFormat(new Date(response.data.final_date)));
+          setCategoria(response.data.category.id);
+          setStatus(response.data.status);
+          setPreco(response.data.base_price);
+          setCapacidade(response.data.capacity);
+          setCor(response.data.color);
+          setIdLocal(response.data.location.id);
+          setLatitude(response.data.location.latitude);
+          setLongitude(response.data.location.longitude);
+          setDescricao(response.data.description);
+          setImgBaner(response.data.img_banner);
+          setImgMiniatura(response.data.img_thumbnail);
+          setImageData(response.data.img_banner);
         }
       } catch (error) {
         handleSetMessage("Erro ao carregar os dados", "error");
@@ -228,9 +284,9 @@ export default function EventoOrganizadorForm() {
       }
     };
     if (idEvento) {
-      fetchData();
+      fetchDataAtualizar();
     }
-  }, []);
+  }, [idEvento]);
 
   return (
     <div>
@@ -258,13 +314,6 @@ export default function EventoOrganizadorForm() {
                 />
                 <label className="form-label">
                   Caracteres: {nome.length} / 20
-                </label>
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Gerente</label>
-                <br />
-                <label className="form-label">
-                  {user?.name == undefined ? "" : user?.name}
                 </label>
               </div>
               <div className={styles.div_form_evento_dados_data}>
@@ -308,6 +357,7 @@ export default function EventoOrganizadorForm() {
                   <label>Categoria do evento</label>
                   <select
                     className="form-select"
+                    value={categoria}
                     onChange={(e) => setCategoria(e.target.value)}
                   >
                     <option value="">Selecione o tipo de categoria</option>
@@ -324,6 +374,7 @@ export default function EventoOrganizadorForm() {
                   <label>Estado do evento</label>
                   <select
                     className="form-select"
+                    value={status}
                     onChange={(e) => setStatus(e.target.value)}
                   >
                     <option value="">Selecione o status do evento...</option>
@@ -374,6 +425,7 @@ export default function EventoOrganizadorForm() {
                   <label>Local do evento</label>
                   <select
                     className="form-select"
+                    value={idLocal}
                     onChange={(e) => setIdLocal(e.target.value)}
                   >
                     <option value="">Selecione o local do evento...</option>
@@ -459,10 +511,10 @@ export default function EventoOrganizadorForm() {
             <button
               type="button"
               className="btn btn-primary"
-              onClick={inserirDados}
+              onClick={salvarDados}
               disabled={!isFormValid}
             >
-              Cadastrar
+              {idEvento ? "Atualizar" : "Cadastrar"}
             </button>
           </div>
         </div>

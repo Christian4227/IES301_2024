@@ -55,7 +55,7 @@ class EventRepository {
         location: {
           select: {
             id: true, name: true, address_type: true, address: true, number: true, zip_code: true,
-            city: true, uf: true, country: true, complements: true
+            city: true, uf: true, country: true, complements: true, latitude: true, longitude: true
           }
         }, manager_id: true //, Ticket: true
       }
