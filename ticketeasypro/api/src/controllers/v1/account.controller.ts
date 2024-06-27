@@ -4,6 +4,7 @@ import { AccountRoleUpdate, AccountUpdateResult, PaginatedAccountResult, QueryPa
 import { AccountCreate } from "@interfaces/service/account.interface";
 import { Role } from "@prisma/client";
 import { Identifier } from "types/common.type";
+import { makeTemporaryPasswordEmailContent } from "@utils/templates";
 // import { AccountResult } from "@interfaces/repository/account.interface";
 
 
@@ -15,7 +16,7 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
             const { user: { role: actorRole }, body: updateData } = request;
             try {
                 const account = await accountService.create(actorRole as Role, updateData, api);
-                const { id, email, name, email_confirmed, birth_date, phone, phone_fix, role } = account;
+                const { id, email, name, email_confirmed, birth_date, phone, phone_fix, role } = account;                
                 return reply.code(201).send({ id, email, name, email_confirmed, birth_date, phone, phone_fix, role });
             } catch (error) {
                 return reply.code(409).send(error);

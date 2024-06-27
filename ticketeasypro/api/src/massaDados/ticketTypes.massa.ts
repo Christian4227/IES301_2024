@@ -18,7 +18,7 @@ const ticketTypes = [
     },
     {
         "name": "Meia-Entrada para Idosos",
-        "discount": 30,
+        "discount": 50,
         "description": "Ingresso com desconto para idosos."
     },
     {

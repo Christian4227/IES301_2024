@@ -8,7 +8,7 @@ import { FastifyInstance } from "types/fastify";
 import { AccountCreateResult, AccountResult } from "@interfaces/repository/account.interface";
 import { generateConfirmationToken } from "@utils/auth";
 import sendEmail from "@utils/sendEmail";
-import { makeConfirmEmailContent, makeResetEmailContent } from "@utils/templates";
+import { makeConfirmEmailContent, makeResetEmailContent, makeTemporaryPasswordEmailContent } from "@utils/templates";
 import { generateRandomPassword, getLocalbaseURL } from "@utils/mixes";
 import crypto from "crypto";
 
@@ -24,7 +24,7 @@ class AccountService {
     if (!(actorRole === roleAccountCreate && (actorRole === Role.ADMIN || actorRole === Role.EVENT_MANAGER)))
       if (!canDoIt(actorRole, roleAccountCreate)) throw new Error('InsufficientPermissions');
     try {
-      const verifyIfAccountExists = await this.getOne({email});
+      const verifyIfAccountExists = await this.getOne({ email });
     } catch (error) {
       if (error instanceof Error)
         if (error.message !== 'AccountNotFound')
@@ -42,7 +42,7 @@ class AccountService {
     const account: AccountCreateResult = await this.accountRepository.create(accountToCreate);
 
     const emailSended = await this.reSendConfirmationEmail(email, api);
-
+    await this.sendTemporaryPassword(email, tempPassword);
     return account;
   }
 
@@ -91,7 +91,7 @@ class AccountService {
   };
   passwordReset = async (email: string, api: FastifyInstance) => {
 
-    const account = await this.getOne({email});
+    const account = await this.getOne({ email });
     if (!account) throw new Error('AccountNotFound');
 
     const resetPasswordToken = crypto.randomBytes(64).toString('hex');
@@ -109,7 +109,7 @@ class AccountService {
 
   reSendConfirmationEmail = async (email: string, api: FastifyInstance): Promise<AccountResult> => {
     try {
-      const account = await this.getOne({email});
+      const account = await this.getOne({ email });
 
       if (account.email_confirmed) throw new Error('EmailAlreadyConfirmed');
 
@@ -124,6 +124,20 @@ class AccountService {
       return account;
     } catch (error) {
       console.error('Error resending confirmation email:', error);
+      throw error
+    }
+  };
+  sendTemporaryPassword = async (email: string, temporaryPassword: string): Promise<AccountResult> => {
+    try {
+      const account = await this.getOne({ email });
+      const { name, } = account;
+
+
+      const emailContent = makeTemporaryPasswordEmailContent({ name, email }, temporaryPassword)
+      await sendEmail(email, "Sua senha provisória.", emailContent);
+      return account;
+    } catch (error) {
+      console.error('Error sending password temporary:', error);
       throw error
     }
   };

@@ -131,7 +131,7 @@ export const makeConfirmEmailContent = (user: { name: string, email: string }, c
 }
 
 export const makeResetEmailContent = (user: { name: string, email: string }, resetUrl: string) => {
-    const htmlContent = `
+  const htmlContent = `
     <!DOCTYPE html>
     <html lang="pt-br">
     
@@ -245,6 +245,121 @@ export const makeResetEmailContent = (user: { name: string, email: string }, res
     
     </html>
 `;
-    return htmlContent;
+  return htmlContent;
 
+}
+
+export const makeTemporaryPasswordEmailContent = (user: { name: string, email: string }, temporaryPassword: string) => {
+  const htmlContent = `
+  <!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE-edge">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Ticket Easy Pro</title>
+</head>
+
+<body>
+  <table style="background-color: #F1F1F1; width: 480px; display: flex; justify-content: center;">
+    <tr>
+      <td style="background-color: black; color: white; text-align: center; padding: 0.2em;">
+        <h1>Event Mais Você</h1>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table style="padding: 0.2em; width: 100%;">
+          <tr>
+            <td>
+              <table style="padding: 0.2em; text-align: center; width: 100%;">
+                <tr>
+                  <td>
+                    <h1>Sistema Ticket Easy Pro</h1>
+                  </td>
+                </tr>
+                <tr style="margin: 10px 0; height: 1px;">
+                  <td>
+                    <table style="width: 100%;">
+                      <tr>
+                        <td style="background-color: gray; width: 100%; height: 1px;"></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table style="padding: 1em; width: 100%;">
+                <tr>
+                  <td>
+                    <p style="text-align: justify;"><b>Olá,</b> ${user.name}</p><br />
+                    <p style="text-align: justify;">Sua conta foi criada com sucesso! Utilize a senha temporária abaixo para acessar sua conta e mudar sua senha:</p><br />
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table style="background-color: black; color: white; padding: 1em; width: 100%;">
+                <tr>
+                  <td>
+                    <p style="text-align: left;"><b>Nome: </b>${user.name}</p><br>
+                    <p style="text-align: left;"><b>E-mail de acesso: </b>${user.email}</p><br>
+                    <p style="text-align: left;"><b>Senha Temporária: </b>${temporaryPassword}</p><br>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table style="text-align: center; padding: 1em; width: 100%;">
+                <tr>
+                  <td>
+                    <p style="text-align: justify; margin: 10px 0;">Se recebeu este e-mail por engano ou alguma informação estiver errada, ignore este e-mail.</p>
+                  </td>
+                </tr>
+                <tr style="margin: 10px 0; height: 1px;">
+                  <td>
+                    <table style="width: 100%;">
+                      <tr>
+                        <td style="background-color: gray; width: 100%; height: 1px;"></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <b>
+                      <p style="text-align: justify; margin: 10px 0;">Se expirar o tempo de confirmação do e-mail, é possível reenviar este e-mail na página de cadastro da Event Mais Você.</p>
+                    </b>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table style="width: 100%;">
+          <tr>
+            <td style="background-color: black; height: 30px; width: 100%;"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+
+                    `
+  return htmlContent;
 }
