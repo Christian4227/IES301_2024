@@ -7,9 +7,11 @@ import styles from "@styles/Cliente.module.css";
 import TicketRow from "@/components/TicketRow/TicketRow";
 import client from "@/utils/client_axios";
 import { getToken } from "@/utils";
+import LoadingOverlay from "@components/LoadingOverlay";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 
 const TicketForm = () => {
+  const [loading, setLoading] = useState(false);
   const [tickets, setTickets] = useState([{ type: "", quantity: 1 }]);
   const [total, setTotal] = useState(0);
   const [ticketsFree, setTicketsFree] = useState(0);
@@ -22,41 +24,59 @@ const TicketForm = () => {
   const { eventId } = router.query;
 
   const setErrorMessage = useCallback(
-    (message) => setMessage(message, "error"),
+    (message) => setMessage({ text: message, type: "error" }),
     []
   );
   const setSuccessMessage = useCallback(
-    (message) => setMessage(message, "success"),
+    (message) => setMessage({ text: message, type: "success" }),
     []
   );
 
-  const onPaymentMethodChange = useCallback(async (e) => {
-    setpaymentMethod(e);
-  });
+  const onPaymentMethodChange = useCallback((e) => {
+    setpaymentMethod(e.target.value);
+  }, []);
 
-  const handlerSubmit = useCallback(async () => {
+  const setLoadingWithDelay = (isLoading) => {
+    if (isLoading) setLoading(true);
+    else setTimeout(() => setLoading(false), 100);
+  };
+
+  const handleSubmit = useCallback(async () => {
     try {
+      setLoadingWithDelay(true);
+
       const orderTickets = tickets.map((ticket) => {
         const type = availableTicketTypes.find((t) => t.name === ticket.type);
         return { typeId: type.id, quantity: ticket.quantity };
       });
 
-      const response = await client.post("orders", {
-        headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
-        data: {
-          eventId: event.id,
-          paymentMethod: paymentMethod,
-          orderTickets: orderTickets,
-        },
+      const data = {
+        eventId: event.id,
+        paymentMethod: paymentMethod,
+        orderTickets: orderTickets
+      };
+
+      const accessToken = getToken().accessToken;
+      const response = await client.post('orders', data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        }
       });
-      if (response.status == 200) {
-        setSuccessMessage("Compra registrada com sucesso!");
+
+      if (response.status === 201) {
+        setSuccessMessage("Compra Efetivada! Você será redirecionado para a tela de reservas.");
+        setTimeout(() => {
+          router.push("/Cliente/Ingressos/IngressosCliente");
+        }, 3000); // Redireciona após 3 segundos (3000 milissegundos)
       }
     } catch (error) {
       setErrorMessage("Erro ao registrar os detalhes da compra.");
       console.error("Erro ao enviar detalhes da ordem de compra:", error);
+    } finally {
+      setLoadingWithDelay(false);
     }
-  }, [tickets, availableTicketTypes]);
+  }, [tickets, availableTicketTypes, event, paymentMethod, router, setSuccessMessage, setErrorMessage]);
 
   const fetchDataEvent = useCallback(async () => {
     try {
@@ -79,7 +99,7 @@ const TicketForm = () => {
     } catch (error) {
       console.error("Erro ao buscar os tipos de ingressos:", error);
     }
-  }, [eventId]);
+  }, []);
 
   const fetchTicketFree = useCallback(async () => {
     try {
@@ -112,9 +132,9 @@ const TicketForm = () => {
     if (
       tickets.length < MAX_TICKETS_FOR_USER &&
       tickets.reduce((acc, curr) => acc + curr.quantity, 0) <
-        MAX_TICKETS_FOR_USER
+      MAX_TICKETS_FOR_USER
     ) {
-      setTickets([...tickets, { type: "", quantity: 0 }]);
+      setTickets([...tickets, { type: "", quantity: 1 }]);
     }
   };
 
@@ -161,11 +181,11 @@ const TicketForm = () => {
       return (
         acc +
         (event.base_price - (event.base_price * discount) / 100) *
-          ticket.quantity
+        ticket.quantity
       );
     }, 0);
     setTotal(total);
-  });
+  }, [availableTicketTypes, event]);
 
   const getAvailableTypes = (index) => {
     const selectedTypes = tickets
@@ -176,8 +196,10 @@ const TicketForm = () => {
         !selectedTypes.includes(type.name) || tickets[index].type === type.name
     );
   };
+
   return (
     <div>
+      {loading && <LoadingOverlay />}
       <CabecalhoCliente />
       <CabecalhoInfoCliente secao="Formulário de compra" />
       <SuporteTecnico />
@@ -212,9 +234,7 @@ const TicketForm = () => {
                     <option value="CASH">Dinheiro</option>
                   </select>
                 </div>
-              </div>
-
-              <div className="mb-4">
+              </div>          <div className="mb-4">
                 <label className="block text-gray-700">Preço base</label>
                 <p>
                   R${" "}
@@ -251,7 +271,7 @@ const TicketForm = () => {
           </div>
           <div className="flex justify-around">
             <button
-              onClick={handlerSubmit}
+              onClick={handleSubmit}
               disabled={total === 0}
               className={`${total === 0 ? "bg-gray-500" : "bg-blue-500"} text-white px-4 py-2 rounded`}
             >
@@ -270,7 +290,7 @@ const TicketForm = () => {
         <ToastMessage text={message.text} type={message.type} />
       )}
     </div>
+
   );
 };
-
 export default TicketForm;

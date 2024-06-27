@@ -10,6 +10,7 @@ import {
 } from "types/order.type";
 import { AnyRole } from "@utils/auth";
 import { getLastdayOfNextMonthTimestamp, getStartOfDayTimestamp } from "@utils/mixes";
+import { Type } from "@sinclair/typebox";
 
 
 
@@ -124,6 +125,22 @@ const OrderRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 
   // Endpoint para obter detalhes de uma ordem de compra específica
   api.get('/:orderId', { schema: { params: OrderDetailParamsSchema }, preHandler: [api.authenticate] },
+    async (request: FastifyRequest<{ Params: OrderDetailParams }>, reply: FastifyReply) => {
+      const { orderId } = request.params;
+      try {
+        const order = await orderService.getOrderById(orderId);
+        return reply.code(200).send(order);
+      } catch (error) {
+        return reply.code(404).send(error);
+      }
+    });
+  // Endpoint para solicitar ingressos ja pagos por email.
+  api.get('/:orderId/tickets-email', {
+    schema: {
+      params: Type.Object({ orderId: Type.String() })
+    },
+    preHandler: [api.authenticate]
+  },
     async (request: FastifyRequest<{ Params: OrderDetailParams }>, reply: FastifyReply) => {
       const { orderId } = request.params;
       try {
