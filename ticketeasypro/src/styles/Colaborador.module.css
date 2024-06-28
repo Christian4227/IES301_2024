@@ -324,7 +324,7 @@
 }
 
 .form_evento_data {
-  display: flex;
+  width: 100%;
 }
 
 .form_evento_botoes {

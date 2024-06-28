@@ -41,7 +41,13 @@ const ScannerQrCode = () => {
       const isUUID4 = regex.test(result);
 
       if (isUUID4) {
-        ValidarCodigo(result);
+        const resposta = ValidarCodigo(result);
+
+        if (resposta != "ok") {
+          scanner.resume();
+        } else {
+          scanner.clear();
+        }
       } else {
         setErrorMessage("Não foi encontrado o ingresso com este QR Code.");
       }
@@ -72,29 +78,29 @@ const ScannerQrCode = () => {
         return;
       }
 
-
       if (response.status === 200) {
-        const mensagem = response?.data?.fail;
+        const mensagem = response?.data.fail;
         if (mensagem) {
           switch (mensagem) {
             case "TicketReservedPendingPayment":
               setErrorMessage("O ingresso/ordem de compra precisa ser pago.");
-              return;
+              return "nok";
             case "TicketHasBeenUsed":
               setErrorMessage("Esse ingresso já foi usado.");
-              return;
+              return "nok";
             case "TicketCancelled":
               setErrorMessage("Esse ingresso foi cancelado.");
-              return;
+              return "nok";
             case "TicketExpired":
               setErrorMessage("Esse ingresso está expirado.");
-              return;
+              return "nok";
           }
-        };
+        }
         setSuccessMessage("Ingresso validado com sucesso!");
         setTimeout(() => {
-          router.back();
+          router.push("./SucessoValidacao");
         }, 7000);
+        return "ok";
       }
     } catch (error) {
       setErrorMessage("Falha ao validar o ticket. Erro inesperado.");
@@ -140,5 +146,5 @@ const ScannerQrCode = () => {
       )}
     </div>
   );
-}
+};
 export default ScannerQrCode;

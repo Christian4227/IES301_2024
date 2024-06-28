@@ -9,6 +9,7 @@ import { parseCookies } from "nookies";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import client from "@/utils/client_axios";
 import { useRouter } from "next/router";
+import { emailRegex } from "@/utils";
 
 function getToken() {
   const cookies = parseCookies();
@@ -24,55 +25,51 @@ function getToken() {
 export default function VerificarIngresso() {
   const router = useRouter();
   const [message, setMessage] = useState({ text: "", type: "" });
-  // const [tickets, setTickets] = useState([]);
+  const [tickets, setTickets] = useState([]);
   const [eventos, setEventos] = useState([]);
-  const [eventoEscolhido, setEventoEscolhido] = useState("");
-  const [dataInicio, setDataInicio] = useState("");
-  const [dataFim, setDataFim] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailValid, setEmailValid] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [idCompra, setIdCompra] = useState(0);
   const handleSetMessage = (message, type) => {
     setMessage({ text: message, type });
   };
 
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setEmailValid(validateEmail(e.target.value));
+  };
+
+  const validateEmail = (email) => emailRegex.test(email);
+
   const CarregarIngressos = async () => {
-    // try {
-    //   const cookie = getToken()?.accessToken;
-    //   if (!cookie) {
-    //     handleSetMessage("Cookie expirado", "error");
-    //     setTimeout(() => {
-    //       router.replace("/");
-    //     }, 6000);
-    //   }
-    //   const response = await client.get(`tickets/${eventoEscolhido}`, {
-    //     headers: { Authorization: `Bearer ${cookie}` },
-    //   });
-    //   if (response.status == 200) {
-    //     handleSetMessage(
-    //       "Dados dos tickets carregados com sucesso!",
-    //       "success"
-    //     );
-    //     setTickets(response.data);
-    //     console.log(response.data);
-    //   }
-    // } catch (error) {
-    //   handleSetMessage("Erro ao carregar os tickets", "error");
-    //   console.log("Erro na requisição de tickets:", error);
-    // }
+    try {
+      const response = await client.get(`orders/${idCompra}`, {
+        headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+      });
+      if (response.status == 200) {
+        setIdCompra(response.data);
+        handleSetMessage(
+          "Dados dos tickets carregados com sucesso!",
+          "success"
+        );
+        setTickets(response.data.data);
+        setTotalPages(response.data.totalPages);
+        console.log(response.data);
+      }
+    } catch (error) {
+      handleSetMessage("Erro ao carregar os tickets", "error");
+      console.log("Erro na requisição de tickets:", error);
+    }
   };
 
   const FiltrarEventos = async () => {
     try {
-      const cookie = getToken()?.accessToken;
-
-      if (!cookie) {
-        handleSetMessage("Cookie expirado", "error");
-        setTimeout(() => {
-          router.replace("/");
-        }, 6000);
-      }
       const response = await client.get(
-        `events/?start-date=${dataInicio}&final-date=${dataFim}`,
+        `orders/email?customer-email=${email}&order-status=COMPLETED`,
         {
-          headers: { Authorization: `Bearer ${cookie}` },
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
         }
       );
       if (response.status == 200) {
@@ -100,35 +97,31 @@ export default function VerificarIngresso() {
           <div className={styles.form_evento_campos}>
             <div className={styles.form_evento_campos_data}>
               <div className={styles.form_evento_data}>
-                <div></div>
-                <div></div>
                 <div className="mb-3">
-                  <label>Data de início</label>
+                  <label htmlFor="InputEmail" className="form-label">
+                    E-mail
+                  </label>
                   <input
-                    type="date"
-                    className="form-control"
-                    onChange={(e) =>
-                      setDataInicio(new Date(e.target.value).getTime())
-                    }
+                    type="email"
+                    className={`form-control mb-4 ${!emailValid ? "is-invalid" : ""}`}
+                    id="InputEmail"
+                    value={email}
+                    onChange={handleEmailChange}
                   />
-                </div>
-                <div className="mb-3">
-                  <label>Data final</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    onChange={(e) =>
-                      setDataFim(new Date(e.target.value).getTime())
-                    }
-                  />
+                  {!emailValid && (
+                    <i className="absolute text-red-600 text-sm -mt-6">
+                      Por favor, insira um e-mail válido.
+                    </i>
+                  )}
                 </div>
               </div>
+
               <div className={styles.form_evento_botoes}>
                 <input
                   type="button"
                   className="botao_sistema"
                   value="Filtrar eventos"
-                  disabled={!(dataFim && dataInicio)}
+                  disabled={!emailValid}
                   onClick={() => FiltrarEventos()}
                 />
               </div>
@@ -139,14 +132,13 @@ export default function VerificarIngresso() {
                   <label>Tipo de evento</label>
                   <select
                     className="form-select"
-                    value={eventoEscolhido}
-                    onChange={(e) => setEventoEscolhido(e.target.value)}
+                    onChange={(e) => setIdCompra(e.target.value)}
                   >
                     <option value="">Eventos...</option>
                     {eventos.length !== 0 &&
-                      eventos.map((evento) => (
-                        <option key={`cat-${evento.id}`} value={`${evento.id}`}>
-                          {evento.name}
+                      eventos.map((evento, index) => (
+                        <option key={`cat-${index}`} value={`${evento.id}`}>
+                          {evento.event.name}
                         </option>
                       ))}
                   </select>
@@ -157,7 +149,7 @@ export default function VerificarIngresso() {
                   type="button"
                   className="botao_sistema"
                   value="Buscar ingressos"
-                  disabled={!eventoEscolhido}
+                  disabled={!idCompra}
                   onClick={() => CarregarIngressos()}
                 />
               </div>
@@ -165,10 +157,16 @@ export default function VerificarIngresso() {
           </div>
 
           <div className="div_tabela_dados">
+            <div className={"flex justify-end"}>
+              <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+              />
+            </div>
             <table className="table table-striped">
               <thead className="thead-dark">
                 <tr>
-                  <th>Nome do cliente</th>
                   <th>Evento</th>
                   <th>Período</th>
                   <th>Data término</th>
@@ -181,7 +179,7 @@ export default function VerificarIngresso() {
                 {/* {tickets.length <= 0 ? (
                   <tr>
                     <td
-                      colSpan={7}
+                      colSpan={6}
                       style={{ textAlign: "center", fontWeight: "bold" }}
                     >
                       Nenhum dado foi encontrado.
@@ -196,13 +194,6 @@ export default function VerificarIngresso() {
                 )} */}
               </tbody>
             </table>
-            {/* <div className={"flex justify-end"}>
-              <Pagination
-                totalPages={totalPages}
-                currentPage={currentPage}
-                onPageChange={setCurrentPage}
-              />
-            </div> */}
           </div>
         </div>
       </div>
