@@ -57,8 +57,9 @@ const TicketRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 						return [ticket, null]; // Ticket cancelado
 					case TicketStatus.EXPIRED:
 						return [ticket, null]; // Ticket expirado
-					case TicketStatus.AVAILABLE:
 					case TicketStatus.RESERVED:
+						return [ticket, null]; // Ticket expirado
+					case TicketStatus.AVAILABLE:
 						// Atualiza o ticket para marcá-lo como usado
 						const updatedTicket = await transaction.ticket.update({
 							where: { id: ticket.id },
@@ -85,7 +86,7 @@ const TicketRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 				case TicketStatus.AVAILABLE:
 					return reply.code(200).send({ "success": ticketUpdated?.id });
 				case TicketStatus.RESERVED:
-					return reply.code(200).send("TicketReservedPendingPayment"); // Pode ser necessário ajuste conforme lógica específica
+					return reply.code(200).send({ "fail": "TicketReservedPendingPayment" });; // Pode ser necessário ajuste conforme lógica específica
 				default:
 					return reply.code(500).send({ "fail": "UnexpectedTicketStatus" }); // Status inesperado (não deve acontecer)
 			}
