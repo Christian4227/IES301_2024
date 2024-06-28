@@ -19,6 +19,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
+import Pagination from "@/components/Pagination/Pagination";
 
 function getToken() {
   const cookies = parseCookies();
@@ -41,6 +42,8 @@ export default function GeralEventosOrganizador() {
   const [dataFim, setDataFim] = useState("");
   const [estrangeiro, setEstrangeiro] = useState(false);
   const [tipoEvento, setTipoEvento] = useState("");
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const AdicionarEventos = () => {
     router.push("./EventoOrganizadorForm");
@@ -126,6 +129,7 @@ export default function GeralEventosOrganizador() {
       if (response.status == 200) {
         handleSetMessage("Dados filtrados com sucesso.", "success");
         setEventos(response.data.data);
+        setTotalPages(response.data.totalPages);
       }
     } catch (error) {
       handleSetMessage("Erro ao carregar os dados", "error");
@@ -145,6 +149,7 @@ export default function GeralEventosOrganizador() {
           }
         );
         setEventos(response.data.data);
+        setTotalPages(response.data.totalPages);
       } catch (error) {
         handleSetMessage("Erro ao carregar as categorias", "error");
         console.log("Erro na requisição de categorias:", error);
@@ -260,6 +265,13 @@ export default function GeralEventosOrganizador() {
           </div>
           <div>
             <div className="div_tabela_dados">
+              <div className={"flex justify-end"}>
+                <Pagination
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
               <table className="table table-striped">
                 <thead className="thead-dark">
                   <tr>

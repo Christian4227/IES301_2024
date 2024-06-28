@@ -1,16 +1,156 @@
-/* Cabecalho */
+/* Cabeçalho */
+.header_cabecalho_administrador {
+  background-color: #096217;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 10px;
+  min-height: 120px;
+  width: 100%;
+  top: 0;
+}
 
+.header_cabecalho_administrador label {
+  color: white;
+}
 
-/* Outras telas */
+.header_cabecalho_administrador label a {
+  color: white !important;
+}
+
+.li_administrador_sair a {
+  color: white !important;
+}
+
+.header_administrador a {
+  color: black;
+}
+
+.li_administrador_sair {
+  color: white;
+}
+
 .header_administrador {
-    border-bottom: 1px solid black;
-    width: 98%;
-    margin-left: 1%;
-    padding: 10px 0 0 0;
-    margin-bottom: 20px;
+  border-bottom: 1px solid black;
+  width: 98%;
+  margin-left: 1%;
+  display: flex;
+  padding: 10px 0 0 0;
+  position: relative;
 }
 
 .header_administrador h1 {
-    font-weight: bold;
-    font-size: 1.5em;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.header_administrador_nav {
+  position: absolute;
+  right: calc(100% - 95%);
+}
+
+.header_administrador_menu {
+  display: flex;
+}
+
+.header_administrador_menu li {
+  padding: 0 20px;
+  font-weight: bold;
+}
+
+.header_administrador_menu li:nth-of-type(n + 2), .header_administrador_subtitulo label{
+  border-left: 2px solid black;
+}
+
+.header_administrador_subtitulo {
+display: flex;
+align-items: center;
+}
+
+.header_administrador_subtitulo h1, .header_administrador_subtitulo label {
+padding: 0 20px;
+}
+
+/* Outras telas */
+/* Perfil Administrador */
+/* Cadastro Colaborador */
+.div_form_body_Administrador {
+  display: flex;
+  justify-content: center;
+}
+
+.div_redefinir_senha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.div_redefinir_senha input[type=button] {
+  margin-top: 1em;
+}
+
+.div_titulo_usuario {
+  background-color: #096217;
+}
+
+.div_titulo_usuario h2 {
+  color: white;
+  margin-bottom: 0 !important;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Tela inicial */
+.td_usuario_confirmado, .td_usuario_nao_confirmado, .td_usuario_cliente, .td_usuario_colaborador,
+.td_usuario_organizador, .td_usuario_administrador {
+  color: white !important;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.td_usuario_confirmado {
+  background-color: #07b015 !important;
+}
+
+.td_usuario_nao_confirmado {
+  background-color: #e02626 !important;
+}
+
+.td_usuario_cliente {
+  background-color: #2E302D !important;
+} 
+
+.td_usuario_colaborador {
+  background-color: #EF0909 !important;
+}
+.td_usuario_organizador {
+  background-color: #1019DE !important;
+} 
+
+.td_usuario_administrador {
+  background-color: #096217 !important;
+}
+
+/* Editar Configurações usuários */
+.div_tabela_permissoes {
+  display: flex;
+}
+
+.div_tabela_permissoes_info {
+  width: 40%;
+}
+
+.div_tabela_permissoes_tabela {
+  margin-left: 1em;
+  padding-left: 1em;
+  border-left: 1px solid #D1CECE;
+  width: 60%;
+}
+
+.label_info_admin {
+  margin-bottom: 1em;
+}
+
+.label_info_admin label {
+  font-weight: bold;
 }

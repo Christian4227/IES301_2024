@@ -1,28 +1,17 @@
-import React, { useContext } from "react";
+import React from "react";
 import Link from "next/link";
-import { AuthContext } from "@/context/Auth";
-import styles from "@styles/Cabecalho.module.css";
+import styles from "@styles/Administracao.module.css";
+import MenuUsuario from "@/components/MenuUsuario";
 
 export default function CabecalhoAdmin() {
-    const { logout } = useContext(AuthContext);
-
-    const Sair = () => {
-        logout();
-    };
-    return (
-        <div className={styles.Header}>
-            <Link href="/">
-                <label>Ticket Easy Pro</label>
-            </Link>
-            <nav>
-                <ul className={styles.ul}>
-                    <li className={styles.li_admin_sair}>
-                        <a href="#" onClick={() => Sair()}>
-                            Sair
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    );
+  return (
+    <div className={styles.header_cabecalho_administrador}>
+      <div>
+        <Link href="/">
+          <label>Ticket Easy Pro</label>
+        </Link>
+      </div>
+      <MenuUsuario />
+    </div>
+  );
 }

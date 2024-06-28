@@ -184,7 +184,6 @@ export default function InfoEventos() {
               <label>Período</label>
             </div>
             <div className="mb-3">
-              {/* <label>Período</label> */}
               <input
                 type="date"
                 className="form-control"

@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
   const DirecionarRota = (userRole) => {
     if (userRole === "ADMIN") {
-      router.push("/Admin/Administracao");
+      router.push("/Admin/GeralAdministrador");
     } else if (userRole === "SPECTATOR") {
       router.push("/Cliente/GeralCliente");
     } else if (userRole === "EVENT_MANAGER") {

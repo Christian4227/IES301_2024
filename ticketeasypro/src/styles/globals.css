@@ -174,6 +174,11 @@ h3 {
   padding: 1em;
 }
 
+.div_formulario_container {
+  display: flex;
+  justify-content: center;
+}
+
 /* Loading */
 .loader-container {
     width: 30%; 

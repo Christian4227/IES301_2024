@@ -51,7 +51,7 @@ export default function MenuUsuario() {
                         ? "Colaborador"
                         : user.role == "EVENT_MANAGER"
                           ? "Gerente"
-                          : user.role == "ADMINISTRATOR"
+                          : user.role == "ADMIN"
                             ? "Administrador"
                             : ""}
                   </label>
