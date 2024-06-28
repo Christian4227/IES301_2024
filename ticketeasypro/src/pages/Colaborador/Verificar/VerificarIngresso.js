@@ -8,7 +8,7 @@ import styles from "@styles/Colaborador.module.css";
 import { parseCookies } from "nookies";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import client from "@/utils/client_axios";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { emailRegex } from "@/utils";
 
 function getToken() {
@@ -23,9 +23,9 @@ function getToken() {
 }
 
 export default function VerificarIngresso() {
-  const router = useRouter();
+  // const router = useRouter();
   const [message, setMessage] = useState({ text: "", type: "" });
-  const [tickets, setTickets] = useState([]);
+  // const [tickets, setTickets] = useState([]);
   const [eventos, setEventos] = useState([]);
   const [email, setEmail] = useState("");
   const [emailValid, setEmailValid] = useState(true);
@@ -54,7 +54,7 @@ export default function VerificarIngresso() {
           "Dados dos tickets carregados com sucesso!",
           "success"
         );
-        setTickets(response.data.data);
+        // setTickets(response.data.data);
         setTotalPages(response.data.totalPages);
         console.log(response.data);
       }
