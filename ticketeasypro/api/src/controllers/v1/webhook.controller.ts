@@ -24,9 +24,6 @@ const parseOrderBy = (orderBy: string): Prisma.OrderOrderByWithRelationInput[] =
   });
 };
 
-
-
-
 export const OrderActionParamsSchema = Type.Object({
   orderId: Type.String(),
   action: Type.String(),
@@ -57,6 +54,7 @@ const WebhookRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         case 'payment-confirm':
           // Lógica para confirmar o pagamento da ordem
           order = await orderService.updateOrderStatus(orderId, OrderStatus.COMPLETED, paymentMethod);
+          await orderService.sendTicketsQrCodeForEmail(order.id, false);
           break;
         case 'cancel':
           // Lógica para cancelar o pagamento da ordem

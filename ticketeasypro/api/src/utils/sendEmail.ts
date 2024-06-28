@@ -18,11 +18,12 @@ const sendEmail = async (to: string, subject: string, content: string): Promise<
         console.error('Erro ao enviar o email:', error);
     }
 }
-export async function sendEmailWithAttachments(to: string, subject: string, pdfBytes: any): Promise<void> {
+export async function sendEmailWithAttachments(to: string, subject: string, content: string, pdfBytes: any): Promise<void> {
     const mailOptions = {
         to,
         subject,
         attachments: [{ filename: 'tickets.pdf', content: pdfBytes, contentType: 'application/pdf' }],
+        html: content
     };
 
     try {

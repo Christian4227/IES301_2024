@@ -29,7 +29,7 @@ class OrderRepository {
     });
   }
   async findOrderTickets(orderId: string): Promise<OrderTicket[]> {
-    return prisma.orderTicket.findMany({ where: { order_id: orderId } })
+    return prisma.orderTicket.findMany({ where: { order_id: orderId }, include: { TicketType: { select: { id: true, name: true } } } })
 
   }
 

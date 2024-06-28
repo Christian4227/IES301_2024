@@ -363,3 +363,68 @@ export const makeTemporaryPasswordEmailContent = (user: { name: string, email: s
                     `
   return htmlContent;
 }
+
+export const makeTicketEmailContent = (email: string, eventName: string, customerName:string, eventDate: string) => {
+  const htmlContent = `
+  <!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE-edge">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Ticket Easy Pro</title>
+</head>
+
+<body>
+  <table style="background-color: #F1F1F1; width: 600px; margin: 0 auto;">
+    <tr>
+      <td style="background-color: black; color: white; text-align: center; padding: 1em;">
+        <h1>Event Mais Você</h1>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table style="padding: 2em; width: 100%; background-color: white;">
+          <tr>
+            <td style="text-align: center;">
+              <h1>Sistema Ticket Easy Pro</h1>
+              <hr style="border: 0; border-top: 1px solid gray; margin: 1em 0;">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="text-align: justify;"><b>Olá,</b> ${customerName}</p>
+              <p style="text-align: justify;">Seus ingressos para o evento foram gerados com sucesso. Em anexo, você encontrará um PDF contendo seus ingressos com QR codes individuais.</p>
+              <p style="text-align: justify;">Por favor, leve este PDF no dia do evento e apresente os ingressos na entrada para validação.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: black; color: white; padding: 1em;">
+              <p style="text-align: left;"><b>Evento: </b>${eventName}</p>
+              <p style="text-align: left;"><b>E-mail: </b>${email}</p>
+              <p style="text-align: left;"><b>Data do Evento: </b>${eventDate}</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: center; padding: 2em;">
+              <p style="text-align: justify;">Se recebeu este e-mail por engano ou alguma informação estiver errada, ignore este e-mail.</p>
+              <hr style="border: 0; border-top: 1px solid gray; margin: 1em 0;">
+              <p style="text-align: justify;"><b>Observação:</b> Certifique-se de manter este e-mail e o PDF anexado em um local seguro.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td style="background-color: black; height: 30px; text-align: center; color: white;">
+        <p>&copy; 2024 Event Mais Você</p>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>
+  `;
+  return htmlContent;
+}
