@@ -102,9 +102,9 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         } catch (error) {
             if (error instanceof Error)
                 if (error.message === "InvalidOrExpiredToken")
-                    reply.status(400).send({ "Success": false });
+                    return reply.status(400).send({ "Success": false });
         }
-        return reply.code(200).send({ "Success": true });
+        return reply.code(500).send({ "Success": false });
     });
 
     api.get<{ Params: { email: string } }>('/resend-email-confirmation/:email',

@@ -343,6 +343,16 @@
     margin-right: 1em;
   }
 
+  /* Página de redefinição de senha */
+  .div_form_redefinir_senha {
+    display: flex;
+    justify-content: center;
+  }
+
+  .div_form_botao_enviar {
+    margin-top: 1em;
+  }
+
   @keyframes divCookies {
     0% {
       opacity: 0;

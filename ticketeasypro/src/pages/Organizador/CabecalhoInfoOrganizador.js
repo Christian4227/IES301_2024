@@ -20,9 +20,6 @@ export default function CabecalhoInfoOrganizador({ secao }) {
             <Link href="/Organizador/GeralOrganizador">Home</Link>
           </li>
           <li>
-            <Link href="/organizador/Dados/Dadosorganizador">Meus dados</Link>
-          </li>
-          <li>
             <a href="#" onClick={Voltar}>
               Voltar
             </a>

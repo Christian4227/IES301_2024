@@ -15,7 +15,7 @@ export default function SucessoValidacao() {
   return (
     <div>
       <CabecalhoColaborador />
-      <CabecalhoInfoColaborador secao="Validação bem sucedida." />
+      <CabecalhoInfoColaborador secao="Compra bem sucedida." />
       <SuporteTecnico />
       <div className="div_principal">
         <div className={styles.div_mensagem_colaborador}>
@@ -27,10 +27,10 @@ export default function SucessoValidacao() {
                   alt=""
                   className={styles.img_sucesso_colaborador}
                 />
-                <h1>Ingresso validado com sucesso!</h1>
+                <h1>Compra validada com sucesso!</h1>
                 <p>
-                  Acesso liberado e o cliente pode aproveitar o evento com
-                  tranquilidade.
+                  Agora o cliente pode baixar o PDF com os ingressos e garantir
+                  a sua entrada no evento.
                 </p>
                 <input
                   type="button"

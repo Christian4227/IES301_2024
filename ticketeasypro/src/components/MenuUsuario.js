@@ -1,14 +1,27 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { AuthContext } from "@/context/Auth";
 import styles from "@styles/Componentes.module.css";
+import { getToken } from "@/utils";
+import { jwtDecode } from "jwt-decode";
 
 export default function MenuUsuario() {
-  const { auth, logoutPrivado, user } = useContext(AuthContext);
+  const { auth, logoutPrivado, user, DirecionarRotaPerfil } =
+    useContext(AuthContext);
+  const [papel, setPapel] = useState(null);
 
   const Sair = () => {
     logoutPrivado();
   };
+  useEffect(() => {
+    const valor = getToken();
+    var role;
+
+    if (valor) {
+      role = jwtDecode(getToken().accessToken.toString()).role;
+      setPapel(role);
+    }
+  }, []);
   return (
     <div>
       <nav>
@@ -44,7 +57,9 @@ export default function MenuUsuario() {
                   </label>
                 </div>
                 <div className={styles.Header_menu_usuario_opcoes_submenus}>
-                  <Link href="./DadosCliente">Meus dados</Link>{" "}
+                  <a href="#" onClick={() => DirecionarRotaPerfil(papel)}>
+                    Meus dados
+                  </a>{" "}
                   <a
                     href="#"
                     className={styles.Header_menu_usuario_opcoes_sair}

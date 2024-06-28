@@ -63,7 +63,7 @@ const UserRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
         const { user: { sub: userId }, body: updateData } = request;
         try {
             await userService.update({ id: userId }, updateData);
-            return reply.status(204);
+            return reply.status(200).send();
         } catch (error) {
             console.error('User update error:', error);
             return reply.status(500).send({ message: 'User update error', error: 'Internal Server Error' });

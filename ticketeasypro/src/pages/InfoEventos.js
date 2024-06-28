@@ -87,7 +87,6 @@ export default function InfoEventos() {
 
     if (selectedStatesQuery)
       queryString = `${queryString}&${selectedStatesQuery}`;
-    console.log(queryString + selectedStatesQuery);
     return queryString;
   };
 
@@ -155,7 +154,6 @@ export default function InfoEventos() {
 
   return (
     <div id="div-principal">
-      {console.log("RENDERIZOU A PÁGINA TODA")}
       <Cabecalho className={styles.header} />
       <CabecalhoHomeMenu componente={"Eventos"} />
       <div className={stylese.body}>
@@ -272,12 +270,6 @@ export default function InfoEventos() {
           ) : (
             <div>
               <div className={"flex justify-end"}>
-                {/* <label>
-                  Página{" "}
-                  {eventos.length / 6 <= 1 ? 1 : Math.ceil(eventos.length / 6)}{" "}
-                  - {eventos.length <= 6 ? eventos.length : 6} de{" "}
-                  {eventos.length} eventos.
-                </label> */}
                 <Pagination
                   totalPages={totalPages}
                   currentPage={currentPage}
@@ -322,9 +314,6 @@ export default function InfoEventos() {
                                 <ul
                                   className={stylese.tabela_eventos_info_topico}
                                 >
-                                  {/* <li>
-                                    <label>Nome da empresa</label>
-                                  </li> */}
                                   <li>
                                     <label>Local</label>
                                   </li>
@@ -336,9 +325,6 @@ export default function InfoEventos() {
                                   </li>
                                 </ul>
                                 <ul>
-                                  {/* <li>
-                                    <label>Ticket Easy Pro</label>
-                                  </li> */}
                                   <li>
                                     <label>{dado.location.name}</label>
                                   </li>

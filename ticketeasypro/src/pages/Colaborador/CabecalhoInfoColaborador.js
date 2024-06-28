@@ -17,10 +17,10 @@ export default function CabecalhoInfoColaborador({ secao }) {
       <nav className={styles.header_colaborador_nav}>
         <ul className={styles.header_colaborador_menu}>
           <li>
-            <Link href="/Colaborador/IndexColaborador">Home</Link>
+            <Link href="/">Home</Link>
           </li>
           <li>
-            <Link href="/Colaborador/Dados/DadosColaborador">Meus dados</Link>
+            <Link href="/Colaborador/IndexColaborador">Home colaborador</Link>
           </li>
           <li>
             <a href="#" onClick={Voltar}>

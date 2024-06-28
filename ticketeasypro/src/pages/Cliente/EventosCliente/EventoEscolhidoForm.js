@@ -9,6 +9,7 @@ import client from "@/utils/client_axios";
 import { getToken } from "@/utils";
 import LoadingOverlay from "@components/LoadingOverlay";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const TicketForm = () => {
   const [loading, setLoading] = useState(false);
@@ -53,19 +54,21 @@ const TicketForm = () => {
       const data = {
         eventId: event.id,
         paymentMethod: paymentMethod,
-        orderTickets: orderTickets
+        orderTickets: orderTickets,
       };
 
       const accessToken = getToken().accessToken;
-      const response = await client.post('orders', data, {
+      const response = await client.post("orders", data, {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`
-        }
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
 
       if (response.status === 201) {
-        setSuccessMessage("Compra Efetivada! Você será redirecionado para a tela de reservas.");
+        setSuccessMessage(
+          "Compra Efetivada! Você será redirecionado para a tela de reservas."
+        );
         setTimeout(() => {
           router.push("/Cliente/Ingressos/IngressosCliente");
         }, 3000); // Redireciona após 3 segundos (3000 milissegundos)
@@ -76,7 +79,15 @@ const TicketForm = () => {
     } finally {
       setLoadingWithDelay(false);
     }
-  }, [tickets, availableTicketTypes, event, paymentMethod, router, setSuccessMessage, setErrorMessage]);
+  }, [
+    tickets,
+    availableTicketTypes,
+    event,
+    paymentMethod,
+    router,
+    setSuccessMessage,
+    setErrorMessage,
+  ]);
 
   const fetchDataEvent = useCallback(async () => {
     try {
@@ -132,7 +143,7 @@ const TicketForm = () => {
     if (
       tickets.length < MAX_TICKETS_FOR_USER &&
       tickets.reduce((acc, curr) => acc + curr.quantity, 0) <
-      MAX_TICKETS_FOR_USER
+        MAX_TICKETS_FOR_USER
     ) {
       setTickets([...tickets, { type: "", quantity: 1 }]);
     }
@@ -173,19 +184,22 @@ const TicketForm = () => {
     updateTotal(newTickets);
   };
 
-  const updateTotal = useCallback((tickets) => {
-    const total = tickets.reduce((acc, ticket) => {
-      const type = availableTicketTypes.find((t) => t.name === ticket.type);
-      if (!type) return acc;
-      const discount = type.discount;
-      return (
-        acc +
-        (event.base_price - (event.base_price * discount) / 100) *
-        ticket.quantity
-      );
-    }, 0);
-    setTotal(total);
-  }, [availableTicketTypes, event]);
+  const updateTotal = useCallback(
+    (tickets) => {
+      const total = tickets.reduce((acc, ticket) => {
+        const type = availableTicketTypes.find((t) => t.name === ticket.type);
+        if (!type) return acc;
+        const discount = type.discount;
+        return (
+          acc +
+          (event.base_price - (event.base_price * discount) / 100) *
+            ticket.quantity
+        );
+      }, 0);
+      setTotal(total);
+    },
+    [availableTicketTypes, event]
+  );
 
   const getAvailableTypes = (index) => {
     const selectedTypes = tickets
@@ -204,85 +218,89 @@ const TicketForm = () => {
       <CabecalhoInfoCliente secao="Formulário de compra" />
       <SuporteTecnico />
       <div className={styles.div_principal}>
-        <div className="div_container_principal flex-auto p-9">
-          <div className="div_subtitulo ">
-            <h1 className="text-center py-3">
-              Formulário de compra do ingresso
-            </h1>
-            <h2 className="text-center py-1">{event.name}</h2>
-            <div className="flex justify-between">
-              <div className="flex flex-col">
+        <div className={styles.div_principal_form}>
+          <div className="div_container_maior">
+            <div className="div_subtitulo">
+              <h2>Formulário de compra do ingresso</h2>
+            </div>
+            <div>
+              <h2 className="text-center py-1">{event.name}</h2>
+              <div className="flex justify-between">
+                <div className="flex flex-col">
+                  <div className="mb-4">
+                    <label className="block text-gray-700">
+                      Ingressos disponíveis
+                    </label>
+                    <p> {ticketsFree}</p>
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700">
+                      Forma de Pagamento:
+                    </label>
+                    <select
+                      value={paymentMethod}
+                      onChange={(e) => onPaymentMethodChange(e.target.value)}
+                      className="form-select border p-2 min-w-60 max-w-72"
+                    >
+                      <option value="PIX">PIX</option>
+                      <option value="CREDIT_CARD">Cartão de Crédito</option>
+                      <option value="DEBIT_CARD">Cartão de Débito</option>
+                      <option value="BANK_SLIP">Boleto Bancário</option>
+                      <option value="CASH">Dinheiro</option>
+                    </select>
+                  </div>
+                </div>{" "}
                 <div className="mb-4">
-                  <label className="block text-gray-700">
-                    Ingressos disponíveis
-                  </label>
-                  <p> {ticketsFree}</p>
+                  <label className="block text-gray-700">Preço base</label>
+                  <p>
+                    R${" "}
+                    {(event.base_price / 100).toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </p>
                 </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">
-                    Forma de Pagamento:
-                  </label>
-                  <select
-                    value={paymentMethod}
-                    onChange={(e) => onPaymentMethodChange(e.target.value)}
-                    className="border p-2 min-w-60 max-w-72"
-                  >
-                    <option value="PIX">PIX</option>
-                    <option value="CREDIT_CARD">Cartão de Crédito</option>
-                    <option value="DEBIT_CARD">Cartão de Débito</option>
-                    <option value="BANK_SLIP">Boleto Bancário</option>
-                    <option value="CASH">Dinheiro</option>
-                  </select>
-                </div>
-              </div>          <div className="mb-4">
-                <label className="block text-gray-700">Preço base</label>
-                <p>
-                  R${" "}
-                  {(event.base_price / 100).toLocaleString("pt-BR", {
-                    minimumFractionDigits: 2,
-                  })}
-                </p>
+              </div>
+              <div className={`flex flex-col items-center justify-center`}>
+                {tickets.map((ticket, index) => (
+                  <TicketRow
+                    key={index}
+                    index={index}
+                    ticket={ticket}
+                    onAddRow={handleAddRow}
+                    onRemoveRow={handleRemoveRow}
+                    onQuantityChange={handleQuantityChange}
+                    onTypeChange={handleTypeChange}
+                    availableTypes={getAvailableTypes(index)}
+                    totalTickets={tickets.length}
+                  />
+                ))}
               </div>
             </div>
-            <div className={`flex flex-col items-center justify-center`}>
-              {tickets.map((ticket, index) => (
-                <TicketRow
-                  key={index}
-                  index={index}
-                  ticket={ticket}
-                  onAddRow={handleAddRow}
-                  onRemoveRow={handleRemoveRow}
-                  onQuantityChange={handleQuantityChange}
-                  onTypeChange={handleTypeChange}
-                  availableTypes={getAvailableTypes(index)}
-                  totalTickets={tickets.length}
-                />
-              ))}
+            <hr />
+            <div className="flex justify-between items-center my-4">
+              <h2 className="text-xl font-bold">Total</h2>
+              <h2 className="text-xl font-bold">
+                R${" "}
+                {(total / 100).toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                })}
+              </h2>
             </div>
-          </div>
-          <div className="flex justify-between items-center my-4">
-            <h2 className="text-xl font-bold">Total</h2>
-            <h2 className="text-xl font-bold">
-              R${" "}
-              {(total / 100).toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}
-            </h2>
-          </div>
-          <div className="flex justify-around">
-            <button
-              onClick={handleSubmit}
-              disabled={total === 0}
-              className={`${total === 0 ? "bg-gray-500" : "bg-blue-500"} text-white px-4 py-2 rounded`}
-            >
-              Salvar
-            </button>
-            <button
-              className={`bg-red-500 text-white px-4 py-2 rounded`}
-              onClick={() => router.back()}
-            >
-              Cancelar
-            </button>
+            <div className="flex justify-around">
+              <button
+                onClick={handleSubmit}
+                disabled={total === 0}
+                className={`${total === 0 ? "bg-gray-500" : "bg-blue-500"} text-white px-4 py-2 rounded`}
+              >
+                Salvar
+              </button>
+              <button
+                className={`bg-red-500 text-white px-4 py-2 rounded`}
+                onClick={() => router.back()}
+              >
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -290,7 +308,6 @@ const TicketForm = () => {
         <ToastMessage text={message.text} type={message.type} />
       )}
     </div>
-
   );
 };
 export default TicketForm;

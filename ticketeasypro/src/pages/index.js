@@ -203,12 +203,11 @@ export default function Home() {
             <div className={styles.home_body_esquerda}>
               <h1>Compre ingressos agora!</h1>
               <label className={styles.body_descricao}>
-                Compre 1 ingresso por R$ 50,00 + 4 pessoas R$ 30,00 cada
+                Verifique os eventos disponíveis a partir de hoje com diferentes
+                preços.
               </label>
               <br />
-              <label className={styles.frase_botao}>
-                Veja todos os ingressos disponíveis
-              </label>
+              <label className={styles.frase_botao}>Veja mais!</label>
               <br />
               <input
                 type="button"

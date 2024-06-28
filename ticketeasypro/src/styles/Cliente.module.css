@@ -373,7 +373,6 @@
   width: 100%;
   height: 100px;
   padding: 1em;
-  /* background-color: #088F1D; */
 }
 
 .div_evento_escolhido_descricao_titulo {
@@ -502,6 +501,11 @@
   font-weight: bold;
 }
 
+.div_principal_form {
+  display: flex;
+  justify-content: center;
+}
+
 /* CompraPDF */
 .div_principal_pdf {
   padding: 1em;
@@ -575,6 +579,33 @@
   font-size: 1.1em !important;
 }
 
+.div_info_evento_compras_info_evento label {
+  font-weight: bold;
+}
+
+.div_info_evento_compras_info_evento {
+  margin-bottom: 1em;
+}
+
+.img_evento_compras {
+  width: 100%;
+  height: 100%;
+}
+
+.div_info_evento_compras_info_evento_form {
+  display: flex;
+}
+
+.div_img_evento_compras_div {
+  border-left: 1px solid #D1CECE;
+  padding-left: 1em;
+  margin-left: 1em;
+}
+
+.div_info_evento_compras_div, .div_img_evento_compras_div {
+  width: 50%;
+}
+
 /* EventosEscolhidoForm */
 .botao_adicionar_ingressos, .botao_diminuir_ingressos {
   width: 40px;
@@ -641,6 +672,33 @@
   animation: showLinhaAdicionar 2s;
   background-color: #565555;
   z-index: 0;
+}
+
+/* Cadastro Cliente */
+.div_form_body_cliente {
+  display: flex;
+  justify-content: center;
+}
+
+.div_redefinir_senha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.div_redefinir_senha input[type=button] {
+  margin-top: 1em;
+}
+
+.div_titulo_usuario {
+  background-color: #2E302D;
+}
+
+.div_titulo_usuario h2 {
+  color: white;
+  margin-bottom: 0 !important;
+  padding: 10px;
+  text-align: center;
 }
 
 @keyframes encolherSideBar {

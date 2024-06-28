@@ -10,6 +10,8 @@ import { useRouter } from "next/router";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import { parseCookies } from "nookies";
 import { getFullAddress } from "@/utils";
+import Image from "next/image";
+import eventos from "../../../assets/Evento desconhecido.png";
 
 function getToken() {
   const cookies = parseCookies();
@@ -174,33 +176,80 @@ export default function ComprarIngressoCliente() {
               <div className={styles.titulo_secao}>
                 <h1>Informações do evento</h1>
               </div>
-              <div>
-                <div>
-                  <label>Local do evento:</label>
-                  <span>
-                    {dados?.event == undefined
-                      ? ""
-                      : getFullAddress(dados?.event.location)}
-                  </span>
-                </div>
-                <div>
-                  <label>Data de início:</label>
-                  <span>
-                    {dados.event == undefined
-                      ? ""
-                      : new Date(dados.event.initial_date).toLocaleDateString()}
-                  </span>
-                </div>
-                <div>
-                  <label>Data de término:</label>
-                  <span>
-                    {dados.event == undefined
-                      ? ""
-                      : new Date(dados.event.final_date).toLocaleDateString()}
-                  </span>
+              <div className="div_container_principal">
+                <div
+                  className={styles.div_info_evento_compras_info_evento_form}
+                >
+                  <div className={styles.div_info_evento_compras_div}>
+                    <div className={styles.div_info_evento_compras_info_evento}>
+                      <label>Nome do evento:</label>
+                      <br />
+                      <span>
+                        {dados?.event == undefined
+                          ? ""
+                          : getFullAddress(dados?.event.location)}
+                      </span>
+                    </div>
+                    <div className={styles.div_info_evento_compras_info_evento}>
+                      <label>Tipo do evento:</label>
+                      <br />
+                      <span>
+                        {dados?.event == undefined
+                          ? ""
+                          : getFullAddress(dados?.event.location)}
+                      </span>
+                    </div>
+                    <div className={styles.div_info_evento_compras_info_evento}>
+                      <label>Local do evento:</label>
+                      <br />
+                      <span>
+                        {dados?.event == undefined
+                          ? ""
+                          : getFullAddress(dados?.event.location)}
+                      </span>
+                    </div>
+                    <div className={styles.div_info_evento_compras_info_evento}>
+                      <label>Data de início:</label>
+                      <br />
+                      <span>
+                        {dados.event == undefined
+                          ? ""
+                          : new Date(
+                              dados.event.initial_date
+                            ).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <div className={styles.div_info_evento_compras_info_evento}>
+                      <label>Data de término:</label>
+                      <br />
+                      <span>
+                        {dados.event == undefined
+                          ? ""
+                          : new Date(
+                              dados.event.final_date
+                            ).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                  <div className={styles.div_img_evento_compras_div}>
+                    <div className={styles.div_img_evento_compras}>
+                      <Image
+                        src={
+                          dados?.event?.img_thumbnail == undefined
+                            ? eventos
+                            : dados?.event?.img_thumbnail
+                        }
+                        width={200}
+                        height={200}
+                        alt=""
+                        className={styles.img_evento_compras}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+            <hr />
             <div className={styles.div_secao_evento_info_adicional}>
               <div className={styles.titulo_secao}>
                 <h2>Recomendações importantes para o evento</h2>

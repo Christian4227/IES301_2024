@@ -211,6 +211,7 @@
     margin: 0 1em;
     min-width: 260px;
     max-width: 300px;
+    height: fit-content;
 }
 
 .filtro_titulo {

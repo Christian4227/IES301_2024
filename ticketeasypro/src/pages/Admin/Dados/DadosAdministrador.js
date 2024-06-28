@@ -1,11 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import CabecalhoColaborador from "../CabecalhoColaborador";
-import CabecalhoInfoColaborador from "../CabecalhoInfoColaborador";
+import CabecalhoCliente from "../CabecalhoCliente";
+import CabecalhoInfoCliente from "../CabecalhoInfoCliente";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import LoadingOverlay from "@components/LoadingOverlay";
 import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "@styles/Colaborador.module.css";
+import styles from "@styles/Cliente.module.css";
 import client from "@/utils/client_axios";
 import {
   emailRegex,
@@ -159,15 +159,15 @@ export default function DadosColaborador() {
   }, []);
   return (
     <div>
-      <CabecalhoColaborador />
-      <CabecalhoInfoColaborador secao="Dados do Colaborador" />
+      <CabecalhoCliente />
+      <CabecalhoInfoCliente secao="Dados do cliente" />
       <SuporteTecnico />
       {loading && <LoadingOverlay />}
       <div className="div_principal">
-        <div className={styles.div_form_body_Colaborador}>
+        <div className={styles.div_form_body_cliente}>
           <form className="form_perfil">
             <div className={styles.div_titulo_usuario}>
-              <h2>Dados do Colaborador</h2>
+              <h2>Dados do cliente</h2>
             </div>
             <div className="div_form_perfil">
               <div className="mb-3">

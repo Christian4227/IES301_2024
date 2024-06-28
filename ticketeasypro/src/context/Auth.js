@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
       secure: true,
     };
     setCookie(null, "ticket-token", JSON.stringify(token), cookieConfig);
+    localStorage.setItem("ticket-token", JSON.stringify(token));
   };
 
   const DirecionarRota = (userRole) => {
@@ -45,6 +46,18 @@ export const AuthProvider = ({ children }) => {
       router.push("/Organizador/GeralOrganizador");
     } else if (userRole === "STAFF") {
       router.push("/Colaborador/IndexColaborador");
+    }
+  };
+
+  const DirecionarRotaPerfil = (userRole) => {
+    if (userRole === "ADMIN") {
+      router.push("/Admin/Dados/DadosAdministrador");
+    } else if (userRole === "SPECTATOR") {
+      router.push("/Cliente/Dados/DadosCliente");
+    } else if (userRole === "EVENT_MANAGER") {
+      router.push("/Organizador/Dados/DadosOrganizador");
+    } else if (userRole === "STAFF") {
+      router.push("/Colaborador/Dados/DadosColaborador");
     }
   };
 
@@ -80,12 +93,14 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     destroyCookie(null, "ticket-token", { path: "/" });
+    localStorage.removeItem("ticket-token");
     setAuth(false);
     router.push(router.asPath);
   };
 
   const logoutPrivado = () => {
     destroyCookie(null, "ticket-token", { path: "/" });
+    localStorage.removeItem("ticket-token");
     setAuth(false);
     router.push("/");
   };
@@ -98,6 +113,7 @@ export const AuthProvider = ({ children }) => {
       secure: true,
     };
     setCookie(undefined, "ticket-politica", true, cookieConfig);
+    localStorage.setItem("ticket-politica", true);
   };
 
   return (
@@ -109,6 +125,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         logoutPrivado,
         DirecionarRota,
+        DirecionarRotaPerfil,
         retorno,
         setPoliticaCookies,
       }}

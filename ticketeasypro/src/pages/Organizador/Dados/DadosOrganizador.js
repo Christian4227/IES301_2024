@@ -1,11 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import CabecalhoColaborador from "../CabecalhoColaborador";
-import CabecalhoInfoColaborador from "../CabecalhoInfoColaborador";
+import CabecalhoOrganizador from "../CabecalhoOrganizador";
+import CabecalhoInfoOrganizador from "../CabecalhoInfoOrganizador";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import LoadingOverlay from "@components/LoadingOverlay";
 import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "@styles/Colaborador.module.css";
+import styles from "@styles/Organizador.module.css";
 import client from "@/utils/client_axios";
 import {
   emailRegex,
@@ -142,7 +142,6 @@ export default function DadosColaborador() {
         const response = await client.get(`accounts/${idUsuario}`, {
           headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
         });
-        console.log;
         setNome(response.data.name);
         setEmail(response.data.email);
         setDataNascimento(response.data.birth_date.split("T")[0]);
@@ -159,15 +158,15 @@ export default function DadosColaborador() {
   }, []);
   return (
     <div>
-      <CabecalhoColaborador />
-      <CabecalhoInfoColaborador secao="Dados do Colaborador" />
+      <CabecalhoOrganizador />
+      <CabecalhoInfoOrganizador secao="Dados do Organizador" />
       <SuporteTecnico />
       {loading && <LoadingOverlay />}
       <div className="div_principal">
-        <div className={styles.div_form_body_Colaborador}>
+        <div className={styles.div_form_body_Organizador}>
           <form className="form_perfil">
             <div className={styles.div_titulo_usuario}>
-              <h2>Dados do Colaborador</h2>
+              <h2>Dados do Organizador</h2>
             </div>
             <div className="div_form_perfil">
               <div className="mb-3">

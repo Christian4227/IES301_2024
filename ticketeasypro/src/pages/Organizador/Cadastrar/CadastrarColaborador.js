@@ -123,7 +123,7 @@ export default function CadastrarColaborador() {
       <div className="div_principal">
         <div className={styles.div_form_body_organizador}>
           <form className="div_container_grande">
-            <div className={styles.cabecalho_cadastro}>
+            <div className="div_subtitulo">
               <h1>Cadastro do colaborador</h1>
               <label>
                 Insira os dados do colaborador para ajudar nos eventos.

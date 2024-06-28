@@ -23,6 +23,7 @@ import {
   getStatusClassEvent,
 } from "@/utils";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
+import Pagination from "@/components/Pagination/Pagination";
 
 function getToken() {
   const cookies = parseCookies();
@@ -46,6 +47,8 @@ export default function IngressosCliente() {
   const [tipoCompra, setTipoCompra] = useState("");
   const [estrangeiro, setEstrangeiro] = useState(false);
   const [tipoEvento, setTipoEvento] = useState("");
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const AdicionarEventos = () => {
     router.push("../../InfoEventos");
@@ -124,15 +127,6 @@ export default function IngressosCliente() {
       }
     }
 
-    var categoriaSelecionada = "";
-    if (categorySelected !== "") {
-      if (situacaoCompra == "" && nacional == "") {
-        categoriaSelecionada = "?category-id=" + categorySelected;
-      } else {
-        categoriaSelecionada = "&category-id=" + categorySelected;
-      }
-    }
-
     // var situacaoDoEvento = ""; // No need to check for empty value here
     // if (tipoEvento !== "") {
     //   if (situacaoCompra == "" && nacional == "" && categoriaSelecionada == ""){
@@ -142,6 +136,15 @@ export default function IngressosCliente() {
     //     situacaoDoEvento = "&status-id=" + tipoEvento;
     //   }
     // }
+
+    var categoriaSelecionada = "";
+    if (categorySelected !== "") {
+      if (situacaoCompra == "" && nacional == "") {
+        categoriaSelecionada = "?category-id=" + categorySelected;
+      } else {
+        categoriaSelecionada = "&category-id=" + categorySelected;
+      }
+    }
 
     var dataInicial = "";
     if (dataInicio !== "") {
@@ -175,6 +178,7 @@ export default function IngressosCliente() {
       if (response.status == 200) {
         handleSetMessage("Dados filtrados com sucesso.", "success");
         setCompras(response.data.data);
+        setTotalPages(response.data.totalPages);
       }
     } catch (error) {
       handleSetMessage("Erro ao carregar os dados", "error");
@@ -201,6 +205,7 @@ export default function IngressosCliente() {
           headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
         });
         setCategories(response.data.data);
+        setTotalPages(response.data.totalPages);
       } catch (error) {
         handleSetMessage("Erro ao carregar as categorias", "error");
         console.log("Erro na requisição de categorias:", error);
@@ -341,6 +346,15 @@ export default function IngressosCliente() {
                 </div>
               </div>
               <div className="div_tabela_dados">
+                <div className={styles.div_numero_paginacao_tabela}>
+                  <div className={"flex justify-end"}>
+                    <Pagination
+                      totalPages={totalPages}
+                      currentPage={currentPage}
+                      onPageChange={setCurrentPage}
+                    />
+                  </div>
+                </div>
                 <table className="table table-striped">
                   <thead className="thead-dark">
                     <tr>
@@ -466,31 +480,6 @@ export default function IngressosCliente() {
                     )}
                   </tbody>
                 </table>
-                <div className={styles.div_numero_paginacao_tabela}>
-                  <label>
-                    Página{" "}
-                    {compras.length / 6 < 1 ? 1 : Math.ceil(compras.length / 6)}{" "}
-                    - {compras.length <= 6 ? compras.length : 6} de{" "}
-                    {compras.length} registros encontrados.
-                  </label>
-                </div>
-                <div className={styles.div_paginacao_tabela}>
-                  <nav aria-label="Navegação de página exemplo">
-                    <ul className="pagination">
-                      <li className="page-item">
-                        <a className="page-link" href="#">
-                          Anterior
-                        </a>
-                      </li>
-                      {paginationButtons}
-                      <li className="page-item">
-                        <a className="page-link" href="#">
-                          Próximo
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
-                </div>
               </div>
             </div>
           </div>

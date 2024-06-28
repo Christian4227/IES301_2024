@@ -1,16 +1,30 @@
 import Link from "next/link";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "@styles/Cabecalho.module.css";
 import { AuthContext } from "@/context/Auth";
+import { getToken } from "@/utils";
+import { jwtDecode } from "jwt-decode";
 
 export default function Cabecalho() {
-  const { auth, logout, user, DirecionarRota } = useContext(AuthContext);
+  const { auth, logout, user, DirecionarRota, DirecionarRotaPerfil } =
+    useContext(AuthContext);
+  const [papel, setPapel] = useState(null);
   const Sair = () => {
     logout();
   };
   const DirecionarRotaUsuario = () => {
     DirecionarRota(user.role);
   };
+
+  useEffect(() => {
+    const valor = getToken();
+    var role;
+
+    if (valor) {
+      role = jwtDecode(getToken().accessToken.toString()).role;
+      setPapel(role);
+    }
+  }, []);
   return (
     <div className={styles.Header}>
       <div>
@@ -55,7 +69,9 @@ export default function Cabecalho() {
                     <a href="#" onClick={() => DirecionarRotaUsuario()}>
                       Minha área
                     </a>{" "}
-                    <Link href="/">Meus dados</Link>{" "}
+                    <a href="#" onClick={() => DirecionarRotaPerfil(papel)}>
+                      Meus dados
+                    </a>{" "}
                     <a
                       href="#"
                       className={styles.Header_menu_usuario_opcoes_sair}
