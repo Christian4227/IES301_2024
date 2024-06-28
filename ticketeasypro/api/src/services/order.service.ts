@@ -229,16 +229,17 @@ async function generatePDF(order: OrderWithTickets): Promise<Uint8Array> {
 
     page.drawText(eventDate, {
       x: width - 150,
-      y: currentY - 22,
+      y: currentY - 90,
       size: 12,
       font,
       color: rgb(0, 0, 0),
+
     });
 
     // Informação do ticket
     page.drawText(`Ticket #: ${orderTicket.ticket_id}`, {
       x: 50,
-      y: currentY - 45,
+      y: currentY - 35,
       size: 12,
       font,
       color: rgb(0, 0, 0),
@@ -246,7 +247,7 @@ async function generatePDF(order: OrderWithTickets): Promise<Uint8Array> {
 
     page.drawText(`Ingresso: ${orderTicket.TicketType?.name}`, {
       x: 50,
-      y: currentY - 65,
+      y: currentY - 50,
       size: 12,
       font,
       color: rgb(0, 0, 0),
@@ -254,7 +255,7 @@ async function generatePDF(order: OrderWithTickets): Promise<Uint8Array> {
 
     page.drawText(`Cliente: ${order.customer.email}`, {
       x: 50,
-      y: currentY - 85,
+      y: currentY - 70,
       size: 12,
       font,
       color: rgb(0, 0, 0),
@@ -262,7 +263,7 @@ async function generatePDF(order: OrderWithTickets): Promise<Uint8Array> {
 
     page.drawText(`Local: ${order.event.location.name}`, {
       x: 50,
-      y: currentY - 105,
+      y: currentY - 90,
       size: 12,
       font,
       color: rgb(0, 0, 0),
@@ -273,7 +274,7 @@ async function generatePDF(order: OrderWithTickets): Promise<Uint8Array> {
     const qrImage = await pdfDoc.embedPng(qrCodeDataUrl);
     page.drawImage(qrImage, {
       x: 45,
-      y: currentY - 200,
+      y: currentY - 195,
       width: 100,
       height: 100,
     });
@@ -323,14 +324,7 @@ export class OrderService {
   }
 
   sendTicketsQrCodeForEmail = async (orderId: string, multiPage: boolean): Promise<{}> => {
-    // const customerOrder = await prisma.order.findUnique({
-    //   where: { id: orderId }, select: {
-    //     status: true,
-    //     event: { select: { name: true, initial_date: true, location: { select: { name: true } } } },
-    //     customer: { select: { email: true, name: true } },
-    //     // OrderTicket: { select: { TicketType: { select: { id: true, name: true } } } }
-    //   }
-    // })
+
     const customerOrder = await prisma.order.findUnique({
       where: { id: orderId },
       select: {
