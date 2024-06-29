@@ -3,7 +3,7 @@ import styles from "@styles/Colaborador.module.css";
 import Image from "next/image";
 import tick from "../../assets/ticky branco.png";
 import ticket from "../../assets/ticket.png";
-import lupa from "../../assets/Lupa.png";
+// import lupa from "../../assets/Lupa.png";
 import CabecalhoColaborador from "./CabecalhoColaborador";
 import CabecalhoInfoColaborador from "./CabecalhoInfoColaborador";
 import { useRouter } from "next/router";
@@ -17,9 +17,9 @@ const IndexColaborador = () => {
   const ValidarIngressos = () => {
     router.push("/Colaborador/Validar/ScannerQrCode");
   };
-  const VerificarIngressos = () => {
-    router.push("/Colaborador/Verificar/VerificarIngresso");
-  };
+  // const VerificarIngressos = () => {
+  //   router.push("/Colaborador/Verificar/VerificarIngresso");
+  // };
   return (
     <div>
       <CabecalhoColaborador />
@@ -36,7 +36,7 @@ const IndexColaborador = () => {
           </button>
           <label>Vender</label>
         </div>
-        <div className={styles.validar_ingressos}>
+        {/* <div className={styles.validar_ingressos}>
           <button onClick={() => VerificarIngressos()}>
             <Image
               src={lupa}
@@ -45,7 +45,7 @@ const IndexColaborador = () => {
             />
           </button>
           <label>Verificar</label>
-        </div>
+        </div> */}
         <div className={styles.validar_ingressos}>
           <button onClick={() => ValidarIngressos()}>
             <Image

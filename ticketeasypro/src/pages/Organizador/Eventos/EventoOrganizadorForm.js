@@ -12,7 +12,6 @@ import { parseCookies } from "nookies";
 import { useRouter } from "next/router";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import { dateFormat } from "@/utils";
-// import { dateFormat } from "@/utils";
 
 function getToken() {
   const cookies = parseCookies();

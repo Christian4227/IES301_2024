@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "@styles/Home.module.css";
 import facebook from "../assets/facebook.png";
@@ -13,8 +13,6 @@ import fest_japao from "../assets/festival do japão.jpg";
 import torre_miroku from "../assets/torre_miroku.jpg";
 import festas from "../assets/formatura.jpg";
 import musica from "../assets/rock in rio.jpg";
-import seta_direita from "../assets/seta_direita.png";
-import seta_esquerda from "../assets/seta esquerda.png";
 import Cabecalho from "./Cabecalho";
 import { parseCookies } from "nookies";
 import { AuthContext } from "@/context/Auth";
@@ -30,10 +28,8 @@ export default function Home() {
     { imagem: torre_miroku, descricao: "Torre de Miroku" },
   ];
   const router = useRouter();
-  const containerRef = useRef();
   const { setPoliticaCookies } = useContext(AuthContext);
   const [imagem, setImagem] = useState(listaImagens[0].imagem);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [click, setClick] = useState(false);
   const [indexI, setIndexI] = useState(0);
   const [valorOption, setValorOption] = useState(listaImagens[0].descricao);
@@ -46,20 +42,6 @@ export default function Home() {
       setDivCokkie(false);
     }
   }, []);
-
-  const DeslocarImagemNovidade = (amount) => {
-    const newScrollPosition = scrollPosition + amount;
-
-    if (newScrollPosition <= 0) {
-      setScrollPosition(0);
-    } else if (newScrollPosition >= 700) {
-      setScrollPosition(700);
-    } else {
-      setScrollPosition(newScrollPosition);
-    }
-
-    containerRef.current.scrollLeft = newScrollPosition;
-  };
 
   const MudarValorOption = (e) => {
     setValorOption(e.target.value);
@@ -292,124 +274,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
-          <div className={styles.titulo_novidades}>
-            <h1>Novidades</h1>
-          </div>
-          <div className={styles.div_body2}>
-            <button
-              onClick={() => DeslocarImagemNovidade(-100)}
-              className={styles.seta_botao_esquerda}
-            >
-              <Image
-                src={seta_esquerda}
-                alt="set direita"
-                className={styles.img_seta_esquerda}
-              />
-            </button>
-            <div className={styles.div_festas_novidades} ref={containerRef}>
-              <div className={styles.festas_novidades}>
-                <Link href="/InfoTipoEvento">
-                  <Image
-                    src={capoeira}
-                    alt="img_nov"
-                    className={styles.img_festas_novidades}
-                  />
-                </Link>
-                <h2>Descrição do evento</h2>
-                <label>
-                  Breve descrição do evento com no máximo três linhas
-                </label>
-              </div>
-              <div className={styles.festas_novidades}>
-                <Link href="/InfoTipoEvento">
-                  <Image
-                    src={futebol}
-                    alt="img_nov"
-                    className={styles.img_festas_novidades}
-                  />
-                </Link>
-                <h2>Descrição do evento</h2>
-                <label>
-                  Breve descrição do evento com no máximo três linhas
-                </label>
-              </div>
-              <div className={styles.festas_novidades}>
-                <Link href="/InfoTipoEvento">
-                  <Image
-                    src={festas}
-                    alt="img_nov"
-                    className={styles.img_festas_novidades}
-                  />
-                </Link>
-                <h2>Descrição do evento</h2>
-                <label>
-                  Breve descrição do evento com no máximo três linhas
-                </label>
-              </div>
-              <div className={styles.festas_novidades}>
-                <Link href="/InfoTipoEvento">
-                  <Image
-                    src={fest_japao}
-                    alt="img_nov"
-                    className={styles.img_festas_novidades}
-                  />
-                </Link>
-                <h2>Descrição do evento</h2>
-                <label>
-                  Breve descrição do evento com no máximo três linhas
-                </label>
-              </div>
-              <div className={styles.festas_novidades}>
-                <Link href="/InfoTipoEvento">
-                  <Image
-                    src={disney}
-                    alt="img_nov"
-                    className={styles.img_festas_novidades}
-                  />
-                </Link>
-                <h2>Descrição do evento</h2>
-                <label>
-                  Breve descrição do evento com no máximo três linhas
-                </label>
-              </div>
-              <div className={styles.festas_novidades}>
-                <Link href="/InfoTipoEvento">
-                  <Image
-                    src={torre_miroku}
-                    alt="img_nov"
-                    className={styles.img_festas_novidades}
-                  />
-                </Link>
-                <h2>Descrição do evento</h2>
-                <label>
-                  Breve descrição do evento com no máximo três linhas
-                </label>
-              </div>
-              <div className={styles.festas_novidades}>
-                <Link href="/InfoTipoEvento">
-                  <Image
-                    src={musica}
-                    alt="img_nov"
-                    className={styles.img_festas_novidades}
-                  />
-                </Link>
-                <h2>Descrição do evento</h2>
-                <label>
-                  Breve descrição do evento com no máximo três linhas
-                </label>
-              </div>
-            </div>
-            <button
-              onClick={() => DeslocarImagemNovidade(100)}
-              className={styles.seta_botao_direita}
-            >
-              <Image
-                src={seta_direita}
-                alt="set direita"
-                className={styles.img_seta_direita}
-              />
-            </button>
           </div>
         </div>
         <div className={styles.home_footer}>

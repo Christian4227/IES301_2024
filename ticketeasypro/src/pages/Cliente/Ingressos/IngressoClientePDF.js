@@ -19,6 +19,7 @@ export default function IngressoClientePDF() {
   const handleSetMessage = (message, type) => {
     setMessage({ text: message, type });
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -51,7 +52,7 @@ export default function IngressoClientePDF() {
       <SuporteTecnico />
       <div className={styles.div_principal_pdf}>
         <div className={styles.div_pdf_particao}>
-          <PDFViewer file="" />
+          <PDFViewer idCompra={idCompra} />
         </div>
         <div className={styles.div_pdf_info_ingresso}>
           <div className={styles.div_info_financeiras_titulo}>

@@ -3,7 +3,6 @@ import Cabecalho from "./Cabecalho";
 import styles from "@styles/Home.module.css";
 import stylese from "../styles/InfoEventos.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import Menu from "./Menu";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import client from "@/utils/client_axios";

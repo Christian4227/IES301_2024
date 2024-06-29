@@ -133,10 +133,13 @@ export default function ComprarIngressoCliente() {
                         <span>
                           {dados?.event == undefined
                             ? ""
-                            : dados.event.base_price.toLocaleString("pt-BR", {
-                                style: "currency",
-                                currency: "BRL",
-                              })}
+                            : (dados.event.base_price / 100).toLocaleString(
+                                "pt-BR",
+                                {
+                                  style: "currency",
+                                  currency: "BRL",
+                                }
+                              )}
                         </span>
                       </div>
                       <div className={styles.div_info_financeiras_tipos}>
