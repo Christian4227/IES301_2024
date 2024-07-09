@@ -3,22 +3,16 @@ import CabecalhoCliente from "../CabecalhoCliente";
 import CabecalhoInfoCliente from "../CabecalhoInfoCliente";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import PDFViewer from "@/components/PDFViewer";
-import styles from "@styles/Cliente.module.css";
 import client from "@/utils/client_axios";
 import { parseCookies } from "nookies";
 import { useRouter } from "next/router";
-import ToastMessage from "@/components/ToastMessage/ToastMessage";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function IngressoClientePDF() {
   const router = useRouter();
   const idCompra = router.query.idCompra;
-  // const [ingressos, setIngressos] = useState([]);
-  // const [paginas, setPaginas] = useState(0);
-  const [message, setMessage] = useState({ text: "", type: "" });
-
-  const handleSetMessage = (message, type) => {
-    setMessage({ text: message, type });
-  };
+  const [dadosCompra, setDadosCompra] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,10 +28,10 @@ export default function IngressoClientePDF() {
           headers: { Authorization: `Bearer ${valorToken?.accessToken}` },
         });
         if (response.status == 200) {
-          handleSetMessage("Dados gerados com sucesso!", "success");
+          setDadosCompra(response.data);
         }
       } catch (error) {
-        handleSetMessage("Erro ao carregar os dados", "error");
+        toast.error("Erro ao carregar os dados");
         console.log("Erro na requisição " + error);
       }
     };
@@ -49,68 +43,13 @@ export default function IngressoClientePDF() {
     <div>
       <CabecalhoCliente />
       <CabecalhoInfoCliente secao="Ingresso PDF" />
-      <SuporteTecnico />
-      <div className={styles.div_principal_pdf}>
-        <div className={styles.div_pdf_particao}>
-          <PDFViewer idCompra={idCompra} />
-        </div>
-        <div className={styles.div_pdf_info_ingresso}>
-          <div className={styles.div_info_financeiras_titulo}>
-            <h1>Informações do ingresso</h1>
-          </div>
-          <div className={styles.corpo_secao_info_ingresso_PDF}>
-            <div className={styles.corpo_secao_info_ingresso_PDF_cliente}>
-              <div>
-                <label>Nome do responsável:</label>
-                <span>-</span>
-              </div>
-              <div>
-                <label>Telefone:</label>
-                <span>-</span>
-              </div>
-              <div>
-                <label>Celular:</label>
-                <span>-</span>
-              </div>
-              <div>
-                <label>E-mail:</label>
-                <span>-</span>
-              </div>
-              <div>
-                <label>Qtd. de ingressos comprados:</label>
-                <span>-</span>
-              </div>
-              <div>
-                <label>Página</label>
-                <select></select>
-              </div>
-            </div>
-
-            <div className={styles.corpo_secao_info_ingresso_financeiras}>
-              <div className={styles.div_info_financeiras_subtotal}>
-                <div className={styles.div_info_financeiras_titulo}>
-                  <h3>Informações do tipo de ingresso</h3>
-                </div>
-                <div className={styles.div_info_financeiras_tipos}>
-                  <label>Comum:</label>
-                  <span>1x</span>
-                </div>
-                <div className={styles.div_info_financeiras_tipos}>
-                  <label>Estudante:</label>
-                  <span>1x</span>
-                </div>
-                <div className={styles.div_info_financeiras_tipos}>
-                  <label>Idoso:</label>
-                  <span>1x</span>
-                </div>
-              </div>
-            </div>
-          </div>
+      <SuporteTecnico role="Cliente"/>
+      <div className="div_principal">
+        <div className="div_formulario_container">
+          <PDFViewer idCompra={idCompra} dado={dadosCompra} />
         </div>
       </div>
-      {!!message.text && (
-        <ToastMessage text={message.text} type={message.type} />
-      )}
+      <ToastContainer />
     </div>
   );
 }

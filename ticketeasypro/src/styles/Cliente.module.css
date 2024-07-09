@@ -3,9 +3,11 @@
     background-color: #2E302D;
     display: flex;
     align-items: center;
-    position: relative;
+    position: sticky;
+    top: 0;
     padding: 10px;
     min-height: 120px;
+    z-index: 1;
   }
   
   .Header label {
@@ -227,7 +229,7 @@
   padding: 0.5em;
   padding-left: 3em;
   border-radius: 5px;
-  background-image: url("../assets/Adicionar.png");
+  background-image: url("../../public/assets/Adicionar.png");
   background-repeat: no-repeat;
   background-position: left;
   background-size: cover;
@@ -507,25 +509,6 @@
 }
 
 /* CompraPDF */
-.div_principal_pdf {
-  padding: 1em;
-  display: flex;
-}
-
-.div_pdf_info_ingresso {
-  margin-left: 1em;
-  padding-left: 1em;
-  border-left: 2px solid black;
-  width: 70%;
-}
-
-.corpo_secao_info_ingresso_PDF {
-  display: flex;
-}
-
-.corpo_secao_info_ingresso_PDF_cliente {
-  width: 60%;
-}
 
 /* Componentes */
 .botao_menu_lateral_maps_eventos_cliente {

@@ -1,4 +1,4 @@
-import { EventStatus, Prisma, PrismaClient, Role } from "@prisma/client";
+import { EventStatus, Role } from "@prisma/client";
 import prisma from "./../repositories/prisma";
 import uuid4 from "uuid4";
 

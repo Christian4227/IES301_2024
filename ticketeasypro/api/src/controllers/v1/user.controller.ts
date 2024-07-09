@@ -2,7 +2,6 @@ import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } fro
 import UserService from "../../services/user.service";
 import { UserCredentials, UserSignin, UserSigninResult, UserUpdate } from "@interfaces/controller/user.interface";
 import { Token } from "@interfaces/token.interface";
-import { generateConfirmationToken } from "@utils/auth";
 import { Role } from "@prisma/client";
 
 

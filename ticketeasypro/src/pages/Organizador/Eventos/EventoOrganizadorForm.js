@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { AuthContext } from "@/context/Auth";
 import client from "@/utils/client_axios";
 import Image from "next/image";
-import eventos from "../../../assets/Evento desconhecido.png";
+import eventos from "public/assets/Evento desconhecido.png";
 import { parseCookies } from "nookies";
 import { useRouter } from "next/router";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
@@ -297,7 +297,7 @@ export default function EventoOrganizadorForm() {
     <div>
       <CabecalhoOrganizador />
       <CabecalhoInfoOrganizador secao="Formulário do evento" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Organizador"/>
       <div className="div_principal">
         <div className="div_container_principal">
           <div className="div_subtitulo">

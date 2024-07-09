@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import styles from "@styles/Cliente.module.css";
 import Image from "next/image";
-import seta_esquerda from "../../../assets/seta esquerda.png";
-import seta_direita from "../../../assets/seta_direita.png";
-import eventos from "../../../assets/eventos.png";
-import local_evento from "../../../assets/google_maps.png";
-import calendario from "../../../assets/Calendário.png";
-import multidao from "../../../assets/multidao.png";
-import status_evento from "../../../assets/Status_evento.png";
-import tipo_evento from "../../../assets/tipo evento.png";
+import seta_esquerda from "public/assets/seta esquerda.png";
+import seta_direita from "public/assets/seta_direita.png";
+import eventos from "public/assets/eventos.png";
+import local_evento from "public/assets/google_maps.png";
+import calendario from "public/assets/Calendário.png";
+import multidao from "public/assets/multidao.png";
+import status_evento from "public/assets/Status_evento.png";
+import tipo_evento from "public/assets/tipo evento.png";
 import { useRouter } from "next/router";
 import client from "@/utils/client_axios";
 import { parseCookies } from "nookies";
-import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import { getStatusStringEvent, getFullAddress } from "@/utils";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function getToken() {
   const cookies = parseCookies();
@@ -31,14 +32,10 @@ export default function MapsEventos() {
   const idEvento = router.query.idEvento;
   const [aberto, setAberto] = useState(false);
   const [evento, setEvento] = useState([]);
-  const [message, setMessage] = useState({ text: "", type: "" });
   const Voltar = () => {
     router.push("./IngressosCliente");
   };
 
-  const handleSetMessage = (message, type) => {
-    setMessage({ text: message, type });
-  };
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -47,7 +44,7 @@ export default function MapsEventos() {
         });
         setEvento(response.data);
       } catch (error) {
-        handleSetMessage("Erro ao carregar as categorias", "error");
+        toast.error("Erro ao carregar as categorias");
         console.log("Erro na requisição de categorias:", error);
       }
     };
@@ -175,9 +172,7 @@ export default function MapsEventos() {
           </>
         )}
       </div>
-      {!!message.text && (
-        <ToastMessage text={message.text} type={message.type} />
-      )}
+      <ToastContainer />
     </div>
   );
 }

@@ -31,7 +31,7 @@ export interface UserUpdate {
     birth_date?: Date;
     phone?: string;
     phone_fix?: string;
-};
+}
 
 
 

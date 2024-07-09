@@ -161,7 +161,7 @@ export default function DadosColaborador() {
     <div>
       <CabecalhoAdmin />
       <CabecalhoInfoAdmin secao="Dados do Admin" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Administrador"/>
       {loading && <LoadingOverlay />}
       <div className="div_principal">
         <div className={styles.div_form_body_Administrador}>

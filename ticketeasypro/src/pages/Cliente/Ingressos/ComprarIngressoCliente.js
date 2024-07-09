@@ -7,11 +7,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import QRCode from "qrcode";
 import client from "@/utils/client_axios";
 import { useRouter } from "next/router";
-import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import { parseCookies } from "nookies";
 import { getFullAddress } from "@/utils";
 import Image from "next/image";
-import eventos from "../../../assets/Evento desconhecido.png";
+import eventos from "public/assets/Evento desconhecido.png";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { GerarPDFIngresso } from "@/utils/GerarPDFIngresso";
 
 function getToken() {
   const cookies = parseCookies();
@@ -28,12 +31,10 @@ export default function ComprarIngressoCliente() {
   const canvasRef = useRef(null);
   const router = useRouter();
   const idCompra = router.query.idCompra;
-
-  const [message, setMessage] = useState({ text: "", type: "" });
   const [tipoPagamento, setTipoPagamento] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   const [dados, setDados] = useState([]);
-  // const [ordemCompra, setOrdemCompra] = useState([]);
+  const [documento, setDocumento] = useState(null);
   const GerarQRCode = () => {
     QRCode.toCanvas(canvasRef.current, idCompra, { width: 250 }, (error) => {
       if (error) {
@@ -45,30 +46,42 @@ export default function ComprarIngressoCliente() {
     });
   };
 
-  const handleSetMessage = (message, type) => {
-    setMessage({ text: message, type });
-  };
-
   const ValidarCompraIngresso = async () => {
+    var file;
+
+    if (!documento) {
+      const pdfGerado = await GerarPDFIngresso(dados);
+      setDocumento(pdfGerado);
+      file = pdfGerado;
+    }
+
+    if (!file) {
+      file = documento;
+    }
+
+    const formData = new FormData();
+    formData.append("paymentMethod", tipoPagamento);
+    formData.append("file", file);
+
     try {
-      let data = JSON.stringify({
-        paymentMethod: tipoPagamento,
-      });
-      const response = await client.post(
-        `webhook/${idCompra}/payment-confirm`,
-        data,
+      const response = axios.post(
+        `http://127.0.0.1:3210/v1/webhook/${idCompra}/payment-confirm`,
+        formData,
         {
-          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+          headers: {
+            Authorization: `Bearer ${getToken()?.accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       if (response.status == 201) {
-        handleSetMessage("Pagamento realizado com sucesso!", "success");
+        toast.success("Pagamento realizado com sucesso!");
         setTimeout(() => {
           router.replace("./IngressosCliente");
         }, 6000);
       }
     } catch (error) {
-      handleSetMessage("Erro ao carregar as categorias", "error");
+      toast.error("Erro ao carregar as categorias");
       console.log("Erro na requisição de categorias:", error);
     }
   };
@@ -88,11 +101,11 @@ export default function ComprarIngressoCliente() {
         });
 
         if (response.status == 200) {
-          handleSetMessage("Dados gerados com sucesso!", "success");
+          toast.success("Dados gerados com sucesso!");
           setDados(response.data);
         }
       } catch (error) {
-        handleSetMessage("Erro ao carregar os dados", "error");
+        toast.error("Erro ao carregar os dados");
         console.log("Erro na requisição " + error);
       }
     };
@@ -113,7 +126,7 @@ export default function ComprarIngressoCliente() {
     <div>
       <CabecalhoCliente />
       <CabecalhoInfoCliente secao="Pagamento" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Cliente"/>
       <div className={styles.div_principal}>
         <div className={styles.div_principal_secao}>
           <div className={styles.div_secao_pagamento_esquerda}>
@@ -188,9 +201,7 @@ export default function ComprarIngressoCliente() {
                       <label>Nome do evento:</label>
                       <br />
                       <span>
-                        {dados?.event == undefined
-                          ? ""
-                          : getFullAddress(dados?.event.location)}
+                        {dados?.event == undefined ? "" : dados.event.name}
                       </span>
                     </div>
                     <div className={styles.div_info_evento_compras_info_evento}>
@@ -199,7 +210,7 @@ export default function ComprarIngressoCliente() {
                       <span>
                         {dados?.event == undefined
                           ? ""
-                          : getFullAddress(dados?.event.location)}
+                          : dados.event.category.name}
                       </span>
                     </div>
                     <div className={styles.div_info_evento_compras_info_evento}>
@@ -317,9 +328,7 @@ export default function ComprarIngressoCliente() {
           </div>
         </div>
       </div>
-      {!!message.text && (
-        <ToastMessage text={message.text} type={message.type} />
-      )}
+      <ToastContainer />
     </div>
   );
 }

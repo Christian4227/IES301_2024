@@ -47,35 +47,7 @@ class TicketTypeService {
             }
             throw error; // Lance novamente o erro original se for um tipo inesperado
         }
-    };
-
-
-    //     const filteredDataUpdate = this.filterNullsData(dataUpdate);
-    //     eventId = Number(eventId);
-    //     const eventStored: EventUniqueResult = await this.eventRepository.findDetails(eventId);
-    //     const { ts_initial_date, ts_final_date, location_id, manager_id, category_id, ...rest } = filteredDataUpdate;
-    //     let { status } = filteredDataUpdate
-    //     const toBeUpdatedIntervalDates = resolveDates(eventStored, { ts_initial_date, ts_final_date });
-
-    //     const { ts_initial_date: initial_date, ts_final_date: final_date } = toBeUpdatedIntervalDates
-    //     const toUpdateData: any = rest;
-
-    //     if (status && !Object.values(EventStatus).includes(status))
-    //         throw new Error("Event status is invalid.");
-
-    //     if (initial_date) toUpdateData.initial_date = new Date(initial_date);
-    //     if (final_date) toUpdateData.final_date = new Date(final_date);
-    //     if (manager_id) toUpdateData.event_manager = { connect: { id: manager_id } };
-    //     if (category_id) toUpdateData.category = { connect: { id: category_id } };
-    //     if (location_id) toUpdateData.location = { connect: { id: location_id } };
-
-    //     const updatedEvent = await this.eventRepository.update(eventId, toUpdateData);
-
-
-    //     return {
-    //         ...updatedEvent, ts_initial_date: updatedEvent.initial_date.getTime(), ts_final_date: updatedEvent.final_date.getTime()
-    //     };
-    // };
+    }
 
     getTicketTypes = async (eventId: number): Promise<BaseTypeTicket> => {
         const typeTicket = await this.ticketTypeRepository.findDetails(eventId)

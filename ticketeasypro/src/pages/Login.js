@@ -3,8 +3,9 @@ import styles from "@styles/Login.module.css";
 import Link from "next/link";
 import { AuthContext } from "@/context/Auth";
 import "bootstrap/dist/css/bootstrap.min.css";
-import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import { useRouter } from "next/router";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const router = useRouter();
@@ -12,19 +13,16 @@ export default function Login() {
   const { login, retorno } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [message, setMessage] = useState({ text: "", type: "" });
   const [evento, setEvento] = useState(null);
-  const handleSetMessage = (message, type) => {
-    setMessage({ text: message, type });
-  };
+
   const handleLogin = () => {
     try {
       login({ email: email, password: senha }, evento);
       if (retorno == 401) {
-        handleSetMessage("Combinação de usuário ou senha incorretos.", "error");
+        toast.error("Combinação de usuário ou senha incorretos.");
       }
     } catch (error) {
-      handleSetMessage("Erro desconhecido.", "error");
+      toast.error("Erro desconhecido.");
       console.error(error);
     }
   };
@@ -88,10 +86,8 @@ export default function Login() {
             </Link>
           </label>
         </div>
-        {!!message.text && (
-          <ToastMessage text={message.text} type={message.type} />
-        )}
       </div>
+      <ToastContainer />
     </div>
   );
 }

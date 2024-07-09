@@ -49,12 +49,12 @@ export interface UserUpdate {
     birth_date?: Date;
     phone?: string;
     phone_fix?: string;
-};
+}
 export interface UserUpdateRole {
     id: string;
     role: Role;
 
-};
+}
 
 
 export interface UserCredentials {

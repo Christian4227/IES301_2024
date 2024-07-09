@@ -1,4 +1,4 @@
-import { Readable } from 'nodemailer/lib/xoauth2';
+// import { Readable } from 'nodemailer/lib/xoauth2';
 import transporter from './email'
 
 const sendEmail = async (to: string, subject: string, content: string): Promise<void> => {

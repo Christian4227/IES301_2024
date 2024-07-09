@@ -2,7 +2,7 @@
 import { EventStatus, Prisma, TicketStatus } from "@prisma/client";
 import { isValidDateRange } from "../utils/mixes";
 import EventRepository from "./../repositories/event.repository";
-import { BaseEvent, Event, EventCreate, EventResult, EventUpdateResult } from "@interfaces/event.interface";
+import { BaseEvent, EventCreate, EventUpdateResult } from "@interfaces/event.interface";
 import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
 import { EventUniqueResult, PaginatedEventResult, PartialEventUpdate } from "types/event.type";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";

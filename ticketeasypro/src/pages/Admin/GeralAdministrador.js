@@ -9,7 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "@styles/Administracao.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import editar from "../../assets/Editar.png";
+import editar from "public/assets/Editar.png";
 
 export default function IndexAdministrador() {
   const [totalPages, setTotalPages] = useState(1);
@@ -35,7 +35,7 @@ export default function IndexAdministrador() {
     <div>
       <CabecalhoAdmin />
       <CabecalhoInfoAdmin secao="Página inicial" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Administrador"/>
       <div className="div_principal">
         <div className="div_container_principal">
           <div className="div_tabela_dados">

@@ -3,4 +3,3 @@ import { UserResult } from "../../interfaces/repository/user.interface";
 
 
 export type PaginatedUserResult = PaginatedResult<UserResult>;
-

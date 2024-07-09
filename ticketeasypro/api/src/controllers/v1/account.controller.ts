@@ -4,8 +4,6 @@ import { AccountRoleUpdate, AccountUpdateResult, PaginatedAccountResult, QueryPa
 import { AccountCreate } from "@interfaces/service/account.interface";
 import { Role } from "@prisma/client";
 import { Identifier } from "types/common.type";
-import { makeTemporaryPasswordEmailContent } from "@utils/templates";
-// import { AccountResult } from "@interfaces/repository/account.interface";
 
 
 const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
@@ -137,18 +135,6 @@ const AccountRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
             return reply.code(200).send(response);
         });
 }
-// api.put('/:accountId', { preHandler: [api.authenticate] }, async (request: FastifyRequest<{ Params: { userId: string }, Body: UserUpdate }>, reply: FastifyReply) => {
-//     const { user: { id: userId }, body: updateData } = request;
-//     const { params: { userId }, body: { role } } = request;
-
-//     try {
-//         await userService.update({ id: userId }, updateData);
-//         return reply.status(204);
-//     } catch (error) {
-//         console.error('User update error:', error);
-//         return reply.status(500).send({ message: 'User update error', error: 'Internal Server Error' });
-//     }
-// });
 
 
 export default AccountRoute;

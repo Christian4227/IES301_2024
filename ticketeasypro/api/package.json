@@ -18,6 +18,7 @@
     "@fastify/cookie": "^9.3.1",
     "@fastify/cors": "^8.5.0",
     "@fastify/jwt": "^8.0.0",
+    "@fastify/multipart": "^8.3.0",
     "@prisma/client": "^5.16.0",
     "@sinclair/typebox": "^0.32.32",
     "dotenv": "^16.4.5",

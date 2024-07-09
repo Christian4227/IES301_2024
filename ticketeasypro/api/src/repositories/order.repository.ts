@@ -1,5 +1,5 @@
 // import { OrderCreate, OrderCreateInput, OrderTicketCreate, OrderUpdateInput } from "@interfaces/order.interface";
-import { Category, EventStatus, Order, OrderStatus, Prisma } from "@prisma/client";
+import {  EventStatus, Order, OrderStatus, Prisma } from "@prisma/client";
 import { PaymentMethod } from "./../schema/order.schema"
 import prisma from "./prisma";
 import { OrderTicket } from "@prisma/client"
@@ -9,13 +9,12 @@ import { PaginateParams } from "types/common.type";
 import { PaginatedOrderResult } from "types/order.type";
 import { PaginationParams } from "@interfaces/common.interface";
 import { paginate } from "@utils/paginate";
-import { Console } from "console";
 
 class OrderRepository {
   private orderDb: Prisma.OrderDelegate;
   constructor() {
     this.orderDb = prisma.order;
-  };
+  }
   async create(customerId: string, totalAmount: number, orderCreate: RepoOrderCreate): Promise<Order> {
     const { eventId, paymentMethod } = orderCreate;
     return await this.orderDb.create({
@@ -50,7 +49,10 @@ class OrderRepository {
           base_price: true, img_banner: true, img_thumbnail: true, color: true
         },
       },
-      OrderTicket: { select: { TicketType: { select: { id: true, name: true, discount: true } } } },
+      customer: {
+        select: { email: true, name: true }
+      },
+      OrderTicket: { select: { ticket_id: true, TicketType: { select: { id: true, name: true, discount: true } } } },
       status: true, payment_method: true, total_amount: true,
       created_at: true
     }

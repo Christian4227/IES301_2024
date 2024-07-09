@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "export",
   reactStrictMode: true,
   images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "source.unsplash.com", pathname: "**" },
-    ],
+    unoptimized: true,
   },
   async headers() {
     return [

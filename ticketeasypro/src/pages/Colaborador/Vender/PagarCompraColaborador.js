@@ -7,7 +7,9 @@ import styles from "@styles/Colaborador.module.css";
 import { useRouter } from "next/router";
 import client from "@/utils/client_axios";
 import { parseCookies } from "nookies";
-import ToastMessage from "@/components/ToastMessage/ToastMessage";
+import { GerarPDFIngresso } from "@/utils/GerarPDFIngresso";
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
 
 function getToken() {
   const cookies = parseCookies();
@@ -23,33 +25,43 @@ export default function PagarCompraColaborador() {
   const router = useRouter();
   const idCompra = router.query.idCompra;
   const [compras, setCompras] = useState([]);
-  const [message, setMessage] = useState({ text: "", type: "" });
   const [isFormValid, setIsFormValid] = useState(false);
   const [tipoPagamento, setTipoPagamento] = useState("");
+  const [documento, setDocumento] = useState(null);
 
   const ValidarCompraIngresso = async () => {
+    var documentoGerado;
+    if (documento) {
+      toast.warn("Gerando o e-mail com o PDF do ingresso.");
+      documentoGerado = await GerarPDFIngresso(compras);
+      setDocumento(documentoGerado);
+    }
+
+    if (!documentoGerado) {
+      documentoGerado = documento;
+    }
+
+    const form = new FormData();
+    form.append("paymentMethod", tipoPagamento);
+    form.append("file", documentoGerado);
+
     try {
-      let data = JSON.stringify({
-        paymentMethod: tipoPagamento,
-      });
-      const response = await client.post(
-        `webhook/${idCompra}/payment-confirm`,
-        data,
+      const response = await axios.post(
+        `http://127.0.0.1:3210/v1/webhook/${idCompra}/payment-confirm`,
+        form,
         {
-          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+          headers: {
+            Authorization: `Bearer ${getToken()?.accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       if (response.status == 201) {
         router.replace("./SucessoCompra");
       }
     } catch (error) {
-      handleSetMessage("Erro ao carregar as categorias", "error");
-      console.log("Erro na requisição de categorias:", error);
+      toast.error("Não foi possível efetuar o pagamento. Tente novamente.");
     }
-  };
-
-  const handleSetMessage = (message, type) => {
-    setMessage({ text: message, type });
   };
 
   useEffect(() => {
@@ -59,10 +71,8 @@ export default function PagarCompraColaborador() {
           headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
         });
         setCompras(response.data);
-        console.log(response.data);
       } catch (error) {
-        handleSetMessage("Erro ao carregar os dados", "error");
-        console.log("Erro na requisição " + error);
+        toast.error("Erro ao carregar os dados.");
       }
     };
     if (idCompra) {
@@ -80,7 +90,7 @@ export default function PagarCompraColaborador() {
     <div>
       <CabecalhoColaborador />
       <CabecalhoInfoColaborador secao="Dados do ingresso PDF" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Colaborador" />
       <div className="div_principal">
         <div className={styles.div_info_colaborador}>
           <div className="div_container_maior">
@@ -95,19 +105,13 @@ export default function PagarCompraColaborador() {
                   >
                     <div className={styles.label_info_comprador_colaborador}>
                       <label>Nome completo</label>
-                      <span></span>
+                      <br />
+                      <span>{compras?.customer?.name}</span>
                     </div>
                     <div className={styles.label_info_comprador_colaborador}>
                       <label>E-mail</label>
-                      <span></span>
-                    </div>
-                    <div className={styles.label_info_comprador_colaborador}>
-                      <label>Telefone</label>
-                      <span></span>
-                    </div>
-                    <div className={styles.label_info_comprador_colaborador}>
-                      <label>Celular</label>
-                      <span></span>
+                      <br />
+                      <span>{compras?.customer?.email}</span>
                     </div>
                   </div>
                   <div
@@ -115,23 +119,36 @@ export default function PagarCompraColaborador() {
                   >
                     <div className={styles.label_info_comprador_colaborador}>
                       <label>Nome do evento</label>
-                      <span></span>
+                      <br />
+                      <span>{compras?.event?.name}</span>
                     </div>
                     <div className={styles.label_info_comprador_colaborador}>
                       <label>Tipo de evento</label>
-                      <span></span>
+                      <br />
+                      <span>{compras?.event?.category?.name}</span>
                     </div>
                     <div className={styles.label_info_comprador_colaborador}>
                       <label>Data de início</label>
-                      <span></span>
+                      <br />
+                      <span>
+                        {new Date(
+                          compras?.event?.initial_date
+                        ).toLocaleDateString()}
+                      </span>
                     </div>
                     <div className={styles.label_info_comprador_colaborador}>
                       <label>Data de término</label>
-                      <span></span>
+                      <br />
+                      <span>
+                        {new Date(
+                          compras?.event?.final_date
+                        ).toLocaleDateString()}
+                      </span>
                     </div>
                     <div className={styles.label_info_comprador_colaborador}>
                       <label>Capacidade</label>
-                      <span></span>
+                      <br />
+                      <span>{compras?.event?.capacity}</span>
                     </div>
                   </div>
                 </div>
@@ -199,9 +216,7 @@ export default function PagarCompraColaborador() {
           </div>
         </div>
       </div>
-      {!!message.text && (
-        <ToastMessage text={message.text} type={message.type} />
-      )}
+      <ToastContainer />
     </div>
   );
 }

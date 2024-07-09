@@ -2,17 +2,6 @@ import { Role } from "@prisma/client";
 import { PaginatedResult } from "../common.interface";
 
 
-// export interface AccountCreate {
-//     email: string;
-//     name: string;
-//     birth_date: Date;
-//     phone: string;
-//     phone_fix?: string;
-//     password: string;
-//     confirm_password: string
-// }
-
-
 interface AccountBase {
     id: string;
     email: string;
@@ -80,11 +69,11 @@ export interface AccountUpdate {
     role?: Role;
     status?: boolean
     email?: string;
-};
+}
 
 export interface AccountRoleUpdate {
     role: Role;
-};
+}
 
 export interface UserCredentials {
 

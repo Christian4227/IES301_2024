@@ -1,16 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import Cabecalho from "./Cabecalho";
 import styles from "@styles/Home.module.css";
-import stylese from "../styles/InfoEventos.module.css";
+import stylese from "@styles/InfoEventos.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import client from "@/utils/client_axios";
 import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
 import { AuthContext } from "@/context/Auth";
-import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import StateFilter from "@/components/StateFilter/StateFilter";
 import Pagination from "@/components/Pagination/Pagination";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   dateFormat,
@@ -26,7 +27,6 @@ export default function InfoEventos() {
   const [categorias, setCategorias] = useState([]);
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
-  const [message, setMessage] = useState({ text: "", type: "" });
   const [searchTerm, setSearchTerm] = useState("");
   const [national, setNational] = useState(true);
   const [selectedStates, setSelectedStates] = useState([]);
@@ -107,17 +107,13 @@ export default function InfoEventos() {
   const visualizarEvento = (eventId) => {
     router.push(`/InfoTipoEvento?eventId=${eventId}`);
   };
-  const handleSetMessage = (message, type) => {
-    setMessage({ text: message, type });
-  };
   const fetchData = async () => {
     try {
       const query = getQueryString();
       const response = await client.get(`/events?${query}`);
       if (response.data.total === 0)
-        handleSetMessage(
-          "Nenhum evento encontrado com os critérios de busca. Por favor, tente ajustar seus filtros.",
-          "success"
+        toast.error(
+          "Nenhum evento encontrado com os critérios de busca. Por favor, tente ajustar seus filtros."
         );
 
       setEventos(response.data.data);
@@ -371,9 +367,7 @@ export default function InfoEventos() {
           )}
         </div>
       </div>
-      {!!message.text && (
-        <ToastMessage text={message.text} type={message.type} />
-      )}
+      <ToastContainer />
     </div>
   );
 }

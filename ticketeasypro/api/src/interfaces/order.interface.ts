@@ -1,10 +1,10 @@
-import { OrderStatus, PaymentMethod, Prisma } from "@prisma/client";
+import { OrderStatus, PaymentMethod } from "@prisma/client";
 
 
 export interface RepoOrderCreate {
     eventId: number;
     paymentMethod: PaymentMethod;
-};
+}
 export interface OrderResult {
 
 }

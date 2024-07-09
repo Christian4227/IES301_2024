@@ -118,7 +118,7 @@ export default function CadastrarColaborador() {
     <div>
       <CabecalhoOrganizador />
       <CabecalhoInfoOrganizador secao="Cadastrar colaborador" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Organizador"/>
       {loading && <LoadingOverlay />}
       <div className="div_principal">
         <div className={styles.div_form_body_organizador}>

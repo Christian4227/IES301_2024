@@ -160,7 +160,7 @@ export default function DadosColaborador() {
     <div>
       <CabecalhoOrganizador />
       <CabecalhoInfoOrganizador secao="Dados do Organizador" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Organizador"/>
       {loading && <LoadingOverlay />}
       <div className="div_principal">
         <div className={styles.div_form_body_Organizador}>

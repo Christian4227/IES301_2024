@@ -33,9 +33,9 @@ const TicketForm = () => {
     []
   );
 
-  const onPaymentMethodChange = useCallback((e) => {
-    setpaymentMethod(e.target.value);
-  }, []);
+  const onPaymentMethodChange = (valor) => {
+    setpaymentMethod(valor);
+  };
 
   const setLoadingWithDelay = (isLoading) => {
     if (isLoading) setLoading(true);
@@ -216,7 +216,7 @@ const TicketForm = () => {
       {loading && <LoadingOverlay />}
       <CabecalhoCliente />
       <CabecalhoInfoCliente secao="Formulário de compra" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Cliente"/>
       <div className={styles.div_principal}>
         <div className={styles.div_principal_form}>
           <div className="div_container_maior">

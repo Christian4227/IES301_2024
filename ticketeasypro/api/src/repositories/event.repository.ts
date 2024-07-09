@@ -1,6 +1,6 @@
 import { PaginationParams } from "@interfaces/common.interface";
 import prisma from "./prisma";
-import { EventResult, BaseEvent, RepoEventCreate, RepoEventUpdate, Event } from "@interfaces/event.interface";
+import { EventResult, BaseEvent, RepoEventCreate, RepoEventUpdate } from "@interfaces/event.interface";
 import { EventStatus, Prisma } from "@prisma/client";
 import { paginate } from "@utils/paginate";
 import { filterNullsData } from "@utils/mixes";
@@ -87,7 +87,6 @@ class EventRepository {
 
   ): Promise<PaginatedEventResult> => {
     // Inicializando o whereClause com a condição de data
-    // let whereClause: Prisma.EventWhereInput = { AND: { location: location, initial_date: { gte: startDate }, final_date: { lte: endDate } } };
     let whereClause: Prisma.EventWhereInput = {
       AND: { location: location, initial_date: { gte: startDate, lte: endDate } }
     };
@@ -101,7 +100,7 @@ class EventRepository {
           { description: { contains: query, mode: 'insensitive' } }
         ]
       });
-    };
+    }
 
     if (category_id)
       whereClause.AND = { ...whereClause.AND, category_id: { equals: category_id } };

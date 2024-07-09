@@ -161,7 +161,7 @@ export default function DadosCliente() {
     <div>
       <CabecalhoCliente />
       <CabecalhoInfoCliente secao="Dados do cliente" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Cliente"/>
       {loading && <LoadingOverlay />}
       <div className="div_principal">
         <div className={styles.div_form_body_cliente}>

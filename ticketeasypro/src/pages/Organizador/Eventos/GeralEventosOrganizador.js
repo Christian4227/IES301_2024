@@ -7,9 +7,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import client from "@/utils/client_axios";
-import maps from "../../../assets/google_maps.png";
-import editar from "../../../assets/Editar.png";
-import excluir from "../../../assets/excluir.png";
+import maps from "/public/assets/google_maps.png";
+import editar from "public/assets/Editar.png";
+import excluir from "public/assets/excluir.png";
 
 import {
   getFullAddress,
@@ -137,26 +137,30 @@ export default function GeralEventosOrganizador() {
     }
   };
 
+  const fetchEventos = async () => {
+    try {
+      const hoje = new Date().getTime();
+      const depois = new Date().getTime() + 5184000;
+      var pagina = "";
+      // Adiciona 'category' ao queryParams se categorySelected estiver definido e não vazio
+      if (currentPage) pagina = "page=" + currentPage;
+      const response = await client.get(
+        `events/?initial_date=${hoje}&final_date=${depois}&${pagina}`,
+        {
+          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+        }
+      );
+      setEventos(response.data.data);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      handleSetMessage("Erro ao carregar as categorias", "error");
+      console.log("Erro na requisição de categorias:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchEventos = async () => {
-      try {
-        const hoje = new Date().getTime();
-        const depois = new Date().getTime() + 5184000;
-        const response = await client.get(
-          `events/?initial_date=${hoje}&final_date=${depois}`,
-          {
-            headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
-          }
-        );
-        setEventos(response.data.data);
-        setTotalPages(response.data.totalPages);
-      } catch (error) {
-        handleSetMessage("Erro ao carregar as categorias", "error");
-        console.log("Erro na requisição de categorias:", error);
-      }
-    };
     fetchEventos();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -176,7 +180,7 @@ export default function GeralEventosOrganizador() {
     <div>
       <CabecalhoOrganizador />
       <CabecalhoInfoOrganizador secao="Eventos gerais" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Organizador"/>
       <div className="div_principal">
         <div className="div_container_principal">
           <div className="div_subtitulo">

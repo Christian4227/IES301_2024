@@ -9,7 +9,7 @@ import { initialData } from "./lifespan";
 import Authentication, { AuthorizeRoles } from "./middlewares/JWTAuth";
 import { FastifyInstance } from "./types/fastify";
 import { WebhookRoute, TicketRoute, OrderRoute, EventRoute, VenueRoute, UserRoute, AccountRoute, CategoryRoute, TicketTypeRoute } from "./controllers/all_controllers";
-
+import multipart from '@fastify/multipart'
 
 const api: FastifyInstance = fastify({ logger: true });
 
@@ -27,7 +27,7 @@ api.addHook('preHandler', (request: FastifyRequest, reply: FastifyReply, next) =
     request.jwt = api.jwt
     return next()
 })
-
+api.register(multipart)
 api.decorate('authenticate', Authentication)
 api.decorate('authorizeRoles', AuthorizeRoles)
 
@@ -48,8 +48,6 @@ const start = async () => {
     api.ready(async err => {
         if (err) throw err;
         console.log("Todos os plugins foram carregados e o servidor está pronto.");
-        // console.log('JWT Secret Key:', process.env.JWT_SECRET_KEY);
-        // console.log('Cookie Secret Key:', process.env.COOKIE_SECRET_KEY);
         await initialData();
     }
     )

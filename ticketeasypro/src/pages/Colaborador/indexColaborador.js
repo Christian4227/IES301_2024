@@ -1,9 +1,8 @@
 import React from "react";
 import styles from "@styles/Colaborador.module.css";
 import Image from "next/image";
-import tick from "../../assets/ticky branco.png";
-import ticket from "../../assets/ticket.png";
-// import lupa from "../../assets/Lupa.png";
+import tick from "public/assets/ticky branco.png";
+import ticket from "public/assets/ticket.png";
 import CabecalhoColaborador from "./CabecalhoColaborador";
 import CabecalhoInfoColaborador from "./CabecalhoInfoColaborador";
 import { useRouter } from "next/router";
@@ -17,14 +16,11 @@ const IndexColaborador = () => {
   const ValidarIngressos = () => {
     router.push("/Colaborador/Validar/ScannerQrCode");
   };
-  // const VerificarIngressos = () => {
-  //   router.push("/Colaborador/Verificar/VerificarIngresso");
-  // };
   return (
     <div>
       <CabecalhoColaborador />
       <CabecalhoInfoColaborador secao="Home colaborador" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Colaborador" />
       <div className={styles.div_body_colaborador}>
         <div className={styles.vender_ingressos}>
           <button onClick={() => VenderIngressos()}>

@@ -52,7 +52,7 @@ export interface UserUpdate {
     phone?: string;
     phone_fix?: string;
     active?: boolean;
-};
+}
 
 interface CommonUserData {
     email: string;

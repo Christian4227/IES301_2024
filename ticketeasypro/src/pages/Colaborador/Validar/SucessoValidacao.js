@@ -3,7 +3,7 @@ import CabecalhoColaborador from "../CabecalhoColaborador";
 import CabecalhoInfoColaborador from "../CabecalhoInfoColaborador";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import Image from "next/image";
-import sucesso from "../../../assets/ticky_verde.png";
+import sucesso from "public/assets/ticky_verde.png";
 import styles from "@styles/Colaborador.module.css";
 import { useRouter } from "next/router";
 
@@ -16,7 +16,7 @@ export default function SucessoValidacao() {
     <div>
       <CabecalhoColaborador />
       <CabecalhoInfoColaborador secao="Validação bem sucedida." />
-      <SuporteTecnico />
+      <SuporteTecnico role="Colaborador" />
       <div className="div_principal">
         <div className={styles.div_mensagem_colaborador}>
           <div className="div_container_maior">

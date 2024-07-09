@@ -1,262 +1,137 @@
-// import React, { useContext, useEffect, useState } from "react";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import download from "../assets/Download - escuro sem fundo.png";
-import email from "../assets/e-mail sb.png";
+import download from "public/assets/Download - escuro sem fundo.png";
+import email from "public/assets/e-mail sb.png";
 import styles from "@styles/Componentes.module.css";
-import client from "@/utils/client_axios";
-import ToastMessage from "./ToastMessage/ToastMessage";
-// import { AuthContext } from "@/context/Auth";
-// import { useRouter } from "next/router";
 import { getToken } from "@/utils";
 import QRCode from "qrcode";
 import html2canvas from "html2canvas";
+import ticketTemplate from "@/utils/templateHTMLTicket";
+import { getFullAddress } from "@/utils";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const { jsPDF } = require("jspdf");
 
-export default function PDFViewer({ idCompra }) {
-  // const elementPDF = useRef(null);
-  // const router = useRouter();
-  // const { user } = useContext(AuthContext);
-  const [documento, setDocumento] = useState("");
-  const [message, setMessage] = useState({ text: "", type: "" });
-  const [htmlContent, setHtmlContent] = useState("");
-  const [imagem, setImagem] = useState("");
+export default function PDFViewer({ idCompra, dado }) {
+  const [isPdf, setIsPdf] = useState(false);
+  const [pdf, setPdf] = useState(
+    new jsPDF({
+      orientation: "landscape",
+      unit: "cm",
+      format: [10, 7],
+      compress: true,
+    })
+  );
 
-  var htmlTicket = `<!DOCTYPE html>
-<html>
-<head>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-}
+  async function adicionarPaginaIngresso(dados, pdf, idTicket) {
+    try {
+      const url = await QRCode.toDataURL(idTicket);
+      var htmlTicket = ticketTemplate;
+      htmlTicket = htmlTicket.replace("qrcodeBase64", url);
+      htmlTicket = htmlTicket.replace(
+        "#TIPOEVENTO#",
+        dados.event.category.name
+      );
+      htmlTicket = htmlTicket.replace("#IDCOMPRA#", dados.id);
+      htmlTicket = htmlTicket.replace(
+        "#DATAINICIO#",
+        new Date(dados.event.initial_date).toLocaleDateString()
+      );
+      htmlTicket = htmlTicket.replace(
+        "#DATATERMINO#",
+        new Date(dados.event.final_date).toLocaleDateString()
+      );
+      htmlTicket = htmlTicket.replace("#EVENTO#", dados.event.name);
+      htmlTicket = htmlTicket.replace(
+        "#ENDERECO#",
+        getFullAddress(dados.event.location)
+      );
+      htmlTicket = htmlTicket.replace("#IDINGRESSO#", idTicket);
+      htmlTicket = htmlTicket.replace("#PESSOA#", dados.customer.name);
 
-.container {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+      const element = document.createElement("div");
+      element.innerHTML = htmlTicket;
+      document.body.appendChild(element);
 
-h1 {
-  font-size: 2.5em;
-  margin-bottom: 10px;
-}
+      const canvas = await html2canvas(element.querySelector(".container"));
+      const imgData = canvas.toDataURL("image/png", 0.4);
+      pdf.addImage(imgData, "PNG", 0, 0, 10, 7);
 
-h2 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-}
+      document.body.removeChild(element);
 
-.info-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.info-table th,
-.info-table td {
-  padding: 10px;
-  text-align: left;
-}
-
-.info-table th {
-  font-weight: bold;
-}
-
-.venue-table,
-.event-manager-table {
-  width: 50%;
-  float: left;
-  margin-top: 20px;
-}
-
-.venue-table th,
-.event-manager-table th {
-  display: none;
-}
-
-.venue-table td,
-.event-manager-table td {
-  border-bottom: none;
-  padding: 10px;
-}
-
-.qr-code {
-  float: left;
-  width: 50%;
-  text-align: center;
-  margin-bottom: 20px; /* added margin bottom */
-  margin-top: 10vh;
-}
-
-.qr-code img {
-  max-width: 100%;
-  height: auto;
-}
-
-.check-in {
-  float: right;
-  width: 50%;
-  text-align: center;
-  margin-top: 10vh;
-}
-
-.check-in h2 {
-  margin-top: 0;
-}
-
-.clear {
-  clear: both;
-}
-
-/* added media query for responsive design */
-@media (max-width: 768px) {
-  .venue-table, .event-manager-table {
-    width: 100%;
-    float: none;
+      return pdf;
+    } catch (err) {
+      console.error(err);
+    }
   }
-  .qr-code, .check-in {
-    width: 100%;
-    float: none;
+
+  async function gerarPdf(dados) {
+    var documento;
+    var idTicket;
+
+    if (!isPdf) {
+      for (var k = 0; k <= dados.OrderTicket.length - 1; k++) {
+        if (k != 0) {
+          pdf.addPage({
+            orientation: "landscape",
+            unit: "cm",
+            format: [10, 7],
+            compress: true,
+          });
+        }
+        idTicket = dados?.OrderTicket[k].ticket_id;
+        documento = await adicionarPaginaIngresso(dados, pdf, idTicket);
+      }
+    }
+
+    if (documento) {
+      setIsPdf(true);
+      var dataURL = documento.output("blob");
+      const blobURL = URL.createObjectURL(dataURL);
+      setPdf(dataURL);
+      document.getElementById("pdf_container").src = blobURL;
+    }
   }
-}
-</style>
-</head>
-<body>
-  <div class="container">
-    <h1>Evento</h1>
-    <h2>Data Início | Data Término</h2>
 
-    <table class="info-table">
-      <tr>
-        <th>ID DO INGRESSO</th>
-        <th>TIPO DE EVENTO</th>
-        <th>CLIENTE</th>
-        <th>ID DA COMPRA</th>
-      </tr>
-      <tr>
-        <td>1137</td>
-        <td>Club Members</td>
-        <td>Bob Snell</td>
-        <td>68de1a9d30</td>
-      </tr>
-    </table>
-
-    <table class="venue-table">
-      <tr>
-        <td><strong>ENDEREÇO</strong></td>
-      </tr>
-      <tr>
-        <td>São Paulo, Brasil</td>
-      </tr>
-      <tr>
-        <td>Rua muito bacana 777</td>
-      </tr>
-    </table>
-
-    <table class="event-manager-table">
-      <tr>
-        <td><strong>GERENTE DO EVENTO</strong></td>
-      </tr>
-      <tr>
-        <td>F. Scott Fitzgerald</td>
-      </tr>
-    </table>
-
-    <div class="clear"></div>
-
-    <div class="qr-code">
-      <img src="qrcodeBase64" alt="QR Code">
-    </div>
-    <div class="check-in">
-      <h2>Confira o evento</h2>
-      <h3>Escaneie esse QR Code no local do evento para check in.</h3>
-    </div>
-    <div class="clear"></div>
-  </div>
-</body>
-</html>`;
-
-  const handlePDF = async () => {
-    QRCode.toDataURL(idCompra)
-      .then((url) => {
-        htmlTicket = htmlTicket.replace("qrcodeBase64", url);
-
-        const element = document.createElement("div");
-        element.innerHTML = htmlTicket;
-        document.body.appendChild(element);
-
-        html2canvas(element).then((canvas) => {
-          const imgData = canvas.toDataURL("image/png"); // Convert canvas to image data
-
-          const pdf = new jsPDF();
-          pdf.addImage(imgData, "PNG", 0, 0, 210, 297); // A4 size (210x297 mm)
-          var dataURL = pdf.output("bloburl", { filename: "IES301.pdf" });
-          setDocumento(dataURL);
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-  const handleSetMessage = (message, type) => {
-    setMessage({ text: message, type });
-  };
   const BaixarPDFCompra = () => {
-    QRCode.toDataURL(idCompra)
-      .then((url) => {
-        htmlTicket = htmlTicket.replace("qrcodeBase64", url);
-
-        const element = document.createElement("div");
-        element.innerHTML = htmlTicket;
-        document.body.appendChild(element);
-
-        html2canvas(element).then((canvas) => {
-          const imgData = canvas.toDataURL("image/png"); // Convert canvas to image data
-
-          const pdf = new jsPDF();
-          pdf.addImage(imgData, "PNG", 0, 0, 250, 297); // A4 size (210x297 mm)
-          pdf.save("IES301.pdf");
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    pdf.save("IES301.pdf");
   };
   const EnviarPDFEmail = async () => {
     handleEnviarCompra(idCompra);
   };
 
   const handleEnviarCompra = async (idCompra) => {
+    const arquivo = new File([pdf], "IES301.pdf");
+
+    const form = new FormData();
+    form.append("file", arquivo);
+
     try {
-      const response = await client.get(`orders/${idCompra}/tickets-email`, {
-        headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
-      });
+      const response = axios.post(
+        `http://127.0.0.1:3210/v1/orders/${idCompra}/tickets-email`,
+        form,
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()?.accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       if (response.status == 201) {
-        handleSetMessage("Ingressos enviados por email.", "success");
+        toast.success("Ingressos enviados por email.");
       }
     } catch (error) {
-      handleSetMessage("Erro ao enviar os ingressos por email.", "error");
+      toast.error("Erro ao enviar os ingressos por email.");
     }
   };
 
   useEffect(() => {
-    handlePDF();
-  }, []);
-
-  useEffect(() => {
-    // Carregar o conteúdo HTML do arquivo externo
-    fetch("/content.html")
-      .then((response) => response.text())
-      .then((data) => {
-        setHtmlContent(data);
-      });
-  }, []);
+    if (dado.length == undefined) {
+      gerarPdf(dado);
+    }
+  }, [dado]);
   return (
     <div>
       <div>
@@ -274,15 +149,9 @@ h2 {
             <Image src={email} alt="email" width={40} height={40} />
           </button>
         </div>
-        <iframe
-          src={documento}
-          id="pdf-container"
-          className={styles.div_pdf}
-        ></iframe>
+        <iframe id="pdf_container" className={styles.div_pdf}></iframe>
       </div>
-      {!!message.text && (
-        <ToastMessage text={message.text} type={message.type} />
-      )}
+      <ToastContainer />
     </div>
   );
 }

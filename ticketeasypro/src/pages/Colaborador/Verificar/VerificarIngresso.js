@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import CabecalhoColaborador from "../CabecalhoColaborador";
 import CabecalhoInfoColaborador from "../CabecalhoInfoColaborador";
-import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
+
 import Pagination from "@/components/Pagination/Pagination";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "@styles/Colaborador.module.css";
 import { parseCookies } from "nookies";
 import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import client from "@/utils/client_axios";
-// import { useRouter } from "next/router";
 import { emailRegex } from "@/utils";
 
 function getToken() {
@@ -88,7 +87,7 @@ export default function VerificarIngresso() {
     <div>
       <CabecalhoColaborador />
       <CabecalhoInfoColaborador secao="Verificar ingresso" />
-      <SuporteTecnico />
+      
       <div className="div_principal">
         <div className="div_container_principal">
           <div className="div_subtitulo">

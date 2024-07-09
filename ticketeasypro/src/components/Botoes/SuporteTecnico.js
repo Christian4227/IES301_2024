@@ -1,22 +1,20 @@
 import React from "react";
 import styles from "@styles/Componentes.module.css";
-import { useRouter } from "next/router";
 
 const SuporteTecnico = ({ role }) => {
-  const router = useRouter();
   const DirecionarPaginaSuporte = () => {
     switch (role) {
       case "Cliente":
-        router.push();
+        window.open("/pdf/Manual de uso - Rota Cliente.pdf", "_blank");
         break;
       case "Colaborador":
-        router.push();
+        window.open("/pdf/Manual de uso - Rota Colaborador.pdf", "_blank");
         break;
       case "Organizador":
-        router.push();
+        window.open("/pdf/Manual de uso - Rota Organizador.pdf", "_blank");
         break;
       case "Administrador":
-        router.push();
+        window.open("/pdf/Manual de uso - Rota Administrador.pdf", "_blank");
         break;
       default:
         break;

@@ -1,5 +1,5 @@
 import { EventStatus } from '@prisma/client';
-import { Type, Static } from '@sinclair/typebox';
+import { Type } from '@sinclair/typebox';
 import { getLastdayOfNextMonthTimestamp, getStartOfDayTimestamp } from '@utils/mixes';
 
 

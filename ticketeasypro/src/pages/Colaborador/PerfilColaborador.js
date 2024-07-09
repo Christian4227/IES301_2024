@@ -8,7 +8,7 @@ export default function PerfilColaborador() {
     <div>
       <CabecalhoColaborador />
       <CabecalhoInfoColaborador secao="Perfil do colaborador" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Colaborador" />
     </div>
   );
 }

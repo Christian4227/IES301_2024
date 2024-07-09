@@ -3,19 +3,21 @@ import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "@styles/Home.module.css";
-import facebook from "../assets/facebook.png";
-import whatsapp from "../assets/whatsapp.png";
-import instagram from "../assets/instagram.jpg";
-import capoeira from "../assets/capoeira.jpg";
-import futebol from "../assets/jogo de futebol.webp";
-import disney from "../assets/disney_World.jpg";
-import fest_japao from "../assets/festival do japão.jpg";
-import torre_miroku from "../assets/torre_miroku.jpg";
-import festas from "../assets/formatura.jpg";
-import musica from "../assets/rock in rio.jpg";
+import facebook from "/public/assets/facebook.png";
+import whatsapp from "public/assets/whatsapp.png";
+import instagram from "public/assets/instagram.jpg";
+import capoeira from "public/assets/capoeira.jpg";
+import futebol from "public/assets/jogo de futebol.webp";
+import disney from "public/assets/disney_World.jpg";
+import fest_japao from "public/assets/festival do japão.jpg";
+import torre_miroku from "public/assets/torre_miroku.jpg";
+import festas from "public/assets/formatura.jpg";
+import musica from "public/assets/rock in rio.jpg";
 import Cabecalho from "./Cabecalho";
 import { parseCookies } from "nookies";
 import { AuthContext } from "@/context/Auth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
   const listaImagens = [
@@ -68,7 +70,7 @@ export default function Home() {
   };
 
   const VisualizarTipoEvento = () => {
-    router.push("./InfoTipoEvento");
+    toast.error("Selecione um evento na página de eventos");
   };
 
   const VisualizarEvento = () => {
@@ -218,7 +220,7 @@ export default function Home() {
                     value="Veja mais"
                     id="botaoEventosCulturais"
                     className="botao_sistema"
-                    onClick={() => VisualizarTipoEvento()}
+                    onClick={VisualizarTipoEvento}
                   />
                 </div>
                 <div className={styles.home_eventos_info}>
@@ -235,7 +237,7 @@ export default function Home() {
                     value="Veja mais"
                     id="botaoEventosEsportivos"
                     className="botao_sistema"
-                    onClick={() => VisualizarTipoEvento()}
+                    onClick={VisualizarTipoEvento}
                   />
                 </div>
                 <div className={styles.home_eventos_info}>
@@ -252,7 +254,7 @@ export default function Home() {
                     value="Veja mais"
                     id="botaoEventosFestas"
                     className="botao_sistema"
-                    onClick={() => VisualizarTipoEvento()}
+                    onClick={VisualizarTipoEvento}
                   />
                 </div>
                 <div className={styles.home_eventos_info}>
@@ -269,7 +271,7 @@ export default function Home() {
                     value="Veja mais"
                     id="botaoEventosMusicais"
                     className="botao_sistema"
-                    onClick={() => VisualizarTipoEvento()}
+                    onClick={VisualizarTipoEvento}
                   />
                 </div>
               </div>
@@ -333,6 +335,7 @@ export default function Home() {
           <></>
         )}
       </div>
+      <ToastContainer />
     </main>
   );
 }

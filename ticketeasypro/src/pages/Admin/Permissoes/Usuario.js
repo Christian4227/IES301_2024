@@ -72,7 +72,7 @@ export default function Usuario() {
     <div>
       <CabecalhoAdmin />
       <CabecalhoInfoAdmin secao="Permissões de usuários" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Administrador"/>
       <div className="div_principal">
         <div className="div_formulario_container">
           <div className="div_container_maior">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Cabecalho from "./Cabecalho";
-import styles from "../styles/CadastroCliente.module.css";
-import styleh from "../styles/Home.module.css";
+import styles from "@styles/CadastroCliente.module.css";
+import styleh from "@styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import LoadingOverlay from "@components/LoadingOverlay";
 import Link from "next/link";

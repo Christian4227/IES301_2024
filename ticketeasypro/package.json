@@ -18,6 +18,7 @@
     "@types/uuid4": "^2.0.3",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "fs": "^0.0.1-security",
     "fullcalendar": "^6.1.14",
     "html2canvas": "^1.4.1",
     "html5-qrcode": "^2.3.8",

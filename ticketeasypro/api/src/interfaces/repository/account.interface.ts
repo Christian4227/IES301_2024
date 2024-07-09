@@ -63,7 +63,7 @@ export interface AccountUpdate {
     email?: string;
     token?: string
     token_expires?: Date
-};
+}
 
 export interface AccountSortParams {
     name?: Prisma.SortOrder;

@@ -22,4 +22,4 @@ export interface AccountUpdate {
     role: Role;
     status?: boolean
     email?: string;
-};
+}

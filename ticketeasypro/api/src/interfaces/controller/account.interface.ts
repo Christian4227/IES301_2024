@@ -47,7 +47,7 @@ export interface AccountCreate {
 }
 export interface AccountRoleUpdate {
     role: Role;
-};
+}
 export interface QueryPaginationFilter {
     page: number,
     pageSize: number;

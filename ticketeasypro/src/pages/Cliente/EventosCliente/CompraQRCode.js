@@ -8,7 +8,7 @@ export default function CompraQRCode() {
     <div>
       <CabecalhoCliente />
       <CabecalhoInfoCliente secao="Comprovante de compra" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Cliente"/>
     </div>
   );
 }

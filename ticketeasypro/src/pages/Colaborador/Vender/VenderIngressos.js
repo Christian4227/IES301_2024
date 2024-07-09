@@ -3,8 +3,8 @@ import CabecalhoInfoColaborador from "../CabecalhoInfoColaborador";
 import CabecalhoColaborador from "../CabecalhoColaborador";
 import Image from "next/image";
 import styles from "@styles/Colaborador.module.css";
-import sacola from "../../../assets/Sacola 2.png";
-import qrcode from "../../../assets/qr code.png";
+import sacola from "public/assets/Sacola 2.png";
+import qrcode from "public/assets/qr code.png";
 import { useRouter } from "next/router";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 
@@ -20,7 +20,7 @@ export default function VenderIngressos() {
     <div>
       <CabecalhoColaborador />
       <CabecalhoInfoColaborador secao="Opções vender" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Colaborador" />
       <div className={styles.div_body_colaborador}>
         <div className={styles.vender_ingressos}>
           <button onClick={() => ValidarCompra()}>

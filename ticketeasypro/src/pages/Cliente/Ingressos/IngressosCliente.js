@@ -6,10 +6,10 @@ import styles from "@styles/Cliente.module.css";
 import { useRouter } from "next/router";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Image from "next/image";
-import carteira from "../../../assets/Carteira.png";
-import pdf from "../../../assets/PDF.png";
-import maps from "../../../assets/google_maps.png";
-import excluir from "../../../assets/excluir.png";
+import carteira from "public/assets/Carteira.png";
+import pdf from "public/assets/PDF.png";
+import maps from "public/assets/google_maps.png";
+import excluir from "public/assets/excluir.png";
 import Link from "next/link";
 import { parseCookies } from "nookies";
 import client from "@/utils/client_axios";
@@ -22,8 +22,9 @@ import {
   getStatusClass,
   getStatusClassEvent,
 } from "@/utils";
-import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import Pagination from "@/components/Pagination/Pagination";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function getToken() {
   const cookies = parseCookies();
@@ -41,7 +42,6 @@ export default function IngressosCliente() {
   const [cotegories, setCategories] = useState([]);
   const [categorySelected, setCategorySelected] = useState("");
   const [compras, setCompras] = useState([]);
-  const [message, setMessage] = useState({ text: "", type: "" });
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
   const [tipoCompra, setTipoCompra] = useState("");
@@ -86,10 +86,6 @@ export default function IngressosCliente() {
     setCategorySelected(event.target.value);
   };
 
-  const handleSetMessage = (message, type) => {
-    setMessage({ text: message, type });
-  };
-
   const handleDeleteCompra = async (idCompra, indexItem) => {
     const resposta = window.confirm("Deseja deletar esta ordem de compra?");
     if (resposta == true) {
@@ -99,23 +95,25 @@ export default function IngressosCliente() {
           headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
         });
         if (response.status == 201) {
-          handleSetMessage("Ordem de compra excluída com sucesso!", "success");
+          toast.success("Ordem de compra excluída com sucesso!");
           const novasCompras = compras.filter(
             (item, index) => index !== indexItem
           );
           setCompras(novasCompras);
         }
       } catch (error) {
-        handleSetMessage("Erro ao deletar a ordem de compra.", "error");
+        toast.error("Erro ao deletar a ordem de compra.");
         console.log("Erro na requisição de categorias:", error);
       }
     }
   };
 
   const FiltrarTabelaOrdemCompra = async () => {
+    var paginas = "?page=" + currentPage;
+
     var situacaoCompra = "";
     if (tipoCompra !== "") {
-      situacaoCompra = "?order-status=" + tipoCompra;
+      situacaoCompra = "&order-status=" + tipoCompra;
     }
 
     var nacional = "";
@@ -127,15 +125,18 @@ export default function IngressosCliente() {
       }
     }
 
-    // var situacaoDoEvento = ""; // No need to check for empty value here
-    // if (tipoEvento !== "") {
-    //   if (situacaoCompra == "" && nacional == "" && categoriaSelecionada == ""){
-    //     situacaoDoEvento = "?status-id=" + tipoEvento;
-    //   }
-    //   else {
-    //     situacaoDoEvento = "&status-id=" + tipoEvento;
-    //   }
-    // }
+    var situacaoDoEvento = ""; // No need to check for empty value here
+    if (tipoEvento !== "") {
+      if (
+        situacaoCompra == "" &&
+        nacional == "" &&
+        categoriaSelecionada == ""
+      ) {
+        situacaoDoEvento = "?status-id=" + tipoEvento;
+      } else {
+        situacaoDoEvento = "&status-id=" + tipoEvento;
+      }
+    }
 
     var categoriaSelecionada = "";
     if (categorySelected !== "") {
@@ -166,9 +167,11 @@ export default function IngressosCliente() {
     }
 
     const query =
+      paginas +
       situacaoCompra +
       nacional +
       categoriaSelecionada +
+      situacaoDoEvento +
       dataInicial +
       dataFinal;
     try {
@@ -176,12 +179,12 @@ export default function IngressosCliente() {
         headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
       });
       if (response.status == 200) {
-        handleSetMessage("Dados filtrados com sucesso.", "success");
+        toast.success("Dados filtrados com sucesso.");
         setCompras(response.data.data);
         setTotalPages(response.data.totalPages);
       }
     } catch (error) {
-      handleSetMessage("Erro ao carregar os dados", "error");
+      toast.error("Erro ao carregar os dados");
       console.log("Erro na requisição de pedidos:", error);
     }
   };
@@ -198,6 +201,19 @@ export default function IngressosCliente() {
     );
   }
 
+  const fetchData = async () => {
+    try {
+      const response = await client.get(`orders/?page=${currentPage}`, {
+        headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
+      });
+      setCompras(response.data.data);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      toast.error("Erro ao carregar os dados");
+      console.log("Erro na requisição de pedidos:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -207,7 +223,7 @@ export default function IngressosCliente() {
         setCategories(response.data.data);
         setTotalPages(response.data.totalPages);
       } catch (error) {
-        handleSetMessage("Erro ao carregar as categorias", "error");
+        toast.error("Erro ao carregar as categorias");
         console.log("Erro na requisição de categorias:", error);
       }
     };
@@ -215,30 +231,24 @@ export default function IngressosCliente() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await client.get("orders/", {
-          headers: { Authorization: `Bearer ${getToken()?.accessToken}` },
-        });
-        setCompras(response.data.data);
-      } catch (error) {
-        handleSetMessage("Erro ao carregar os dados", "error");
-        console.log("Erro na requisição de pedidos:", error);
-      }
-    };
     fetchData();
+    setCurrentPage(1);
     const initialDate = new Date(getStartOfDayTimestamp());
     const finalDate = new Date(getLastdayOfNextMonthTimestamp());
     setDataInicio(dateFormat(initialDate));
     setDataFim(dateFormat(finalDate));
   }, []);
 
+  useEffect(() => {
+    fetchData();
+  }, [currentPage]);
+
   return (
     <div>
       <CabecalhoCliente />
       <CabecalhoInfoCliente secao="Compras Cliente" />
       <div className={styles.div_principal}>
-        <SuporteTecnico />
+        <SuporteTecnico role="Cliente"/>
         <div>
           <div className={styles.titulo_secao}>
             <h2>Seus eventos</h2>
@@ -485,9 +495,7 @@ export default function IngressosCliente() {
           </div>
         </div>
       </div>
-      {!!message.text && (
-        <ToastMessage text={message.text} type={message.type} />
-      )}
+      <ToastContainer />
     </div>
   );
 }

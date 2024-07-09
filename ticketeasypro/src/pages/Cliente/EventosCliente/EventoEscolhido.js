@@ -51,7 +51,7 @@ export default function EventoEscolhido() {
     <div>
       <CabecalhoCliente />
       <CabecalhoInfoCliente secao="Evento escolhido" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Cliente"/>
       <div className={styles.div_principal}>
         <div className="div_container_principal flex-auto">
           <div>

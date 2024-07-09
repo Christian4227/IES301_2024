@@ -1,5 +1,5 @@
 import prisma from "./prisma";
-import { Prisma, Role } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { BaseTypeTicket } from "@interfaces/tycketType.interface";
 import { PaginatedTicketTypeResult, PartialTypeTicket, TypeTicketCreate } from "types/ticketType.type";
 import { PaginationParams } from "@interfaces/common.interface";
@@ -35,7 +35,7 @@ class TicketTypeRepository {
                     { description: { contains: query, mode: 'insensitive' } }
                 ]
             });
-        };
+        }
         const select = { id: true, name: true, discount: true, description: true };
 
         // Parâmetros de paginação incluindo orderBy
@@ -106,5 +106,5 @@ class TicketTypeRepository {
             throw error; // Re-lance o erro para ser capturado no nível superior
         }
     }
-};
+}
 export default TicketTypeRepository;

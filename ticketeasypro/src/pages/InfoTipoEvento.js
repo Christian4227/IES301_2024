@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Cabecalho from "./Cabecalho";
 import styles from "@styles/Home.module.css";
-import stylese from "../styles/InfoEventos.module.css";
+import stylese from "@styles/InfoEventos.module.css";
 import Image from "next/image";
 import CabecalhoHomeMenu from "./CabecalhoHomeMenu";
 import { useRouter } from "next/router";
@@ -92,10 +92,10 @@ export default function InfoTipoEvento() {
                 {evento.base_price === undefined
                   ? ""
                   : "Preço base: " +
-                  (evento.base_price / 100).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
+                    (evento.base_price / 100).toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
               </p>
               <p>{"Capacidade: " + evento.capacity}</p>
             </div>

@@ -40,7 +40,7 @@ const createTicketTypes = async (prisma: PrismaClient) => {
         console.log("Tipos de Ticket criados com sucesso!");
     } catch (error) {
         console.error("Erro ao criar Tipos de Ticket:", error);
-    };
+    }
 };
 
 export default createTicketTypes;

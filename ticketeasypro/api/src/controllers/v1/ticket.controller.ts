@@ -86,7 +86,7 @@ const TicketRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
 				case TicketStatus.AVAILABLE:
 					return reply.code(200).send({ "success": ticketUpdated?.id });
 				case TicketStatus.RESERVED:
-					return reply.code(200).send({ "fail": "TicketReservedPendingPayment" });; // Pode ser necessário ajuste conforme lógica específica
+					return reply.code(200).send({ "fail": "TicketReservedPendingPayment" }); // Pode ser necessário ajuste conforme lógica específica
 				default:
 					return reply.code(500).send({ "fail": "UnexpectedTicketStatus" }); // Status inesperado (não deve acontecer)
 			}

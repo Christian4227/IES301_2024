@@ -37,7 +37,7 @@ const Authentication = async (request: FastifyRequest, reply: FastifyReply) => {
 }
 
 const AuthorizeRoles = (roles: Role[]) => {
-    return async (request: FastifyRequest, reply: FastifyReply) => {
+    return async (request: FastifyRequest) => {
         const { role } = request.user;
 
         // Verifica se o usuário autenticado tem pelo menos um dos papéis permitidos

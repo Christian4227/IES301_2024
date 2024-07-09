@@ -3,8 +3,8 @@ import CabecalhoCliente from "./CabecalhoCliente";
 import CabecalhoInfoCliente from "./CabecalhoInfoCliente";
 import Image from "next/image";
 import styles from "@styles/Cliente.module.css";
-import eventos from "../../assets/eventos.png";
-import ingressos from "../../assets/ticket.png";
+import eventos from "public/assets/eventos.png";
+import ingressos from "public/assets/ticket.png";
 import Link from "next/link";
 import SuporteTecnico from "@/components/Botoes/SuporteTecnico";
 import FullCalendar from "@fullcalendar/react";
@@ -70,7 +70,7 @@ export default function GeralCliente() {
     <div>
       <CabecalhoCliente />
       <CabecalhoInfoCliente secao="Home cliente" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Cliente"/>
       <div className={styles.div_principal_cliente}>
         <div className={styles.div_esquerda_cliente}>
           <div className={styles.div_opcao_cliente}>

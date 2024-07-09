@@ -5,7 +5,6 @@ import { OrderCreateSchema, OrderDetailParamsSchema, QueryPaginationFilterOrderE
 import { PaginationParams, QueryIntervalDate } from "@interfaces/common.interface";
 import {
   PaginatedOrderResult, QueryPaginationFilterOrder, OrderCreate, OrderDetailParams,
-  CustomerEmailParams,
   QueryPaginationFilterOrderEmail
 } from "types/order.type";
 import { AnyRole } from "@utils/auth";
@@ -46,17 +45,28 @@ const OrderRoute: FastifyPluginAsync = async (api: FastifyInstance) => {
   const orderService: OrderService = new OrderService();
 
   // Endpoint para solicitar ingressos ja pagos por email.
-  api.get('/:orderId/tickets-email', {
+  api.post('/:orderId/tickets-email', {
     schema: { params: OrderDetailParams, querystring: QueryStringSchema },
     preHandler: [api.authenticate]
   },
-    async (request: FastifyRequest<{ Params: OrderDetailParams, Querystring: { "multi-page": boolean } }>, reply: FastifyReply) => {
+    async (request: FastifyRequest<{ Params: OrderDetailParams, Querystring: { "multi-page": boolean }, Body: { file: any } }>, reply: FastifyReply) => {
 
       const { orderId } = request.params;
       const { "multi-page": multiPage } = request.query;
+      let file: any;
 
+    if (request.isMultipart()) {
+      const parts = request.parts();
+      for await (const part of parts) {
+        if (part.fieldname == 'file') {
+          file = part;
+          break;
+        }
+      }
+    }
+      
       try {
-        const order = await orderService.sendTicketsQrCodeForEmail(orderId, multiPage);
+        const order = await orderService.sendTicketsQrCodeForEmail(orderId, multiPage, file.file);
         return reply.code(200).send(order);
       } catch (error) {
         return reply.code(404).send(error);

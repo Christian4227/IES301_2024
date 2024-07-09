@@ -16,7 +16,7 @@ export interface ControllerEventCreate {
     color: string;
     category_id: number;
     location_id: number;
-};
+}
 
 export interface Event {
     id: number;
@@ -50,7 +50,7 @@ export interface EventCreate {
     color: string;
     category_id: number;
     location_id: number;
-};
+}
 export interface RepoEventCreate {
     name: string;
     description: string;
@@ -65,7 +65,7 @@ export interface RepoEventCreate {
     category_id: number;
     manager_id: string;
     location_id: number;
-};
+}
 
 export interface RepoEventUpdate {
     name?: string;
@@ -83,10 +83,10 @@ export interface RepoEventUpdate {
     location_id?: number;
 }
 
-export interface EventResult extends EventCreate { };
-export interface EventCreateResult extends EventCreate { };
+export interface EventResult extends EventCreate { }
+export interface EventCreateResult extends EventCreate { }
 
-export interface EventUpdateResult extends EventCreate { };
+export interface EventUpdateResult extends EventCreate { }
 
 export interface BaseEvent {
     name: string;
@@ -102,7 +102,7 @@ export interface BaseEvent {
     category_id: number;
     manager_id: string;
     location_id: number;
-};
+}
 
 export interface EventUpdate {
     name: string;
@@ -118,7 +118,7 @@ export interface EventUpdate {
     category_id: number;
     manager_id: string;
     location_id: number;
-};
+}
 
 
 
@@ -127,11 +127,10 @@ export interface EventSortParams {
     name?: Prisma.SortOrder;
     initial_date?: Prisma.SortOrder;
     final_date?: Prisma.SortOrder;
-};
+}
 
 export interface OrderCriteria {
     name?: Prisma.SortOrder;
     initial_date?: Prisma.SortOrder;
     final_date?: Prisma.SortOrder;
 }
-

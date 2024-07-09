@@ -1,10 +1,6 @@
 import { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
-import AccountService from "../../services/account.service";
-// import { AccountRoleUpdate, AccountUpdateResult, PaginatedAccountResult, QueryPaginationFilter } from "../../interfaces/controller/account.interface";
 
-import { Role } from "@prisma/client";
 import { QueryPaginationFilter } from "@interfaces/common.interface";
-// import { AccountResult } from "@interfaces/repository/account.interface";
 
 
 const CategoryRoute: FastifyPluginAsync = async (api: FastifyInstance) => {

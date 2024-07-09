@@ -10,7 +10,7 @@ import ToastMessage from "@/components/ToastMessage/ToastMessage";
 import Link from "next/link";
 import Image from "next/image";
 import { parseCookies } from "nookies";
-import carteira from "../../../assets/Carteira.png";
+import carteira from "public/assets/Carteira.png";
 import {
   getFullAddress,
   formatDate,
@@ -103,7 +103,7 @@ export default function VerificarCompra() {
     <div>
       <CabecalhoColaborador />
       <CabecalhoInfoColaborador secao="Compras do cliente" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Colaborador" />
       <div className={styles.div_principal}>
         <div className="div_container_principal">
           <div>

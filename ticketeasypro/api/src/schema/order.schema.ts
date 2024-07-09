@@ -1,4 +1,4 @@
-import { Static, Type } from '@sinclair/typebox';
+import { Type } from '@sinclair/typebox';
 import { OrderTicketSchema } from './orderTicket.schema';
 // import { EventStatus, OrderStatus } from '@prisma/client';
 
@@ -12,15 +12,6 @@ export const OrderCreateSchema = Type.Object({
     paymentMethod: Type.Enum(PaymentMethod),
     orderTickets: Type.Array(OrderTicketSchema),
 });
-
-// export const QueryPaginationFilterOrderSchema = Type.Object({
-//     page: Type.Integer({ minimum: 1, default: 1 }),
-//     'page-size': Type.Integer({ minimum: 1, default: 10, maximum: 50 }),
-//     'order-by': Type.Optional(Type.String({ default: 'created-at:asc' })),
-//     status: Type.Enum(OrderStatus, { default: OrderStatus.PROCESSING }),
-//     'event-id': Type.Optional(Type.Integer()),  // Tornando 'event-id' opcional
-//     'payment-method': Type.Enum(PaymentMethod, { default: PaymentMethod.PIX })
-// });
 
 export const QueryPaginationFilterOrderSchema = Type.Object({
     'page': Type.Integer({ minimum: 1, default: 1 }),
@@ -56,4 +47,3 @@ export const OrderDetailParamsSchema = Type.Object({
 export const CustomerEmailParamsSchema = Type.Object({
     customerEmail: Type.String(), // Definindo orderId como uma string
 });
-

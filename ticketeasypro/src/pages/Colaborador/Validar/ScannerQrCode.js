@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import styles from "@styles/Colaborador.module.css";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import seta from "../../../assets/seta para cima.jpg";
+import seta from "public/assets/seta para cima.jpg";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import client from "@/utils/client_axios";
@@ -47,6 +47,9 @@ const ScannerQrCode = () => {
           scanner.resume();
         } else {
           scanner.clear();
+          setTimeout(() => {
+            router.push("./SucessoValidacao");
+          }, 7000);
         }
       } else {
         setErrorMessage("Não foi encontrado o ingresso com este QR Code.");
@@ -97,9 +100,6 @@ const ScannerQrCode = () => {
           }
         }
         setSuccessMessage("Ingresso validado com sucesso!");
-        setTimeout(() => {
-          router.push("./SucessoValidacao");
-        }, 7000);
         return "ok";
       }
     } catch (error) {

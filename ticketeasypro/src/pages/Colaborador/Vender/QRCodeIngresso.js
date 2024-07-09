@@ -53,7 +53,7 @@ export default function QRCodeIngresso() {
     <div>
       <CabecalhoColaborador />
       <CabecalhoInfoColaborador secao="Vender ingresso QR Code" />
-      <SuporteTecnico />
+      <SuporteTecnico role="Colaborador" />
       <div className={styles.qrcode_scanner_body_imprimir}>
         <div id="qrcode" className={styles.qrcode_scanner_ingresso} />
       </div>
