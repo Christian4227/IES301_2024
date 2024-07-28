@@ -13,6 +13,7 @@ import fest_japao from "public/assets/festival do japão.jpg";
 import torre_miroku from "public/assets/torre_miroku.jpg";
 import festas from "public/assets/formatura.jpg";
 import musica from "public/assets/rock in rio.jpg";
+import fechar from "public/assets/x.png";
 import Cabecalho from "./Cabecalho";
 import { parseCookies } from "nookies";
 import { AuthContext } from "@/context/Auth";
@@ -36,6 +37,7 @@ export default function Home() {
   const [indexI, setIndexI] = useState(0);
   const [valorOption, setValorOption] = useState(listaImagens[0].descricao);
   const [divCokkie, setDivCokkie] = useState(true);
+  const [aviso, setAviso] = useState(true);
 
   useEffect(() => {
     const cookie = parseCookies();
@@ -82,10 +84,42 @@ export default function Home() {
     setPoliticaCookies();
     setDivCokkie(false);
   };
+
+  const Aviso = () => {
+    setAviso(!aviso);
+  };
   return (
     <main className={styles.div_principal}>
       <div id="div-principal">
         <Cabecalho className={styles.header} />
+        <div className={styles.div_aviso}>
+          {aviso ? (
+            <div className={styles.div_conteudo}>
+              <button className={styles.btn_fechar} onClick={() => Aviso()}>
+                <Image src={fechar} alt="" width={20} height={20} />
+              </button>
+              <label>Aviso</label>
+              <p>
+                Este site tem como propósito educacional e não têm outros
+                objetivos. Por meio deste site, é possível ver o trabalho feito
+                por alunos, apesar de utilizar cookies com o objetivo de
+                armazenar informações para serem utilizadas no sistema para o
+                seu funcionamento.
+              </p>
+              <p>
+                No entanto, esta é uma versão estática e não funcional, mesmo
+                com acesso a páginas dos tipos de usuários criados para este
+                fim.
+              </p>
+            </div>
+          ) : (
+            <div className={styles.div_conteudo}>
+              <button className={styles.btn_abrir} onClick={() => Aviso()}>
+                Expandir aviso
+              </button>
+            </div>
+          )}
+        </div>
         <div className={styles.div_demonstracao}>
           <Image
             id="imgPainel"

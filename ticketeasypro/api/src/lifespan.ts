@@ -347,6 +347,6 @@ export const initialData = async () => {
     await createVenues(prisma);
     await createCategories(prisma);
 
-    await createRandomEvents();
-    await createRandomOrders()
+    // await createRandomEvents();
+    // await createRandomOrders()
 }

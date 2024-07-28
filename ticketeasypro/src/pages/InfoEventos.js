@@ -111,10 +111,6 @@ export default function InfoEventos() {
     try {
       const query = getQueryString();
       const response = await client.get(`/events?${query}`);
-      if (response.data.total === 0)
-        toast.error(
-          "Nenhum evento encontrado com os critérios de busca. Por favor, tente ajustar seus filtros."
-        );
 
       setEventos(response.data.data);
       setTotalPages(response.data.totalPages);
@@ -124,6 +120,7 @@ export default function InfoEventos() {
   };
   const handleSubmit = async () => {
     setCurrentPage(1);
+    toast.warn("Procurando eventos...");
     fetchData();
   };
 

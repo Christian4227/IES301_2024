@@ -343,6 +343,33 @@
     margin-right: 1em;
   }
 
+  .div_aviso {
+    background-color: #fcf858;
+    border: 3px solid #bfb90b;
+    padding: 5px;
+    text-align: center;
+    position: relative;
+  }
+
+  .div_conteudo {
+    transition: 1.6s;
+  }
+
+  .div_aviso p {
+    text-align: center;
+  }
+
+  .div_aviso label {
+    font-weight: bold;
+    font-size: 20px;
+    text-decoration: underline;
+  }
+
+  .btn_fechar {
+    position: absolute;
+    right: 1em;
+  }
+
   /* Página de redefinição de senha */
   .div_form_redefinir_senha {
     display: flex;
